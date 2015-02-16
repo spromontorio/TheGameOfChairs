@@ -226,7 +226,18 @@ didFailToUpdatePositionWithError:(NSError *)error {
 
 }
 
-- (BOOL)shouldAcceptSessionJoinerNamed:(NSString *)joiner onSessionPort:(AJNSessionPort)sessionPort withSessionOptions:(AJNSessionOptions *)options{}
+- (void)didJoin:(NSString *)joiner inSessionWithId:(AJNSessionId)sessionId onSessionPort:(AJNSessionPort)sessionPort
+{
+    if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 1) {
+        self.sessionId = sessionId;
+    }
+}
+
+- (BOOL)shouldAcceptSessionJoinerNamed:(NSString *)joiner onSessionPort:(AJNSessionPort)sessionPort withSessionOptions:(AJNSessionOptions *)options {
+
+    return sessionPort == kServicePort;
+
+}
 
 
 
