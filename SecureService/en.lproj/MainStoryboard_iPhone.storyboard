@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qdR-Ns-0Z1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qdR-Ns-0Z1">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -55,6 +55,15 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wDC-HR-2pq">
+                                <rect key="frame" x="142" y="505" width="36" height="30"/>
+                                <state key="normal" title="Send">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchSendButton:" destination="qdR-Ns-0Z1" eventType="touchUpInside" id="Fbw-57-yga"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -63,8 +72,10 @@
                             <constraint firstAttribute="centerY" secondItem="0J8-fR-iNI" secondAttribute="centerY" id="Pv9-zB-YhZ"/>
                             <constraint firstAttribute="centerX" secondItem="0J8-fR-iNI" secondAttribute="centerX" id="Xuy-En-QvB"/>
                             <constraint firstItem="gLf-sW-Mzh" firstAttribute="top" secondItem="9Fd-fJ-nd2" secondAttribute="bottom" constant="109" id="aNg-T8-cgP"/>
+                            <constraint firstAttribute="centerX" secondItem="wDC-HR-2pq" secondAttribute="centerX" id="d2G-wi-g6j"/>
                             <constraint firstItem="GnR-dW-ddF" firstAttribute="trailing" secondItem="T7A-sP-rSX" secondAttribute="trailingMargin" id="j2e-IT-nZN"/>
                             <constraint firstAttribute="centerX" secondItem="seZ-4B-kEb" secondAttribute="centerX" constant="-0.5" id="jlu-nh-a68"/>
+                            <constraint firstItem="wDC-HR-2pq" firstAttribute="top" secondItem="seZ-4B-kEb" secondAttribute="bottom" constant="8" id="lyF-KO-WaU"/>
                             <constraint firstAttribute="centerX" secondItem="9Fd-fJ-nd2" secondAttribute="centerX" constant="-0.5" id="o7W-ib-wkp"/>
                             <constraint firstItem="gpW-nN-gfb" firstAttribute="leading" secondItem="T7A-sP-rSX" secondAttribute="leadingMargin" constant="4" id="qGr-iv-KRl"/>
                             <constraint firstItem="gpW-nN-gfb" firstAttribute="top" secondItem="OFu-cg-yRt" secondAttribute="bottom" constant="13" id="sMh-Dc-3z0"/>

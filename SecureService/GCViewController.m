@@ -39,11 +39,12 @@
 @property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
 
-
+@property(nonatomic) BOOL started;
 
 @end
 
 @implementation GCViewController
+
 
 - (void)viewDidLoad {
     
@@ -57,6 +58,39 @@
     
     self.location = [ESTLocationBuilder parseFromJSON:content];
     
+    // Do any additional setup after loading the view.
+    self.started=NO;
+    self.playersImageView = [NSMutableDictionary dictionary];
+    
+    
+}
+
+-(IBAction)didTouchStartButton:(UIButton *)sender {
+    
+    if(!self.started)
+    {
+        [self createAndConnectBus];
+        self.started=YES;
+        self.sessionTypeSegmentedControl.enabled=NO;
+        [sender setTitle:@"Stop" forState:UIControlStateNormal];
+    }
+    else{
+        [self disconnectAndDestroyBus];
+        self.started=NO;
+        self.sessionTypeSegmentedControl.enabled=YES;
+        [sender setTitle:@"Start" forState:UIControlStateNormal];
+    }
+   
+   
+    
+    
+    
+}
+
+
+
+-(void)createAndConnectBus{
+    
     QStatus status = ER_OK;
     
     
@@ -64,7 +98,7 @@
     
     AJNInterfaceDescription* posInterface = [self.busAttachment createInterfaceWithName:kInterfaceName];
     
-    [posInterface addSignalWithName:@"Position" inputSignature:@"s" argumentNames:[NSArray arrayWithObject:@"str"]];
+    status=[posInterface addSignalWithName:@"Position" inputSignature:@"s" argumentNames:[NSArray arrayWithObject:@"str"]];
     if (status != ER_OK) {
         NSLog(@"ERROR: Failed to add signal to chat interface. %@", [AJNStatus descriptionForStatusCode:status]);
     }
@@ -72,26 +106,29 @@
     [posInterface activate];
     
     
+    self.signalHandler = [[GCPositionObjectSignalHandler alloc] init];
+    self.signalHandler.delegate = self;
+    [self.busAttachment registerSignalHandler:self.signalHandler];
+    
     self.sixiObject = [[GCPositionObject alloc] initWithBusAttachment:self.busAttachment onServicePath:kServicePath];
     self.sixiObject.delegate = self;
     
     [self.busAttachment registerBusObject:self.sixiObject];
     
-    self.signalHandler = [[GCPositionObjectSignalHandler alloc] init];
-    self.signalHandler.delegate = self;
-    [self.busAttachment registerSignalHandler:self.signalHandler];
     
-    [self.busAttachment start];
+    status = [self.busAttachment start];
+    if (status != ER_OK) {
+        NSLog(@"ERROR: Failed to start bus. %@", [AJNStatus descriptionForStatusCode:status]);
+    }
     
     [self.busAttachment registerBusListener:self];
     
-    [self.busAttachment connectWithArguments:@"null:"];
+    status = [self.busAttachment connectWithArguments:@"null:"];
     
-    [self.busAttachment addMatchRule:[self sessionlessSignalMatchRule]];
+    if (status != ER_OK) {
+        NSLog(@"ERROR: Failed to connect bus. %@", [AJNStatus descriptionForStatusCode:status]);
+    }
     
-    // Do any additional setup after loading the view.
-    
-    self.playersImageView = [NSMutableDictionary dictionary];
     
     if (gMessageFlags == kAJNMessageFlagSessionless) {
         NSLog(@"Adding match rule : [%@]", self.sessionlessSignalMatchRule);
@@ -128,15 +165,64 @@
         }
     }
 
-    
 }
 
--(IBAction)didTouchStartButton:(id)sender {
+
+-(void)disconnectAndDestroyBus{
+    // leave the chat session
+    //
     
+    NSString *serviceName = [NSString stringWithFormat:@"%@%@", kServiceName, @"gameofchairs"];
+    if(gMessageFlags!=kAJNMessageFlagSessionless && self.sessionId)
+        [self.busAttachment leaveSession:self.sessionId];
+    
+    // cancel the advertised name search, or the advertisement, depending on if this is a
+    // service or client
+    //
+    if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 0) {
+        [self.busAttachment cancelFindAdvertisedName:serviceName];
+    }
+    else {
+        [self.busAttachment cancelAdvertisedName:serviceName withTransportMask:kAJNTransportMaskAny];
+    }
+    
+    // disconnect from the bus
+    //
+    [self.busAttachment disconnectWithArguments:@"null:"];
+    
+    // unregister our listeners and the chat bus object
+    //
+    [self.busAttachment unregisterBusListener:self];
+    
+    [self.busAttachment unregisterSignalHandler:self.signalHandler];
+    
+    [self.busAttachment unregisterBusObject:self.sixiObject];
+    
+    // stop the bus and wait for the stop operation to complete
+    //
+    [self.busAttachment stop];
+    
+    [self.busAttachment waitUntilStopCompleted];
+    
+    // dispose of everything
+    //
+    self.signalHandler.delegate = nil;
+    self.signalHandler = nil;
+    
+    self.sixiObject.delegate = nil;
+    self.sixiObject = nil;
+    
+    self.busAttachment = nil;
+
+}
+
+- (IBAction)didTouchSendButton:(id)sender {
     NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @"ciao"];
     [self.sixiObject sendPosition:message onSession:self.sessionId];
-
-    
+    /** SE USI SESSION NON RICEVI MESSAGGI A TE STESSO QUINDI BISOGNA INVIARLI MANUALMENTE*/
+    if (gMessageFlags != kAJNMessageFlagSessionless) {
+        [self didReceiveNewPositionMessage:message forSession:self.sessionId];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -164,7 +250,7 @@
 
     [self.locationView drawLocation:self.location];
 
-    [self.manager startIndoorLocation:self.location];
+    //  [self.manager startIndoorLocation:self.location];
 }
 
 - (NSString *)sessionlessSignalMatchRule
@@ -178,14 +264,20 @@
 }
 
 
--(void)didReceiveNewPositionMessage:(NSString *)message{
-    NSLog(@"RICEVUTA POSIZIONE: %@", message);
+-(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
     
+    if(gMessageFlags != kAJNMessageFlagSessionless && self.sessionId!=sessionId)
+        NSLog(@"POSIZIONE RICEVUTA MA SESSIONE ERRATA");
+    
+    NSLog(@"RICEVUTA POSIZIONE: %@", message);
     NSError *jsonError;
     NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
                                                          options:NSJSONReadingMutableContainers
                                                            error:&jsonError];
+    if(jsonError)
+        return;
+    
     NSString *player = data[@"player"];
     if (![player isEqualToString:[[UIDevice currentDevice] name]]) {
         UIImageView *view = self.playersImageView[player];

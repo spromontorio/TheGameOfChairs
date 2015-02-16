@@ -32,7 +32,7 @@
 }
 
 
--(void)didReceiveNewPositionMessage:(NSString *)message{
-    [self.delegate didReceiveNewPositionMessage:message];
+-(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
+    [self.delegate didReceiveNewPositionMessage:message forSession:sessionId];
 }
 @end

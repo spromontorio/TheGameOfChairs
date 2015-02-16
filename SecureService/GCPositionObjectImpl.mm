@@ -37,12 +37,12 @@ QStatus GCPositionObjectImpl::SendPositionSignal(const char* msg, ajn::SessionId
     
     ajn::MsgArg posArg("s", msg);
     
-    // if we are using sessionless signals, ignore the session (obviously)
-  /*  if (gMessageFlags == kAJNMessageFlagSessionless) {
+     //if we are using sessionless signals, ignore the session (obviously)
+    if (gMessageFlags == kAJNMessageFlagSessionless) {
         sessionId = 0;
-    }*/
+    }
     
-    return Signal(NULL, sessionId, *positionSignalMember, &posArg, 1, 0, kAJNMessageFlagSessionless);
+    return Signal(NULL, sessionId, *positionSignalMember, &posArg, 1, 0, gMessageFlags);
 }
 
 

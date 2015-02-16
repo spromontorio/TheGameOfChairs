@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AJNSessionOptions.h"
 
 @protocol GCPositionReceiver <NSObject>
 
--(void)didReceiveNewPositionMessage: (NSString *)message;
+-(void)didReceiveNewPositionMessage: (NSString *)message forSession: (AJNSessionId)sessionId;
 
 
 @end

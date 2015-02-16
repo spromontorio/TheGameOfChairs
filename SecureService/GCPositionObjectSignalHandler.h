@@ -23,6 +23,6 @@
 
 @property (nonatomic, strong) id<GCPositionReceiver> delegate;
 
--(void)didReceiveNewPositionMessage:(NSString *)message;
+-(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId;
 
 @end

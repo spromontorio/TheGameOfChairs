@@ -47,14 +47,14 @@
 
 - (void)sendPosition:(NSString*)message onSession:(AJNSessionId)sessionId
 {
-    QStatus status = static_cast<GCPositionObjectImpl*>(self.handle)->SendPositionSignal([message UTF8String], NULL);
+    QStatus status = static_cast<GCPositionObjectImpl*>(self.handle)->SendPositionSignal([message UTF8String], sessionId);
     if (status != ER_OK) {
         NSLog(@"ERROR: sendPosition failed. %@", [AJNStatus descriptionForStatusCode:status]);
     }
 }
 
--(void)didReceiveNewPositionMessage:(NSString *)message{
-    [self.delegate didReceiveNewPositionMessage:message];
+-(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
+    [self.delegate didReceiveNewPositionMessage:message forSession:sessionId];
 }
 
 

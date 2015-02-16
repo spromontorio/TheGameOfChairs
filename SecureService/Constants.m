@@ -16,7 +16,7 @@
 
 #import "Constants.h"
 
-const AJNSessionPort kServicePort = 42;
+const AJNSessionPort kServicePort = 48;
 NSString * const kServicePath = @"/TheGameOfChairs";
 NSString * const kServiceName = @"org.alljoyn.bus.samples.chairs";
 NSString * const kInterfaceName = @"org.alljoyn.bus.samples.secure.chairs";
