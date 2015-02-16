@@ -82,6 +82,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="label" destination="gpW-nN-gfb" id="Lkb-6n-Q0W"/>
                         <outlet property="locationView" destination="0J8-fR-iNI" id="32c-LM-qjZ"/>
                         <outlet property="sessionSwitch" destination="GnR-dW-ddF" id="Y57-pF-645"/>
                         <outlet property="sessionTypeSegmentedControl" destination="9Fd-fJ-nd2" id="gbb-1m-1B5"/>

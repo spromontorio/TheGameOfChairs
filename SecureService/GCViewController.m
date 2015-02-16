@@ -38,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
+@property (weak, nonatomic) IBOutlet UILabel *label;
 
 @property(nonatomic) BOOL started;
 
@@ -289,6 +290,8 @@
         
         ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
         [self.locationView drawObject:view withPosition:point];
+        
+        self.label.text = player;
     }
 
 }
