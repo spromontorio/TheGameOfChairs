@@ -22,7 +22,7 @@
 #import "ESTOrientedPoint.h"
 
 
-@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener>
+@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener, AJNSessionListener>
 
 
 @property (nonatomic, strong) AJNBusAttachment *busAttachment;
@@ -133,6 +133,9 @@
 
 -(IBAction)didTouchStartButton:(id)sender {
     
+    NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @"ciao"];
+    [self.sixiObject sendPosition:message onSession:self.sessionId];
+
     
 }
 
@@ -198,9 +201,7 @@
 
 }
 
-- (void)indoorLocationManager:(ESTIndoorLocationManager *)manager
-            didUpdatePosition:(ESTOrientedPoint *)position
-                   inLocation:(ESTLocation *)location {
+- (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didUpdatePosition:(ESTOrientedPoint *)position inLocation:(ESTLocation *)location {
     NSLog(@"posizione ricevuta");
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
@@ -221,16 +222,46 @@
  * @param manager The manager object that generated the event.
  * @param error Error why position could not be determined.
  */
-- (void)indoorLocationManager:(ESTIndoorLocationManager *)manager
-didFailToUpdatePositionWithError:(NSError *)error {
+- (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didFailToUpdatePositionWithError:(NSError *)error {
+    
     NSLog(@"errore posizione");
 
 }
+
+#pragma mark - AJNBusListener delegate methods
+
+- (void)didFindAdvertisedName:(NSString *)name withTransportMask:(AJNTransportMask)transport namePrefix:(NSString *)namePrefix
+{
+    NSString *message = [NSString stringWithFormat:@"%@", [[name componentsSeparatedByString:@"."] lastObject]];
+    
+    NSLog(@"Discovered message: \"%@\"\n", message);
+    
+    [self.busAttachment enableConcurrentCallbacks];
+    
+    /* Join the conversation */
+    AJNSessionOptions *sessionOptions = [[AJNSessionOptions alloc] initWithTrafficType:kAJNTrafficMessages supportsMultipoint:YES proximity:kAJNProximityAny transportMask:kAJNTransportMaskAny];
+    
+    AJNSessionId sessionId = [self.busAttachment joinSessionWithName:name onPort:kServicePort withDelegate:self options:sessionOptions];
+    if (sessionId != 0) {
+        self.sessionId = sessionId;
+    }
+}
+
+- (void)didLoseAdvertisedName:(NSString*)name withTransportMask:(AJNTransportMask)transport namePrefix:(NSString*)namePrefix
+{
+    NSString *message = [NSString stringWithFormat:@"%@", [[name componentsSeparatedByString:@"."] lastObject]];
+    
+    NSLog(@"Lost message: \"%@\"\n", message);
+}
+
+#pragma mark - AJNSessionPortListener delegate methods
+
 
 - (void)didJoin:(NSString *)joiner inSessionWithId:(AJNSessionId)sessionId onSessionPort:(AJNSessionPort)sessionPort
 {
     if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 1) {
         self.sessionId = sessionId;
+        NSLog(@"%@", joiner);
     }
 }
 

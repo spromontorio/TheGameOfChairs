@@ -26,6 +26,15 @@
                                     <constraint firstAttribute="width" constant="280" id="coT-zg-XKb"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="seZ-4B-kEb">
+                                <rect key="frame" x="144" y="467" width="33" height="30"/>
+                                <state key="normal" title="Start">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchStartButton:" destination="qdR-Ns-0Z1" eventType="touchUpInside" id="iAx-8u-R5r"/>
+                                </connections>
+                            </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="9Fd-fJ-nd2">
                                 <rect key="frame" x="117" y="431" width="87" height="29"/>
                                 <segments>
@@ -36,15 +45,16 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GnR-dW-ddF">
                                 <rect key="frame" x="255" y="28" width="51" height="31"/>
                             </switch>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="seZ-4B-kEb">
-                                <rect key="frame" x="144" y="467" width="33" height="30"/>
-                                <state key="normal" title="Start">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="didTouchStartButton:" destination="qdR-Ns-0Z1" eventType="touchUpInside" id="iAx-8u-R5r"/>
-                                </connections>
-                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gpW-nN-gfb">
+                                <rect key="frame" x="20" y="33" width="184" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="KzY-VZ-BO3"/>
+                                    <constraint firstAttribute="width" constant="184" id="fYr-nt-QBE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -56,6 +66,8 @@
                             <constraint firstItem="GnR-dW-ddF" firstAttribute="trailing" secondItem="T7A-sP-rSX" secondAttribute="trailingMargin" id="j2e-IT-nZN"/>
                             <constraint firstAttribute="centerX" secondItem="seZ-4B-kEb" secondAttribute="centerX" constant="-0.5" id="jlu-nh-a68"/>
                             <constraint firstAttribute="centerX" secondItem="9Fd-fJ-nd2" secondAttribute="centerX" constant="-0.5" id="o7W-ib-wkp"/>
+                            <constraint firstItem="gpW-nN-gfb" firstAttribute="leading" secondItem="T7A-sP-rSX" secondAttribute="leadingMargin" constant="4" id="qGr-iv-KRl"/>
+                            <constraint firstItem="gpW-nN-gfb" firstAttribute="top" secondItem="OFu-cg-yRt" secondAttribute="bottom" constant="13" id="sMh-Dc-3z0"/>
                         </constraints>
                     </view>
                     <connections>
