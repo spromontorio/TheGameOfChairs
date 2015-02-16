@@ -38,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
+@property (weak, nonatomic) IBOutlet UILabel *label;
 
 
 
@@ -135,6 +136,7 @@
     
     NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @"ciao"];
     [self.sixiObject sendPosition:message onSession:self.sessionId];
+    
 
     
 }
@@ -197,6 +199,8 @@
         
         ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
         [self.locationView drawObject:view withPosition:point];
+        
+        self.label.text = player;
     }
 
 }
