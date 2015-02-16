@@ -98,6 +98,7 @@
         status = [self.busAttachment addMatchRule:self.sessionlessSignalMatchRule];
         
         if (status != ER_OK) {
+            
             NSLog(@"ERROR: Unable to %@ match rule. %@", self.sessionSwitch.isOn ? @"remove" : @"add", [AJNStatus descriptionForStatusCode:status]);
         }
     }
