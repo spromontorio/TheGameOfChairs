@@ -22,7 +22,7 @@
 #import "ESTOrientedPoint.h"
 
 
-@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate>
+@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener>
 
 
 @property (nonatomic, strong) AJNBusAttachment *busAttachment;
@@ -32,7 +32,12 @@
 @property (nonatomic, strong) ESTLocation *location;
 @property (nonatomic, strong) ESTIndoorLocationManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *playersImageView;
+@property (nonatomic, readonly) NSString *sessionlessSignalMatchRule;
+
 @property (weak, nonatomic) IBOutlet ESTIndoorLocationView *locationView;
+@property (weak, nonatomic) IBOutlet UIButton *startButton;
+@property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
 
 
 
@@ -83,10 +88,50 @@
     [self.busAttachment connectWithArguments:@"null:"];
     
     [self.busAttachment addMatchRule:[self sessionlessSignalMatchRule]];
-
+    
     // Do any additional setup after loading the view.
     
     self.playersImageView = [NSMutableDictionary dictionary];
+    
+    if (gMessageFlags == kAJNMessageFlagSessionless) {
+        NSLog(@"Adding match rule : [%@]", self.sessionlessSignalMatchRule);
+        status = [self.busAttachment addMatchRule:self.sessionlessSignalMatchRule];
+        
+        if (status != ER_OK) {
+            NSLog(@"ERROR: Unable to %@ match rule. %@", self.sessionSwitch.isOn ? @"remove" : @"add", [AJNStatus descriptionForStatusCode:status]);
+        }
+    }
+    else {
+        
+        // get the type of session to create
+        //
+        NSString *serviceName = [NSString stringWithFormat:@"%@%@", kServiceName, @"gameofchairs"];
+        
+        if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 0) {
+            // join an existing session by finding the name
+            //
+            [self.busAttachment findAdvertisedName:serviceName];
+        }
+        else {
+            // request the service name for the position object
+            //
+            [self.busAttachment requestWellKnownName:serviceName withFlags:kAJNBusNameFlagReplaceExisting|kAJNBusNameFlagDoNotQueue];
+            
+            // advertise a name and let others connect to our service
+            //
+            [self.busAttachment advertiseName:serviceName withTransportMask:kAJNTransportMaskAny];
+            
+            AJNSessionOptions *sessionOptions = [[AJNSessionOptions alloc] initWithTrafficType:kAJNTrafficMessages supportsMultipoint:YES proximity:kAJNProximityAny transportMask:kAJNTransportMaskAny];
+            
+            [self.busAttachment bindSessionOnPort:kServicePort withOptions:sessionOptions withDelegate:self];
+        }
+    }
+
+    
+}
+
+-(IBAction)didTouchStartButton:(id)sender {
+    
     
 }
 
@@ -96,7 +141,7 @@
     
     self.locationView.backgroundColor = [UIColor clearColor];
     
-    self.locationView.showTrace               = YES;
+    self.locationView.showTrace               = NO;
     self.locationView.rotateOnPositionUpdate  = YES;
     
     self.locationView.showWallLengthLabels    = YES;
@@ -180,6 +225,8 @@ didFailToUpdatePositionWithError:(NSError *)error {
     NSLog(@"errore posizione");
 
 }
+
+- (BOOL)shouldAcceptSessionJoinerNamed:(NSString *)joiner onSessionPort:(AJNSessionPort)sessionPort withSessionOptions:(AJNSessionOptions *)options{}
 
 
 

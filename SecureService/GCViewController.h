@@ -11,6 +11,7 @@
 
 @interface GCViewController : UIViewController
 
--(IBAction)pressButton:(id)sender;
+- (IBAction)didTouchStartButton:(id)sender;
+
 
 @end
