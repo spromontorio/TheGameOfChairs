@@ -73,23 +73,25 @@
         [self createAndConnectBus];
         self.started=YES;
         self.sessionTypeSegmentedControl.enabled=NO;
+        self.sessionSwitch.enabled=NO;
+        if(self.sessionSwitch.isOn)
+            gMessageFlags=0x0; // SIX: what a fail
+        else
+            gMessageFlags=kAJNMessageFlagSessionless;
         [sender setTitle:@"Stop" forState:UIControlStateNormal];
     }
     else{
         [self disconnectAndDestroyBus];
         self.started=NO;
+        self.sessionSwitch.enabled=NO;
+        self.sessionSwitch.enabled=YES;
         self.sessionTypeSegmentedControl.enabled=YES;
         [sender setTitle:@"Start" forState:UIControlStateNormal];
     }
-   
-   
-    
-    
-    
 }
 
 
-
+// SIX: setup method for alljoyn stuff
 -(void)createAndConnectBus{
     
     QStatus status = ER_OK;
@@ -168,7 +170,7 @@
 
 }
 
-
+// SIX: setup method for cleaning alljoyn stuff
 -(void)disconnectAndDestroyBus{
     // leave the chat session
     //
@@ -220,7 +222,7 @@
 - (IBAction)didTouchSendButton:(id)sender {
     NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @"ciao"];
     [self.sixiObject sendPosition:message onSession:self.sessionId];
-    /** SE USI SESSION NON RICEVI MESSAGGI A TE STESSO QUINDI BISOGNA INVIARLI MANUALMENTE*/
+    // SIX: IF THE COMMUNICATION USES SESSION DATA YOU WONT RECEIVE THE MESSAGE YOU SEND. IF YOU WANT TO RECEIVE IT YOU MANAULLY CALL YOUR DELEGATE METHOD
     if (gMessageFlags != kAJNMessageFlagSessionless) {
         [self didReceiveNewPositionMessage:message forSession:self.sessionId];
     }
@@ -250,7 +252,7 @@
     //self.locationView.positionImage = [UIImage imageNamed:@"cat.png"];
 
     [self.locationView drawLocation:self.location];
-
+    
     //  [self.manager startIndoorLocation:self.location];
 }
 
@@ -267,6 +269,7 @@
 
 -(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
     
+    //SIX: IF YOU ARE USING SESSION YOU FILTER HERE THE MESSAGES THAT DON'T BELONG TO THE CURRENT SESSION
     if(gMessageFlags != kAJNMessageFlagSessionless && self.sessionId!=sessionId)
         NSLog(@"POSIZIONE RICEVUTA MA SESSIONE ERRATA");
     
@@ -333,7 +336,6 @@
     
     [self.busAttachment enableConcurrentCallbacks];
     
-    /* Join the conversation */
     AJNSessionOptions *sessionOptions = [[AJNSessionOptions alloc] initWithTrafficType:kAJNTrafficMessages supportsMultipoint:YES proximity:kAJNProximityAny transportMask:kAJNTransportMaskAny];
     
     AJNSessionId sessionId = [self.busAttachment joinSessionWithName:name onPort:kServicePort withDelegate:self options:sessionOptions];
