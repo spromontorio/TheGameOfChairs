@@ -83,7 +83,6 @@
     else{
         [self disconnectAndDestroyBus];
         self.started=NO;
-        self.sessionSwitch.enabled=NO;
         self.sessionSwitch.enabled=YES;
         self.sessionTypeSegmentedControl.enabled=YES;
         [sender setTitle:@"Start" forState:UIControlStateNormal];
