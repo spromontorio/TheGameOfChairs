@@ -57,8 +57,13 @@
 		684935671A90E05700BD5770 /* libEstimoteSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 684935661A90E05700BD5770 /* libEstimoteSDK.a */; };
 		68B5DC6C1A90E23B003DBECC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */; };
 		68B5DC701A90F6DA003DBECC /* cat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68B5DC6F1A90F6DA003DBECC /* cat@2x.png */; };
+		68C7558C1A95E15B0029F2B0 /* GCProxyPositionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C7558B1A95E15B0029F2B0 /* GCProxyPositionObject.m */; };
 		68EBB1701A8B67660070AD15 /* GCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68EBB16F1A8B67660070AD15 /* GCViewController.m */; };
 		68EBB1731A90B7200070AD15 /* location.json in Resources */ = {isa = PBXBuildFile; fileRef = 68EBB1721A90B7200070AD15 /* location.json */; };
+		68F776911A95F607003ED5C5 /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776901A95F607003ED5C5 /* Game.m */; };
+		68F776941A95F621003ED5C5 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776931A95F621003ED5C5 /* Player.m */; };
+		68F776971A95F712003ED5C5 /* Station.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776961A95F712003ED5C5 /* Station.m */; };
+		68F7769A1A95F749003ED5C5 /* Turn.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776991A95F749003ED5C5 /* Turn.m */; };
 		7DCBEE0A1A254D2600A53A83 /* AJNAboutObjectDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7DCBEDF61A254D2600A53A83 /* AJNAboutObjectDescription.mm */; };
 		7DCBEE0B1A254D2600A53A83 /* AJNAboutObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7DCBEDF81A254D2600A53A83 /* AJNAboutObject.mm */; };
 		7DCBEE0C1A254D2600A53A83 /* AJNAboutDataListenerImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7DCBEDFB1A254D2600A53A83 /* AJNAboutDataListenerImpl.mm */; };
@@ -198,9 +203,19 @@
 		684935661A90E05700BD5770 /* libEstimoteSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libEstimoteSDK.a; sourceTree = "<group>"; };
 		68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		68B5DC6F1A90F6DA003DBECC /* cat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat@2x.png"; sourceTree = "<group>"; };
+		68C7558A1A95E15B0029F2B0 /* GCProxyPositionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCProxyPositionObject.h; sourceTree = "<group>"; };
+		68C7558B1A95E15B0029F2B0 /* GCProxyPositionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCProxyPositionObject.m; sourceTree = "<group>"; };
 		68EBB16E1A8B67660070AD15 /* GCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCViewController.h; sourceTree = "<group>"; };
 		68EBB16F1A8B67660070AD15 /* GCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCViewController.m; sourceTree = "<group>"; };
 		68EBB1721A90B7200070AD15 /* location.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = location.json; sourceTree = "<group>"; };
+		68F7768F1A95F607003ED5C5 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
+		68F776901A95F607003ED5C5 /* Game.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Game.m; sourceTree = "<group>"; };
+		68F776921A95F621003ED5C5 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		68F776931A95F621003ED5C5 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
+		68F776951A95F712003ED5C5 /* Station.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Station.h; sourceTree = "<group>"; };
+		68F776961A95F712003ED5C5 /* Station.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Station.m; sourceTree = "<group>"; };
+		68F776981A95F749003ED5C5 /* Turn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Turn.h; sourceTree = "<group>"; };
+		68F776991A95F749003ED5C5 /* Turn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Turn.m; sourceTree = "<group>"; };
 		7DCBEDF61A254D2600A53A83 /* AJNAboutObjectDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AJNAboutObjectDescription.mm; path = ../../../../AllJoynFramework/AllJoynFramework/AJNAboutObjectDescription.mm; sourceTree = "<group>"; };
 		7DCBEDF71A254D2600A53A83 /* AJNAboutObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AJNAboutObject.h; path = ../../../../AllJoynFramework/AllJoynFramework/AJNAboutObject.h; sourceTree = "<group>"; };
 		7DCBEDF81A254D2600A53A83 /* AJNAboutObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AJNAboutObject.mm; path = ../../../../AllJoynFramework/AllJoynFramework/AJNAboutObject.mm; sourceTree = "<group>"; };
@@ -456,6 +471,21 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		68F7769B1A95F768003ED5C5 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				68F776951A95F712003ED5C5 /* Station.h */,
+				68F776961A95F712003ED5C5 /* Station.m */,
+				68F776981A95F749003ED5C5 /* Turn.h */,
+				68F776991A95F749003ED5C5 /* Turn.m */,
+				68F7768F1A95F607003ED5C5 /* Game.h */,
+				68F776901A95F607003ED5C5 /* Game.m */,
+				68F776921A95F621003ED5C5 /* Player.h */,
+				68F776931A95F621003ED5C5 /* Player.m */,
+			);
+			name = Logic;
+			sourceTree = "<group>";
+		};
 		AC88103F1649DB10006CD25A = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +532,8 @@
 				682B003E1A8B572500BE5DF9 /* GCPositionObject.mm */,
 				682B003F1A8B572500BE5DF9 /* GCPositionObjectImpl.h */,
 				682B00401A8B572500BE5DF9 /* GCPositionObjectImpl.mm */,
+				68C7558A1A95E15B0029F2B0 /* GCProxyPositionObject.h */,
+				68C7558B1A95E15B0029F2B0 /* GCProxyPositionObject.m */,
 				682B00491A8B57CE00BE5DF9 /* GCPositionReceiver.h */,
 				682B00411A8B572500BE5DF9 /* GCPositionObjectSignalHandler.h */,
 				682B00421A8B572500BE5DF9 /* GCPositionObjectSignalHandler.mm */,
@@ -513,6 +545,7 @@
 				AC8811421649E04E006CD25A /* Constants.m */,
 				68EBB16E1A8B67660070AD15 /* GCViewController.h */,
 				68EBB16F1A8B67660070AD15 /* GCViewController.m */,
+				68F7769B1A95F768003ED5C5 /* Logic */,
 				68EBB1711A90B7020070AD15 /* Resources */,
 				AC8810661649DB10006CD25A /* MainStoryboard_iPhone.storyboard */,
 				AC8810551649DB10006CD25A /* Supporting Files */,
@@ -731,6 +764,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68F776971A95F712003ED5C5 /* Station.m in Sources */,
+				68F776911A95F607003ED5C5 /* Game.m in Sources */,
 				AC88105B1649DB10006CD25A /* main.m in Sources */,
 				7DCBEE0C1A254D2600A53A83 /* AJNAboutDataListenerImpl.mm in Sources */,
 				AC88105F1649DB10006CD25A /* AppDelegate.m in Sources */,
@@ -739,6 +774,7 @@
 				AC8810B51649DC99006CD25A /* AJNAuthenticationListenerImpl.mm in Sources */,
 				AC8810B61649DC99006CD25A /* AJNBus.m in Sources */,
 				68EBB1701A8B67660070AD15 /* GCViewController.m in Sources */,
+				68F7769A1A95F749003ED5C5 /* Turn.m in Sources */,
 				7DCBEE121A254D2600A53A83 /* AJNPasswordManager.mm in Sources */,
 				AC8810B71649DC99006CD25A /* AJNBusAttachment.mm in Sources */,
 				682B00481A8B572500BE5DF9 /* GCPositionObjectSignalHandlerImpl.mm in Sources */,
@@ -753,6 +789,7 @@
 				AC8810BD1649DC99006CD25A /* AJNInterfaceMember.mm in Sources */,
 				AC8810BE1649DC99006CD25A /* AJNInterfaceProperty.mm in Sources */,
 				682B00461A8B572500BE5DF9 /* GCPositionObjectImpl.mm in Sources */,
+				68C7558C1A95E15B0029F2B0 /* GCProxyPositionObject.m in Sources */,
 				AC8810BF1649DC99006CD25A /* AJNKeyStoreListenerImpl.mm in Sources */,
 				682B00471A8B572500BE5DF9 /* GCPositionObjectSignalHandler.mm in Sources */,
 				AC8810C01649DC99006CD25A /* AJNMessage.mm in Sources */,
@@ -763,6 +800,7 @@
 				AC8810C31649DC99006CD25A /* AJNObject.m in Sources */,
 				AC8810C41649DC99006CD25A /* AJNProxyBusObject.mm in Sources */,
 				AC8810C51649DC99006CD25A /* AJNSecurityCredentials.mm in Sources */,
+				68F776941A95F621003ED5C5 /* Player.m in Sources */,
 				AC8810C61649DC99006CD25A /* AJNServiceController.m in Sources */,
 				AC8810C71649DC99006CD25A /* AJNSessionListenerImpl.mm in Sources */,
 				7DCBEE0F1A254D2600A53A83 /* AJNAboutIconProxy.mm in Sources */,

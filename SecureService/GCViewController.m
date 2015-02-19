@@ -14,19 +14,26 @@
 #import "AJNSessionListener.h"
 #import "AJNSessionPortListener.h"
 #import "AJNBusInterface.h"
+#import "AJNProxyBusObject.h"
+#import "GCProxyPositionObject.h"
 #import "GCPositionObjectSignalHandler.h"
 #import "ESTLocation.h"
 #import "ESTLocationBuilder.h"
 #import "ESTIndoorLocationManager.h"
 #import "ESTIndoorLocationView.h"
 #import "ESTOrientedPoint.h"
+#import "Player.h"
+#import "Turn.h"
+#import "Station.h"
+#import "Game.h"
 
 
-@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener, AJNSessionListener>
+@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener, AJNSessionListener, AJNProxyBusObjectDelegate>
 
 
 @property (nonatomic, strong) AJNBusAttachment *busAttachment;
 @property (nonatomic, strong) GCPositionObject *sixiObject;
+@property (nonatomic, strong) GCProxyPositionObject *proxyObject;
 @property (nonatomic) AJNSessionId sessionId;
 @property (nonatomic, strong) GCPositionObjectSignalHandler *signalHandler;
 @property (nonatomic, strong) ESTLocation *location;
@@ -41,6 +48,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *label;
 
 @property(nonatomic) BOOL started;
+@property (nonatomic, strong) Player *player;
+@property (nonatomic, strong) Turn *turn;
+@property (nonatomic, strong) Station *station;
+@property (nonatomic, strong) Game *game;
+
+
 
 @end
 
@@ -87,6 +100,21 @@
         self.sessionTypeSegmentedControl.enabled=YES;
         [sender setTitle:@"Start" forState:UIControlStateNormal];
     }
+    
+    NSString *name = [[UIDevice currentDevice] name];
+    self.player = [[Player alloc] initWithIdPlayer:name];
+    self.turn = [[Turn alloc] initWithPlayer:self.player];
+    self.game = [[Game alloc] initWithTurn:self.turn];
+    
+    for (int i=0; i<self.location.beacons.count; i++) {
+        
+        self.station = [[Station alloc] init];
+        ESTPositionedBeacon *beacon = [self.location.beacons objectAtIndex:i];
+        self.station.macAddress = beacon.macAddress;
+        self.turn.stations = [[NSMutableArray alloc] initWithObjects:self.station, nil];
+        
+    }    
+    
 }
 
 
@@ -124,6 +152,8 @@
     }
     
     [self.busAttachment registerBusListener:self];
+    
+    self.proxyObject = [[GCProxyPositionObject alloc] initWithBusAttachment:self.busAttachment serviceName:kServiceName objectPath:kServicePath sessionId:self.sessionId];
     
     status = [self.busAttachment connectWithArguments:@"null:"];
     
@@ -221,7 +251,7 @@
 - (IBAction)didTouchSendButton:(id)sender {
     NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @"ciao"];
     [self.sixiObject sendPosition:message onSession:self.sessionId];
-    // SIX: IF THE COMMUNICATION USES SESSION DATA YOU WONT RECEIVE THE MESSAGE YOU SEND. IF YOU WANT TO RECEIVE IT YOU MANAULLY CALL YOUR DELEGATE METHOD
+    //IF THE COMMUNICATION USES SESSION DATA YOU WONT RECEIVE THE MESSAGE YOU SEND. IF YOU WANT TO RECEIVE IT YOU MANAULLY CALL YOUR DELEGATE METHOD
     if (gMessageFlags != kAJNMessageFlagSessionless) {
         [self didReceiveNewPositionMessage:message forSession:self.sessionId];
     }
@@ -268,7 +298,7 @@
 
 -(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
     
-    //SIX: IF YOU ARE USING SESSION YOU FILTER HERE THE MESSAGES THAT DON'T BELONG TO THE CURRENT SESSION
+    //IF YOU ARE USING SESSION YOU FILTER HERE THE MESSAGES THAT DON'T BELONG TO THE CURRENT SESSION
     if(gMessageFlags != kAJNMessageFlagSessionless && self.sessionId!=sessionId)
         NSLog(@"POSIZIONE RICEVUTA MA SESSIONE ERRATA");
     
@@ -282,7 +312,7 @@
         return;
     
     NSString *player = data[@"player"];
-    if (![player isEqualToString:[[UIDevice currentDevice] name]]) {
+    if (![player isEqualToString:self.player.idPlayer]) {
         UIImageView *view = self.playersImageView[player];
         if (!view) {
             view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cat.png"]];
@@ -294,6 +324,7 @@
         [self.locationView drawObject:view withPosition:point];
         
         self.label.text = player;
+        
     }
 
 }
@@ -302,7 +333,7 @@
     NSLog(@"posizione ricevuta");
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    data[@"player"] = [[UIDevice currentDevice] name];
+    data[@"player"] = self.player.idPlayer;
     data[@"position"] = [NSDictionary dictionaryWithObjectsAndKeys:@(position.x), @"x", @(position.y), @"y", @(position.orientation), @"orientation", nil];
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
@@ -312,6 +343,17 @@
 
     
     [self.locationView updatePosition:position];
+    
+    for (int j=0; j<self.location.beacons.count; j++) {
+        
+        ESTPositionedBeacon *beacon = [self.location.beacons objectAtIndex:j];
+        if ([position distanceToPoint: beacon.position] <= 1.00) {
+            [self.station stationIdentifiedByMacAddress:beacon.macAddress];
+            [self.sixiObject sendPosition:@"MIO" onSession:self.sessionId];
+        }
+            
+        j++;
+    }
 }
 /**
  * Tells the delegate that position update could not be determined.
