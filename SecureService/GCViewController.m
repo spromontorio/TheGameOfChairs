@@ -46,7 +46,6 @@
 @property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *label;
-@property (weak, nonatomic) IBOutlet UIImageView *redLabel;
 
 @property(nonatomic) BOOL started;
 @property (nonatomic, strong) Player *player;
@@ -75,7 +74,6 @@
     // Do any additional setup after loading the view.
     self.started=NO;
     self.playersImageView = [NSMutableDictionary dictionary];
-    self.redLabel.image = nil;
     
     
 }
@@ -93,6 +91,19 @@
         else
             gMessageFlags=kAJNMessageFlagSessionless;
         [sender setTitle:@"Stop" forState:UIControlStateNormal];
+        
+        NSString *name = [[UIDevice currentDevice] name];
+        self.player = [[Player alloc] initWithIdPlayer:name];
+        self.turn = [[Turn alloc] initWithPlayer:self.player];
+        self.game = [[Game alloc] initWithTurn:self.turn];
+        for (ESTPositionedBeacon *beacon in self.location.beacons) {
+            
+            Station *station = [[Station alloc] init];
+            station.macAddress = beacon.macAddress;
+            [self.turn.stations addObject:station];
+        }
+        
+        [self.manager startIndoorLocation:self.location];
     }
     else{
         [self disconnectAndDestroyBus];
@@ -100,18 +111,12 @@
         self.sessionSwitch.enabled=YES;
         self.sessionTypeSegmentedControl.enabled=YES;
         [sender setTitle:@"Start" forState:UIControlStateNormal];
+        [self.manager stopIndoorLocation];
+        self.player = nil;
+        self.turn = nil;
+        self.game = nil;
     }
-    
-    NSString *name = [[UIDevice currentDevice] name];
-    self.player = [[Player alloc] initWithIdPlayer:name];
-    self.turn = [[Turn alloc] initWithPlayer:self.player];
-    self.game = [[Game alloc] initWithTurn:self.turn];
-    for (ESTPositionedBeacon *beacon in self.location.beacons) {
-        
-        Station *station = [[Station alloc] init];
-        station.macAddress = beacon.macAddress;
-        [self.turn.stations addObject:station];
-    }    
+
     
 }
 
@@ -280,7 +285,6 @@
 
     [self.locationView drawLocation:self.location];
     
-    [self.manager startIndoorLocation:self.location];
 }
 
 - (NSString *)sessionlessSignalMatchRule
@@ -332,8 +336,8 @@
             occupiedStation.player = self.player;
             
             ESTOrientedPoint *stationPoint = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
-            self.redLabel.image = [UIImage  imageNamed:@"red.png"];
-            [self.locationView drawObject:self.redLabel withPosition:stationPoint];
+            UIImageView *redLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+            [self.locationView drawObject:redLabel withPosition:stationPoint];
             
         }
         
@@ -347,13 +351,13 @@
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"player"] = self.player.idPlayer;
-    data[@"position"] = [NSDictionary dictionaryWithObjectsAndKeys:@(position.x), @"x", @(position.y), @"y", @(position.orientation), @"orientation", nil];
+    data[@"position"] = [position toDictionary];
     
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
         if ([position distanceToPoint: beacon.position] <= 1.00) {
             data[@"station"] = beacon.macAddress;
-            data[@"point"] = beacon.position;
+            data[@"point"] = [beacon.position toDictionary];
         }
         
     }
