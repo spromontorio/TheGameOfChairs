@@ -12,7 +12,10 @@
 
 -(id)initWithIdPlayer:(NSString *)name {
     
-    self.idPlayer = name;
+    self = [super init];
+    if (self) {
+        self.idPlayer = name;
+    }
     return self;
 
 }

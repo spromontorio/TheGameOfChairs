@@ -64,6 +64,8 @@
 		68F776941A95F621003ED5C5 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776931A95F621003ED5C5 /* Player.m */; };
 		68F776971A95F712003ED5C5 /* Station.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776961A95F712003ED5C5 /* Station.m */; };
 		68F7769A1A95F749003ED5C5 /* Turn.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776991A95F749003ED5C5 /* Turn.m */; };
+		68F7769D1A9779DA003ED5C5 /* red.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F7769C1A9779DA003ED5C5 /* red.png */; };
+		68F7769F1A977A4B003ED5C5 /* red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F7769E1A977A4B003ED5C5 /* red@2x.png */; };
 		7DCBEE0A1A254D2600A53A83 /* AJNAboutObjectDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7DCBEDF61A254D2600A53A83 /* AJNAboutObjectDescription.mm */; };
 		7DCBEE0B1A254D2600A53A83 /* AJNAboutObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7DCBEDF81A254D2600A53A83 /* AJNAboutObject.mm */; };
 		7DCBEE0C1A254D2600A53A83 /* AJNAboutDataListenerImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7DCBEDFB1A254D2600A53A83 /* AJNAboutDataListenerImpl.mm */; };
@@ -216,6 +218,8 @@
 		68F776961A95F712003ED5C5 /* Station.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Station.m; sourceTree = "<group>"; };
 		68F776981A95F749003ED5C5 /* Turn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Turn.h; sourceTree = "<group>"; };
 		68F776991A95F749003ED5C5 /* Turn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Turn.m; sourceTree = "<group>"; };
+		68F7769C1A9779DA003ED5C5 /* red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red.png; sourceTree = "<group>"; };
+		68F7769E1A977A4B003ED5C5 /* red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red@2x.png"; sourceTree = "<group>"; };
 		7DCBEDF61A254D2600A53A83 /* AJNAboutObjectDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AJNAboutObjectDescription.mm; path = ../../../../AllJoynFramework/AllJoynFramework/AJNAboutObjectDescription.mm; sourceTree = "<group>"; };
 		7DCBEDF71A254D2600A53A83 /* AJNAboutObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AJNAboutObject.h; path = ../../../../AllJoynFramework/AllJoynFramework/AJNAboutObject.h; sourceTree = "<group>"; };
 		7DCBEDF81A254D2600A53A83 /* AJNAboutObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AJNAboutObject.mm; path = ../../../../AllJoynFramework/AllJoynFramework/AJNAboutObject.mm; sourceTree = "<group>"; };
@@ -466,6 +470,8 @@
 			children = (
 				684934AC1A90C90100BD5770 /* cat.png */,
 				68B5DC6F1A90F6DA003DBECC /* cat@2x.png */,
+				68F7769C1A9779DA003ED5C5 /* red.png */,
+				68F7769E1A977A4B003ED5C5 /* red@2x.png */,
 				68EBB1721A90B7200070AD15 /* location.json */,
 			);
 			name = Resources;
@@ -751,7 +757,9 @@
 				684935461A90E03D00BD5770 /* screen8_beacon_gray_trans@2x.png in Resources */,
 				684935321A90E03D00BD5770 /* 8a_first_frame@2x.png in Resources */,
 				AC8810681649DB10006CD25A /* MainStoryboard_iPhone.storyboard in Resources */,
+				68F7769F1A977A4B003ED5C5 /* red@2x.png in Resources */,
 				AC88106B1649DB10006CD25A /* MainStoryboard_iPad.storyboard in Resources */,
+				68F7769D1A9779DA003ED5C5 /* red.png in Resources */,
 				6849353E1A90E03D00BD5770 /* beaconmint@2x.png in Resources */,
 				6849352D1A90E03D00BD5770 /* 8a.mov in Resources */,
 			);

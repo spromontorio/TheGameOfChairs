@@ -12,10 +12,26 @@
 
 -(id)initWithPlayer:(Player *)player {
 
-    self.players = [[NSMutableArray alloc] init];
-    [self.players addObject:player];
+    self = [super init];
+    if (self) {
+ 
+        self.players = [[NSMutableArray alloc] init];
+        [self.players addObject:player];
+        self.stations = [[NSMutableArray alloc] init];
+    }
     
     return self;
 }
+
+-(Station *)stationIdentifiedByMacAddress:(NSString *)macAddress {
+    
+    for (Station *station in self.stations) {
+        if (station.macAddress == macAddress)
+            return station;
+    
+    }
+    return nil;
+}
+
 
 @end

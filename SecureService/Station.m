@@ -16,10 +16,19 @@
 
 @implementation Station
 
--(id)stationIdentifiedByMacAddress:(NSString *)macAddress {
+-(BOOL)isActive {
     
-    self.macAddress = macAddress;
-    return self;
+    return self.active = YES;
+}
+
+-(BOOL)turnStationOff {
+
+    if (self.active)
+        self.active = NO;
+    else
+        self.active = YES;
+    
+    return self.active;
 }
 
 

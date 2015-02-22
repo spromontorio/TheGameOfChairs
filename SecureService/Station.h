@@ -14,6 +14,7 @@
 @property (nonatomic ,strong) Player *player;
 @property (nonatomic, strong) NSString *macAddress;
 
--(id)stationIdentifiedByMacAddress:(NSString *)macAddress;
+-(BOOL)isActive;
+-(BOOL)turnStationOff;
 
 @end

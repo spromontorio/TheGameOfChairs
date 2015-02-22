@@ -46,11 +46,11 @@
 @property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) IBOutlet UIImageView *redLabel;
 
 @property(nonatomic) BOOL started;
 @property (nonatomic, strong) Player *player;
 @property (nonatomic, strong) Turn *turn;
-@property (nonatomic, strong) Station *station;
 @property (nonatomic, strong) Game *game;
 
 
@@ -75,6 +75,7 @@
     // Do any additional setup after loading the view.
     self.started=NO;
     self.playersImageView = [NSMutableDictionary dictionary];
+    self.redLabel.image = nil;
     
     
 }
@@ -105,14 +106,11 @@
     self.player = [[Player alloc] initWithIdPlayer:name];
     self.turn = [[Turn alloc] initWithPlayer:self.player];
     self.game = [[Game alloc] initWithTurn:self.turn];
-    
-    for (int i=0; i<self.location.beacons.count; i++) {
+    for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
-        self.station = [[Station alloc] init];
-        ESTPositionedBeacon *beacon = [self.location.beacons objectAtIndex:i];
-        self.station.macAddress = beacon.macAddress;
-        self.turn.stations = [[NSMutableArray alloc] initWithObjects:self.station, nil];
-        
+        Station *station = [[Station alloc] init];
+        station.macAddress = beacon.macAddress;
+        [self.turn.stations addObject:station];
     }    
     
 }
@@ -278,11 +276,11 @@
     
     
     // You can change the avatar using positionImage property of ESTIndoorLocationView class.
-    //self.locationView.positionImage = [UIImage imageNamed:@"cat.png"];
+    self.locationView.positionImage = [UIImage imageNamed:@"cat.png"];
 
     [self.locationView drawLocation:self.location];
     
-    //  [self.manager startIndoorLocation:self.location];
+    [self.manager startIndoorLocation:self.location];
 }
 
 - (NSString *)sessionlessSignalMatchRule
@@ -326,6 +324,21 @@
         self.label.text = player;
         
     }
+    NSString *macAddress = data[@"position"];
+    if (!macAddress ) {
+        Station *occupiedStation = [self.turn stationIdentifiedByMacAddress:macAddress];
+        if ([occupiedStation isActive]) {
+            [occupiedStation turnStationOff];
+            occupiedStation.player = self.player;
+            
+            ESTOrientedPoint *stationPoint = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
+            self.redLabel.image = [UIImage  imageNamed:@"red.png"];
+            [self.locationView drawObject:self.redLabel withPosition:stationPoint];
+            
+        }
+        
+        
+    }
 
 }
 
@@ -335,6 +348,17 @@
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"player"] = self.player.idPlayer;
     data[@"position"] = [NSDictionary dictionaryWithObjectsAndKeys:@(position.x), @"x", @(position.y), @"y", @(position.orientation), @"orientation", nil];
+    
+    for (ESTPositionedBeacon *beacon in self.location.beacons) {
+        
+        if ([position distanceToPoint: beacon.position] <= 1.00) {
+            data[@"station"] = beacon.macAddress;
+            data[@"point"] = beacon.position;
+        }
+        
+    }
+    
+    
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
     NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -344,16 +368,7 @@
     
     [self.locationView updatePosition:position];
     
-    for (int j=0; j<self.location.beacons.count; j++) {
-        
-        ESTPositionedBeacon *beacon = [self.location.beacons objectAtIndex:j];
-        if ([position distanceToPoint: beacon.position] <= 1.00) {
-            [self.station stationIdentifiedByMacAddress:beacon.macAddress];
-            [self.sixiObject sendPosition:@"MIO" onSession:self.sessionId];
-        }
-            
-        j++;
-    }
+    
 }
 /**
  * Tells the delegate that position update could not be determined.

@@ -12,8 +12,12 @@
 
 -(id)initWithTurn:(Turn *)turn {
 
-    self.turns = [[NSMutableArray alloc] init];
-    [self.turns addObject:turn];
+    self = [super init];
+    if (self) {
+        
+        self.turns = [[NSMutableArray alloc] init];
+        [self.turns addObject:turn];
+    }
     return self;
 }
 

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Player.h"
+#import "Station.h"
 
 
 @interface Turn : NSObject
@@ -16,5 +17,7 @@
 @property (nonatomic, strong) NSMutableArray *stations;
 
 -(id)initWithPlayer:(Player *)player;
+-(Station *)stationIdentifiedByMacAddress:(NSString *)macAddress;
+
 
 @end
