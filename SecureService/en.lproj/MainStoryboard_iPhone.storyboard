@@ -64,21 +64,11 @@
                                     <action selector="didTouchSendButton:" destination="qdR-Ns-0Z1" eventType="touchUpInside" id="Fbw-57-yga"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="red.png" translatesAutoresizingMaskIntoConstraints="NO" id="TMG-TL-Uwg">
-                                <rect key="frame" x="0.0" y="0.0" width="33" height="34"/>
-                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="hAK-gK-rzS"/>
-                                    <constraint firstAttribute="width" constant="33" id="oEh-PW-gJe"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="gLf-sW-Mzh" firstAttribute="top" secondItem="TMG-TL-Uwg" secondAttribute="bottom" constant="534" id="DkR-6c-11f"/>
                             <constraint firstItem="gLf-sW-Mzh" firstAttribute="top" secondItem="seZ-4B-kEb" secondAttribute="bottom" constant="71" id="FN7-2T-XUW"/>
                             <constraint firstItem="GnR-dW-ddF" firstAttribute="top" secondItem="OFu-cg-yRt" secondAttribute="bottom" constant="8" id="GJ8-v6-d0N"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="TMG-TL-Uwg" secondAttribute="trailing" constant="271" id="McE-Et-25z"/>
                             <constraint firstAttribute="centerY" secondItem="0J8-fR-iNI" secondAttribute="centerY" id="Pv9-zB-YhZ"/>
                             <constraint firstAttribute="centerX" secondItem="0J8-fR-iNI" secondAttribute="centerX" id="Xuy-En-QvB"/>
                             <constraint firstItem="gLf-sW-Mzh" firstAttribute="top" secondItem="9Fd-fJ-nd2" secondAttribute="bottom" constant="109" id="aNg-T8-cgP"/>
@@ -94,7 +84,6 @@
                     <connections>
                         <outlet property="label" destination="gpW-nN-gfb" id="Lkb-6n-Q0W"/>
                         <outlet property="locationView" destination="0J8-fR-iNI" id="32c-LM-qjZ"/>
-                        <outlet property="redLabel" destination="TMG-TL-Uwg" id="N0d-5w-0Ko"/>
                         <outlet property="sessionSwitch" destination="GnR-dW-ddF" id="Y57-pF-645"/>
                         <outlet property="sessionTypeSegmentedControl" destination="9Fd-fJ-nd2" id="gbb-1m-1B5"/>
                         <outlet property="startButton" destination="seZ-4B-kEb" id="IAg-ra-5Eu"/>
@@ -105,9 +94,6 @@
             <point key="canvasLocation" x="348" y="-198"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="red.png" width="100" height="100"/>
-    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
