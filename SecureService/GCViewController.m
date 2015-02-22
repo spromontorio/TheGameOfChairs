@@ -111,7 +111,7 @@
         Station *station = [[Station alloc] init];
         station.macAddress = beacon.macAddress;
         [self.turn.stations addObject:station];
-    }    
+    }
     
 }
 
@@ -347,13 +347,13 @@
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"player"] = self.player.idPlayer;
-    data[@"position"] = [NSDictionary dictionaryWithObjectsAndKeys:@(position.x), @"x", @(position.y), @"y", @(position.orientation), @"orientation", nil];
+    data[@"position"] =  [position toDictionary];
     
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
         if ([position distanceToPoint: beacon.position] <= 1.00) {
             data[@"station"] = beacon.macAddress;
-            data[@"point"] = beacon.position;
+            data[@"point"] = [beacon.position toDictionary];
         }
         
     }

@@ -115,6 +115,12 @@
 		AC8810CC1649DC99006CD25A /* AJNTransportMask.m in Sources */ = {isa = PBXBuildFile; fileRef = AC8810B11649DC99006CD25A /* AJNTransportMask.m */; };
 		AC8810CD1649DC99006CD25A /* AJNVersion.mm in Sources */ = {isa = PBXBuildFile; fileRef = AC8810B41649DC99006CD25A /* AJNVersion.mm */; };
 		AC8811431649E04E006CD25A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = AC8811421649E04E006CD25A /* Constants.m */; };
+		F5A9A13F1A99FB6A0099012A /* GCTurnObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A1381A99FB6A0099012A /* GCTurnObject.mm */; };
+		F5A9A1401A99FB6A0099012A /* GCTurnObjectImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A13A1A99FB6A0099012A /* GCTurnObjectImpl.mm */; };
+		F5A9A1411A99FB6A0099012A /* GCTurnSignalHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A13C1A99FB6A0099012A /* GCTurnSignalHandler.mm */; };
+		F5A9A1421A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A13E1A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm */; };
+		F5A9A1491A9A0FCF0099012A /* GCHostObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A1451A9A0FCF0099012A /* GCHostObject.m */; };
+		F5A9A14A1A9A0FCF0099012A /* GCBaseHostObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A1471A9A0FCF0099012A /* GCBaseHostObject.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -323,6 +329,19 @@
 		AC8811411649E04E006CD25A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		AC8811421649E04E006CD25A /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		DB118CF667EC3B49DBEE0D69 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5A9A1371A99FB6A0099012A /* GCTurnObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTurnObject.h; sourceTree = "<group>"; };
+		F5A9A1381A99FB6A0099012A /* GCTurnObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GCTurnObject.mm; sourceTree = "<group>"; };
+		F5A9A1391A99FB6A0099012A /* GCTurnObjectImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTurnObjectImpl.h; sourceTree = "<group>"; };
+		F5A9A13A1A99FB6A0099012A /* GCTurnObjectImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GCTurnObjectImpl.mm; sourceTree = "<group>"; };
+		F5A9A13B1A99FB6A0099012A /* GCTurnSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTurnSignalHandler.h; sourceTree = "<group>"; };
+		F5A9A13C1A99FB6A0099012A /* GCTurnSignalHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GCTurnSignalHandler.mm; sourceTree = "<group>"; };
+		F5A9A13D1A99FB6A0099012A /* GCTurnSignalHandlerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTurnSignalHandlerImpl.h; sourceTree = "<group>"; };
+		F5A9A13E1A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GCTurnSignalHandlerImpl.mm; sourceTree = "<group>"; };
+		F5A9A1431A99FBA00099012A /* GCTurnReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTurnReceiver.h; sourceTree = "<group>"; };
+		F5A9A1451A9A0FCF0099012A /* GCHostObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHostObject.m; sourceTree = "<group>"; };
+		F5A9A1461A9A0FCF0099012A /* GCBaseHostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCBaseHostObject.h; sourceTree = "<group>"; };
+		F5A9A1471A9A0FCF0099012A /* GCBaseHostObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GCBaseHostObject.mm; sourceTree = "<group>"; };
+		F5A9A1481A9A0FCF0099012A /* GCHostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHostObject.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -545,6 +564,19 @@
 				682B00421A8B572500BE5DF9 /* GCPositionObjectSignalHandler.mm */,
 				682B00431A8B572500BE5DF9 /* GCPositionObjectSignalHandlerImpl.h */,
 				682B00441A8B572500BE5DF9 /* GCPositionObjectSignalHandlerImpl.mm */,
+				F5A9A1371A99FB6A0099012A /* GCTurnObject.h */,
+				F5A9A1381A99FB6A0099012A /* GCTurnObject.mm */,
+				F5A9A1391A99FB6A0099012A /* GCTurnObjectImpl.h */,
+				F5A9A13A1A99FB6A0099012A /* GCTurnObjectImpl.mm */,
+				F5A9A13B1A99FB6A0099012A /* GCTurnSignalHandler.h */,
+				F5A9A13C1A99FB6A0099012A /* GCTurnSignalHandler.mm */,
+				F5A9A13D1A99FB6A0099012A /* GCTurnSignalHandlerImpl.h */,
+				F5A9A13E1A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm */,
+				F5A9A1431A99FBA00099012A /* GCTurnReceiver.h */,
+				F5A9A1481A9A0FCF0099012A /* GCHostObject.h */,
+				F5A9A1451A9A0FCF0099012A /* GCHostObject.m */,
+				F5A9A1461A9A0FCF0099012A /* GCBaseHostObject.h */,
+				F5A9A1471A9A0FCF0099012A /* GCBaseHostObject.mm */,
 				AC88105D1649DB10006CD25A /* AppDelegate.h */,
 				AC88105E1649DB10006CD25A /* AppDelegate.m */,
 				AC8811411649E04E006CD25A /* Constants.h */,
@@ -774,12 +806,14 @@
 			files = (
 				68F776971A95F712003ED5C5 /* Station.m in Sources */,
 				68F776911A95F607003ED5C5 /* Game.m in Sources */,
+				F5A9A1491A9A0FCF0099012A /* GCHostObject.m in Sources */,
 				AC88105B1649DB10006CD25A /* main.m in Sources */,
 				7DCBEE0C1A254D2600A53A83 /* AJNAboutDataListenerImpl.mm in Sources */,
 				AC88105F1649DB10006CD25A /* AppDelegate.m in Sources */,
 				7DCBEE101A254D2600A53A83 /* AJNAboutListenerImpl.mm in Sources */,
 				682B00451A8B572500BE5DF9 /* GCPositionObject.mm in Sources */,
 				AC8810B51649DC99006CD25A /* AJNAuthenticationListenerImpl.mm in Sources */,
+				F5A9A14A1A9A0FCF0099012A /* GCBaseHostObject.mm in Sources */,
 				AC8810B61649DC99006CD25A /* AJNBus.m in Sources */,
 				68EBB1701A8B67660070AD15 /* GCViewController.m in Sources */,
 				68F7769A1A95F749003ED5C5 /* Turn.m in Sources */,
@@ -790,19 +824,23 @@
 				AC8810B81649DC99006CD25A /* AJNBusListenerImpl.mm in Sources */,
 				7DCBEE0E1A254D2600A53A83 /* AJNAboutIconObject.mm in Sources */,
 				AC8810B91649DC99006CD25A /* AJNBusObject.mm in Sources */,
+				F5A9A1421A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm in Sources */,
 				AC8810BA1649DC99006CD25A /* AJNBusObjectImpl.mm in Sources */,
 				7DCBEE0D1A254D2600A53A83 /* AJNAboutIcon.mm in Sources */,
 				AC8810BB1649DC99006CD25A /* AJNClientController.m in Sources */,
 				AC8810BC1649DC99006CD25A /* AJNInterfaceDescription.mm in Sources */,
 				AC8810BD1649DC99006CD25A /* AJNInterfaceMember.mm in Sources */,
 				AC8810BE1649DC99006CD25A /* AJNInterfaceProperty.mm in Sources */,
+				F5A9A13F1A99FB6A0099012A /* GCTurnObject.mm in Sources */,
 				682B00461A8B572500BE5DF9 /* GCPositionObjectImpl.mm in Sources */,
 				68C7558C1A95E15B0029F2B0 /* GCProxyPositionObject.m in Sources */,
 				AC8810BF1649DC99006CD25A /* AJNKeyStoreListenerImpl.mm in Sources */,
 				682B00471A8B572500BE5DF9 /* GCPositionObjectSignalHandler.mm in Sources */,
 				AC8810C01649DC99006CD25A /* AJNMessage.mm in Sources */,
 				AC8810C11649DC99006CD25A /* AJNMessageArgument.mm in Sources */,
+				F5A9A1411A99FB6A0099012A /* GCTurnSignalHandler.mm in Sources */,
 				7DCBEE0B1A254D2600A53A83 /* AJNAboutObject.mm in Sources */,
+				F5A9A1401A99FB6A0099012A /* GCTurnObjectImpl.mm in Sources */,
 				7DCBEE0A1A254D2600A53A83 /* AJNAboutObjectDescription.mm in Sources */,
 				AC8810C21649DC99006CD25A /* AJNMessageHeaderFields.mm in Sources */,
 				AC8810C31649DC99006CD25A /* AJNObject.m in Sources */,
