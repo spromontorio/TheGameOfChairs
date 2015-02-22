@@ -101,9 +101,15 @@
             Station *station = [[Station alloc] init];
             station.macAddress = beacon.macAddress;
             [self.turn.stations addObject:station];
+            ESTOrientedPoint *stationPoint = beacon.position;
+            UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+            red.alpha = 0.5;
+            [self.locationView drawObject:red withPosition:stationPoint];
         }
         
-        [self.manager startIndoorLocation:self.location];
+        
+        
+       // [self.manager startIndoorLocation:self.location];
     }
     else{
         [self disconnectAndDestroyBus];
@@ -336,8 +342,9 @@
             occupiedStation.player = self.player;
             
             ESTOrientedPoint *stationPoint = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
-            UIImageView *redLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
-            [self.locationView drawObject:redLabel withPosition:stationPoint];
+            UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+            red.alpha = 0.5;
+            [self.locationView drawObject:red withPosition:stationPoint];
             
         }
         
@@ -410,6 +417,12 @@
     
     NSLog(@"Lost message: \"%@\"\n", message);
 }
+
+
+- (void)listenerDidRegisterWithBus:(AJNBusAttachment *)busAttachment{
+    self.player.idPlayer = busAttachment.uniqueName;
+}
+
 
 #pragma mark - AJNSessionPortListener delegate methods
 
