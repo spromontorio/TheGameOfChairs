@@ -122,7 +122,17 @@
         self.turn = nil;
         self.game = nil;
     }
-
+    
+    NSString *name = [[UIDevice currentDevice] name];
+    self.player = [[Player alloc] initWithIdPlayer:name];
+    self.turn = [[Turn alloc] initWithPlayer:self.player];
+    self.game = [[Game alloc] initWithTurn:self.turn];
+    for (ESTPositionedBeacon *beacon in self.location.beacons) {
+        
+        Station *station = [[Station alloc] init];
+        station.macAddress = beacon.macAddress;
+        [self.turn.stations addObject:station];
+    }
     
 }
 
