@@ -368,7 +368,7 @@
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"player"] = self.player.idPlayer;
-    data[@"position"] =  [position toDictionary];
+    data[@"position"] = [position toDictionary];
     
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
