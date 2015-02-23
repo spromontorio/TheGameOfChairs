@@ -21,7 +21,7 @@
 
 GCTurnObjectImpl::GCTurnObjectImpl(ajn::BusAttachment &bus, const char *path, id<AJNBusObject> aDelegate) : AJNBusObjectImpl(bus,path,aDelegate)
 {
-    const ajn::InterfaceDescription* intf = bus.GetInterface([kInterfaceName UTF8String]);
+    const ajn::InterfaceDescription* intf = bus.GetInterface([kInterfaceTurn UTF8String]);
     assert(intf);
     AddInterface(*intf);
     

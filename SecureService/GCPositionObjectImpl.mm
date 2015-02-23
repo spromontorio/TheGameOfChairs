@@ -21,7 +21,7 @@
 
 GCPositionObjectImpl::GCPositionObjectImpl(ajn::BusAttachment &bus, const char *path, id<AJNBusObject> aDelegate) : AJNBusObjectImpl(bus,path,aDelegate)
 {
-    const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfaceName UTF8String]);
+    const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfacePosition UTF8String]);
     assert(posIntf);
     AddInterface(*posIntf);
     

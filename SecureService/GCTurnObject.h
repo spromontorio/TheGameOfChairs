@@ -21,7 +21,7 @@
 
 @interface GCTurnObject : AJNBusObject
 
-- (id)initWithBusAttachment:(AJNBusAttachment*)busAttachment onServicePath:(NSString*)path;
+-(id)initWithBusAttachment:(AJNBusAttachment*)busAttachment onServicePath:(NSString*)path;
 
 -(void)startTurnWithMessage: (NSString *)message forSession: (AJNSessionId)sessionId;
 -(void)endTurnWithMessage: (NSString *)message forSession: (AJNSessionId)sessionId;

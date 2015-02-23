@@ -19,7 +19,10 @@
 const AJNSessionPort kServicePort = 48;
 NSString * const kServicePath = @"/TheGameOfChairs";
 NSString * const kServiceName = @"org.alljoyn.bus.samples.chairs";
-NSString * const kInterfaceName = @"org.alljoyn.bus.samples.secure.chairs";
+NSString * const kInterfacePosition = @"org.alljoyn.bus.samples.chairs.position";
+NSString * const kInterfaceTurn = @"org.alljoyn.bus.samples.chairs.turn";
+NSString * const kInterfaceHost = @"org.alljoyn.bus.samples.chairs.host";
+
 NSString * const kAppName = @"TheGameOfChairs";
 AJNMessageFlag gMessageFlags = 0x0;
 

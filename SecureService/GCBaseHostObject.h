@@ -6,14 +6,14 @@
 #import "AJNSessionOptions.h"
 
 
-@protocol GCHostObjectDelegate <AJNBusInterface>
+@protocol GCBaseHostObjectDelegate <AJNBusInterface>
 
 - (void)takeStation:(NSString *)message onSession: (AJNSessionId)sessionId;
 
 @end
 
 
-@interface GCBaseHostObject : AJNBusObject<GCHostObjectDelegate>
+@interface GCBaseHostObject : AJNBusObject<GCBaseHostObjectDelegate>
 
 // properties
 //

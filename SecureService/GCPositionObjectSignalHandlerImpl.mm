@@ -39,7 +39,7 @@ GCPositionObjectSignalHandlerImpl::~GCPositionObjectSignalHandlerImpl()
 void GCPositionObjectSignalHandlerImpl::RegisterSignalHandler(ajn::BusAttachment &bus)
 {
     if (positionSignalMember == NULL) {
-        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfaceName UTF8String]);
+        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfacePosition UTF8String]);
         
         /* Store the Posotion signal member away so it can be quickly looked up */
         if (posIntf) {
@@ -60,7 +60,7 @@ void GCPositionObjectSignalHandlerImpl::RegisterSignalHandler(ajn::BusAttachment
 void GCPositionObjectSignalHandlerImpl::UnregisterSignalHandler(ajn::BusAttachment &bus)
 {
     if (positionSignalMember == NULL) {
-        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfaceName UTF8String]);
+        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfacePosition UTF8String]);
         
         /* Store the Position signal member away so it can be quickly looked up */
         positionSignalMember = posIntf->GetMember("Position");

@@ -20,7 +20,7 @@ class GCBaseHostObjectImpl : public AJNBusObjectImpl
 private:
 
 public:
-    GCBaseHostObjectImpl(BusAttachment &bus, const char *path, id<GCHostObjectDelegate> aDelegate);
+    GCBaseHostObjectImpl(BusAttachment &bus, const char *path, id<GCBaseHostObjectDelegate> aDelegate);
 
 
     // properties
@@ -42,31 +42,32 @@ public:
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-GCBaseHostObjectImpl::GCBaseHostObjectImpl(BusAttachment &bus, const char *path, id<GCHostObjectDelegate> aDelegate) :
+GCBaseHostObjectImpl::GCBaseHostObjectImpl(BusAttachment &bus, const char *path, id<GCBaseHostObjectDelegate> aDelegate) :
     AJNBusObjectImpl(bus,path,aDelegate)
 {
     const InterfaceDescription* interfaceDescription = NULL;
     QStatus status = ER_OK;
 
 
-    interfaceDescription = bus.GetInterface([kInterfaceName UTF8String]);
+    interfaceDescription = bus.GetInterface([kInterfaceHost UTF8String]);
     assert(interfaceDescription);
     AddInterface(*interfaceDescription, ANNOUNCED);
 
-
+    assert(interfaceDescription->GetMember("TakeStation"));
+    assert(static_cast<MessageReceiver::MethodHandler>(&GCBaseHostObjectImpl::TakeStation));
  
     const MethodEntry methodEntriesForBasicStringsDelegate[] = {
-
+        
         {
-			interfaceDescription->GetMember("TakeStation"), static_cast<MessageReceiver::MethodHandler>(&GCBaseHostObjectImpl::TakeStation)
-		},
+            
+            interfaceDescription->GetMember("TakeStation"), static_cast<MessageReceiver::MethodHandler>(&GCBaseHostObjectImpl::TakeStation)
+        },
     };
-
+    
     status = AddMethodHandlers(methodEntriesForBasicStringsDelegate, sizeof(methodEntriesForBasicStringsDelegate) / sizeof(methodEntriesForBasicStringsDelegate[0]));
     if (ER_OK != status) {
         // TODO: perform error checking here
     }
-
 }
 
 void GCBaseHostObjectImpl::TakeStation(const InterfaceDescription::Member *member, Message& msg)
@@ -85,7 +86,7 @@ void GCBaseHostObjectImpl::TakeStation(const InterfaceDescription::Member *membe
     // call the Objective-C delegate method
     //
 
-    [(id<GCHostObjectDelegate>)delegate takeStation:[NSString stringWithCString:inArg0.c_str() encoding:NSUTF8StringEncoding] onSession:msg->GetSessionId()];
+    [(id<GCBaseHostObjectDelegate>)delegate takeStation:[NSString stringWithCString:inArg0.c_str() encoding:NSUTF8StringEncoding] onSession:msg->GetSessionId()];
     }
         
 }
@@ -113,34 +114,10 @@ void GCBaseHostObjectImpl::TakeStation(const InterfaceDescription::Member *membe
 {
     self = [super initWithBusAttachment:busAttachment onPath:path];
     if (self) {
-        QStatus status = ER_OK;
-
-        AJNInterfaceDescription *interfaceDescription;
-
-
-        //
-        // BasicStringsDelegate interface (org.alljoyn.bus.sample.strings)
-        //
-        // create an interface description
-        //
-        interfaceDescription = [busAttachment createInterfaceWithName:kInterfaceName enableSecurity:NO];
-
-
-        // add the methods to the interface description
-        //
-
-        status = [interfaceDescription addMethodWithName:@"TakePosition" inputSignature:@"s" outputSignature:@"" argumentNames:[NSArray arrayWithObjects:@"message", nil]];
-
-        if (status != ER_OK && status != ER_BUS_MEMBER_ALREADY_EXISTS) {
-            @throw [NSException exceptionWithName:@"BusObjectInitFailed" reason:@"Unable to add method to interface: Concatentate" userInfo:nil];
-        }
-
-
-        [interfaceDescription activate];
 
         // create the internal C++ bus object
         //
-        GCBaseHostObjectImpl *busObject = new GCBaseHostObjectImpl(*((ajn::BusAttachment*)busAttachment.handle), [path UTF8String], (id<GCHostObjectDelegate>)self);
+        GCBaseHostObjectImpl *busObject = new GCBaseHostObjectImpl(*((ajn::BusAttachment*)busAttachment.handle), [path UTF8String], (id<GCBaseHostObjectDelegate>)self);
 
         self.handle = busObject;
     }
@@ -183,8 +160,8 @@ void GCBaseHostObjectImpl::TakeStation(const InterfaceDescription::Member *membe
 
 -(void)takeStation:(NSString *)message onSession:(AJNSessionId)sessionId
 {
-    [self addInterfaceNamed:kInterfaceName];
-
+    [self addInterfaceNamed:kInterfaceHost];
+    
     Message reply(*((BusAttachment*)self.bus.handle));
     MsgArg inArgs[1];
 
@@ -193,7 +170,8 @@ void GCBaseHostObjectImpl::TakeStation(const InterfaceDescription::Member *membe
 
     // make the function call using the C++ proxy object
     //
-    QStatus status = self.proxyBusObject->MethodCall([kInterfaceName UTF8String], "TakeStation", inArgs, 1, reply, 5000);
+    QStatus status = self.proxyBusObject->MethodCall([kInterfaceHost UTF8String], "TakeStation", inArgs, 1, reply, 1);
+    
     if (ER_OK != status) {
         NSLog(@"ERROR: ProxyBusObject::MethodCall failed. %@", [AJNStatus descriptionForStatusCode:status]);
 

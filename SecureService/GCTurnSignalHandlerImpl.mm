@@ -39,7 +39,7 @@ GCTurnSignalHandlerImpl::~GCTurnSignalHandlerImpl()
 void GCTurnSignalHandlerImpl::RegisterSignalHandler(ajn::BusAttachment &bus)
 {
     if (startTurnSignalMember == NULL) {
-        const ajn::InterfaceDescription* intf = bus.GetInterface([kInterfaceName UTF8String]);
+        const ajn::InterfaceDescription* intf = bus.GetInterface([kInterfaceTurn UTF8String]);
         
         /* Store the Posotion signal member away so it can be quickly looked up */
         if (intf) {
@@ -49,7 +49,7 @@ void GCTurnSignalHandlerImpl::RegisterSignalHandler(ajn::BusAttachment &bus)
     }
     
     if (endTurnSignalMember == NULL) {
-        const ajn::InterfaceDescription* intf = bus.GetInterface([kInterfaceName UTF8String]);
+        const ajn::InterfaceDescription* intf = bus.GetInterface([kInterfaceTurn UTF8String]);
         
         if (intf) {
             endTurnSignalMember = intf->GetMember("EndTurn");
@@ -78,7 +78,7 @@ void GCTurnSignalHandlerImpl::RegisterSignalHandler(ajn::BusAttachment &bus)
 void GCTurnSignalHandlerImpl::UnregisterSignalHandler(ajn::BusAttachment &bus)
 {
     if (startTurnSignalMember == NULL) {
-        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfaceName UTF8String]);
+        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfaceTurn UTF8String]);
         
         startTurnSignalMember = posIntf->GetMember("StartTurn");
         assert(startTurnSignalMember);
@@ -92,7 +92,7 @@ void GCTurnSignalHandlerImpl::UnregisterSignalHandler(ajn::BusAttachment &bus)
     }
     
     if (endTurnSignalMember == NULL) {
-        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfaceName UTF8String]);
+        const ajn::InterfaceDescription* posIntf = bus.GetInterface([kInterfaceTurn UTF8String]);
         
         endTurnSignalMember = posIntf->GetMember("EndTurn");
         assert(endTurnSignalMember);

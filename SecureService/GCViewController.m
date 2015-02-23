@@ -15,7 +15,9 @@
 #import "AJNSessionPortListener.h"
 #import "AJNBusInterface.h"
 #import "AJNProxyBusObject.h"
-#import "GCProxyPositionObject.h"
+#import "GCTurnObject.h"
+#import "GCHostObject.h"
+#import "GCTurnSignalHandler.h"
 #import "GCPositionObjectSignalHandler.h"
 #import "ESTLocation.h"
 #import "ESTLocationBuilder.h"
@@ -28,14 +30,18 @@
 #import "Game.h"
 
 
-@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener, AJNSessionListener, AJNProxyBusObjectDelegate>
+@interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener, AJNSessionListener, GCTurnReceiver, GCHostObjectDelegate>
 
 
 @property (nonatomic, strong) AJNBusAttachment *busAttachment;
-@property (nonatomic, strong) GCPositionObject *sixiObject;
-@property (nonatomic, strong) GCProxyPositionObject *proxyObject;
+@property (nonatomic, strong) GCPositionObject *positionObject;
+@property (nonatomic, strong) GCTurnObject *turnObject;
+@property (nonatomic, strong) GCHostObjectProxy *proxyHostObject;
+@property (nonatomic, strong) GCHostObject *hostObject;
+
 @property (nonatomic) AJNSessionId sessionId;
-@property (nonatomic, strong) GCPositionObjectSignalHandler *signalHandler;
+@property (nonatomic, strong) GCPositionObjectSignalHandler *positionHandler;
+@property (nonatomic, strong) GCTurnSignalHandler *turnHandler;
 @property (nonatomic, strong) ESTLocation *location;
 @property (nonatomic, strong) ESTIndoorLocationManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *playersImageView;
@@ -145,25 +151,63 @@
     
     self.busAttachment = [[AJNBusAttachment alloc] initWithApplicationName:kAppName allowRemoteMessages:YES];
     
-    AJNInterfaceDescription* posInterface = [self.busAttachment createInterfaceWithName:kInterfaceName];
+    AJNInterfaceDescription* posInterface = [self.busAttachment createInterfaceWithName:kInterfacePosition];
     
     status=[posInterface addSignalWithName:@"Position" inputSignature:@"s" argumentNames:[NSArray arrayWithObject:@"str"]];
     if (status != ER_OK) {
-        NSLog(@"ERROR: Failed to add signal to chat interface. %@", [AJNStatus descriptionForStatusCode:status]);
+        NSLog(@"ERROR: Failed to add signal to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
     }
     
     [posInterface activate];
+
+    AJNInterfaceDescription* turnInterface = [self.busAttachment createInterfaceWithName:kInterfaceTurn];
+
+    status=[turnInterface addSignalWithName:@"StartTurn" inputSignature:@"s" argumentNames:[NSArray arrayWithObject:@"str"]];
+    if (status != ER_OK) {
+        NSLog(@"ERROR: Failed to add signal to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
+    }
+    
+    status=[turnInterface addSignalWithName:@"EndTurn" inputSignature:@"s" argumentNames:[NSArray arrayWithObject:@"str"]];
+    if (status != ER_OK) {
+        NSLog(@"ERROR: Failed to add signal to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
+    }
+
+    [turnInterface activate];
+
+    AJNInterfaceDescription* hostInterface = [self.busAttachment createInterfaceWithName:kInterfaceHost];
+
+        status = [hostInterface addMethodWithName:@"TakeStation" inputSignature:@"s" outputSignature:@"" argumentNames:[NSArray arrayWithObjects:@"message", nil]];
+        if (status != ER_OK) {
+            NSLog(@"ERROR: Failed to add method to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
+        }
+    
+    [hostInterface activate];
+    
+    self.positionHandler = [[GCPositionObjectSignalHandler alloc] init];
+    self.positionHandler.delegate = self;
+    [self.busAttachment registerSignalHandler:self.positionHandler];
+    
+    self.turnHandler = [[GCTurnSignalHandler alloc] init];
+    self.turnHandler.delegate = self;
+    [self.busAttachment registerSignalHandler:self.turnHandler];
     
     
-    self.signalHandler = [[GCPositionObjectSignalHandler alloc] init];
-    self.signalHandler.delegate = self;
-    [self.busAttachment registerSignalHandler:self.signalHandler];
+    self.positionObject = [[GCPositionObject alloc] initWithBusAttachment:self.busAttachment onServicePath:kServicePath];
+    self.positionObject.delegate = self;
+    [self.busAttachment registerBusObject:self.positionObject];
     
-    self.sixiObject = [[GCPositionObject alloc] initWithBusAttachment:self.busAttachment onServicePath:kServicePath];
-    self.sixiObject.delegate = self;
+    self.turnObject = [[GCTurnObject alloc] initWithBusAttachment:self.busAttachment onServicePath:kServicePath];
+    [self.busAttachment registerBusObject:self.turnObject];
     
-    [self.busAttachment registerBusObject:self.sixiObject];
-    
+    if (gMessageFlags != kAJNMessageFlagSessionless && self.sessionTypeSegmentedControl.selectedSegmentIndex != 0) {
+
+        self.hostObject = [[GCHostObject alloc] initWithBusAttachment:self.busAttachment onPath:kServicePath];
+        self.hostObject.delegate = self;
+        status=[self.busAttachment registerBusObject:self.hostObject];
+        if (ER_OK != status) {
+            NSLog(@"ERROR: Could not register host bus object");
+        }
+    }
     
     status = [self.busAttachment start];
     if (status != ER_OK) {
@@ -172,7 +216,7 @@
     
     [self.busAttachment registerBusListener:self];
     
-    self.proxyObject = [[GCProxyPositionObject alloc] initWithBusAttachment:self.busAttachment serviceName:kServiceName objectPath:kServicePath sessionId:self.sessionId];
+
     
     status = [self.busAttachment connectWithArguments:@"null:"];
     
@@ -194,21 +238,21 @@
         
         // get the type of session to create
         //
-        NSString *serviceName = [NSString stringWithFormat:@"%@%@", kServiceName, @"gameofchairs"];
         
         if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 0) {
             // join an existing session by finding the name
             //
-            [self.busAttachment findAdvertisedName:serviceName];
+            [self.busAttachment findAdvertisedName:kServiceName];
         }
         else {
             // request the service name for the position object
             //
-            [self.busAttachment requestWellKnownName:serviceName withFlags:kAJNBusNameFlagReplaceExisting|kAJNBusNameFlagDoNotQueue];
+            [self.busAttachment requestWellKnownName:kServiceName withFlags:kAJNBusNameFlagReplaceExisting|kAJNBusNameFlagDoNotQueue];
             
             // advertise a name and let others connect to our service
-            //
-            [self.busAttachment advertiseName:serviceName withTransportMask:kAJNTransportMaskAny];
+            
+            [self.busAttachment advertiseName:kServiceName withTransportMask:kAJNTransportMaskAny];
+           
             
             AJNSessionOptions *sessionOptions = [[AJNSessionOptions alloc] initWithTrafficType:kAJNTrafficMessages supportsMultipoint:YES proximity:kAJNProximityAny transportMask:kAJNTransportMaskAny];
             
@@ -218,9 +262,13 @@
 
 }
 
+-(void)takeStation:(NSString *)message onSession:(AJNSessionId)sessionId{
+    NSLog(@"Take Station: %@", message);
+}
+
 // SIX: setup method for cleaning alljoyn stuff
 -(void)disconnectAndDestroyBus{
-    // leave the chat session
+    // leave the  session
     //
     
     NSString *serviceName = [NSString stringWithFormat:@"%@%@", kServiceName, @"gameofchairs"];
@@ -241,13 +289,13 @@
     //
     [self.busAttachment disconnectWithArguments:@"null:"];
     
-    // unregister our listeners and the chat bus object
+    // unregister our listeners and the  bus object
     //
     [self.busAttachment unregisterBusListener:self];
     
-    [self.busAttachment unregisterSignalHandler:self.signalHandler];
+    [self.busAttachment unregisterSignalHandler:self.positionHandler];
     
-    [self.busAttachment unregisterBusObject:self.sixiObject];
+    [self.busAttachment unregisterBusObject:self.positionObject];
     
     // stop the bus and wait for the stop operation to complete
     //
@@ -257,11 +305,11 @@
     
     // dispose of everything
     //
-    self.signalHandler.delegate = nil;
-    self.signalHandler = nil;
+    self.positionHandler.delegate = nil;
+    self.positionHandler = nil;
     
-    self.sixiObject.delegate = nil;
-    self.sixiObject = nil;
+    self.positionObject.delegate = nil;
+    self.positionObject = nil;
     
     self.busAttachment = nil;
 
@@ -269,7 +317,16 @@
 
 - (IBAction)didTouchSendButton:(id)sender {
     NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @"ciao"];
-    [self.sixiObject sendPosition:message onSession:self.sessionId];
+    
+    [self.proxyHostObject introspectRemoteObject];
+    
+    [self.proxyHostObject takeStation:message onSession:self.sessionId];
+    
+    
+    
+    [self.positionObject sendPosition:message onSession:self.sessionId];
+    [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
+    [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
     //IF THE COMMUNICATION USES SESSION DATA YOU WONT RECEIVE THE MESSAGE YOU SEND. IF YOU WANT TO RECEIVE IT YOU MANAULLY CALL YOUR DELEGATE METHOD
     if (gMessageFlags != kAJNMessageFlagSessionless) {
         [self didReceiveNewPositionMessage:message forSession:self.sessionId];
@@ -384,7 +441,7 @@
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
     NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
-    [self.sixiObject sendPosition:message onSession:self.sessionId];
+    [self.positionObject sendPosition:message onSession:self.sessionId];
 
     
     [self.locationView updatePosition:position];
@@ -403,6 +460,19 @@
 
 }
 
+-(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
+
+    NSLog(@"end turn %@", message);
+    
+}
+
+-(void)didStartTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
+    
+    NSLog(@"start turn %@", message);
+    
+}
+
+
 #pragma mark - AJNBusListener delegate methods
 
 - (void)didFindAdvertisedName:(NSString *)name withTransportMask:(AJNTransportMask)transport namePrefix:(NSString *)namePrefix
@@ -418,6 +488,7 @@
     AJNSessionId sessionId = [self.busAttachment joinSessionWithName:name onPort:kServicePort withDelegate:self options:sessionOptions];
     if (sessionId != 0) {
         self.sessionId = sessionId;
+        self.proxyHostObject=[[GCHostObjectProxy alloc] initWithBusAttachment:self.busAttachment serviceName:kServiceName objectPath:kServicePath sessionId:self.sessionId];
     }
 }
 

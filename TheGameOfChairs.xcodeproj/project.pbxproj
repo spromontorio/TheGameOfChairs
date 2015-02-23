@@ -57,7 +57,6 @@
 		684935671A90E05700BD5770 /* libEstimoteSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 684935661A90E05700BD5770 /* libEstimoteSDK.a */; };
 		68B5DC6C1A90E23B003DBECC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */; };
 		68B5DC701A90F6DA003DBECC /* cat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68B5DC6F1A90F6DA003DBECC /* cat@2x.png */; };
-		68C7558C1A95E15B0029F2B0 /* GCProxyPositionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C7558B1A95E15B0029F2B0 /* GCProxyPositionObject.m */; };
 		68EBB1701A8B67660070AD15 /* GCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68EBB16F1A8B67660070AD15 /* GCViewController.m */; };
 		68EBB1731A90B7200070AD15 /* location.json in Resources */ = {isa = PBXBuildFile; fileRef = 68EBB1721A90B7200070AD15 /* location.json */; };
 		68F776911A95F607003ED5C5 /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776901A95F607003ED5C5 /* Game.m */; };
@@ -211,8 +210,6 @@
 		684935661A90E05700BD5770 /* libEstimoteSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libEstimoteSDK.a; sourceTree = "<group>"; };
 		68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		68B5DC6F1A90F6DA003DBECC /* cat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat@2x.png"; sourceTree = "<group>"; };
-		68C7558A1A95E15B0029F2B0 /* GCProxyPositionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCProxyPositionObject.h; sourceTree = "<group>"; };
-		68C7558B1A95E15B0029F2B0 /* GCProxyPositionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCProxyPositionObject.m; sourceTree = "<group>"; };
 		68EBB16E1A8B67660070AD15 /* GCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCViewController.h; sourceTree = "<group>"; };
 		68EBB16F1A8B67660070AD15 /* GCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCViewController.m; sourceTree = "<group>"; };
 		68EBB1721A90B7200070AD15 /* location.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = location.json; sourceTree = "<group>"; };
@@ -370,6 +367,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		68472AB11A9A293700A4801D /* AllJoynObjects */ = {
+			isa = PBXGroup;
+			children = (
+				682B003D1A8B572500BE5DF9 /* GCPositionObject.h */,
+				682B003E1A8B572500BE5DF9 /* GCPositionObject.mm */,
+				682B003F1A8B572500BE5DF9 /* GCPositionObjectImpl.h */,
+				682B00401A8B572500BE5DF9 /* GCPositionObjectImpl.mm */,
+				682B00411A8B572500BE5DF9 /* GCPositionObjectSignalHandler.h */,
+				682B00421A8B572500BE5DF9 /* GCPositionObjectSignalHandler.mm */,
+				682B00431A8B572500BE5DF9 /* GCPositionObjectSignalHandlerImpl.h */,
+				682B00441A8B572500BE5DF9 /* GCPositionObjectSignalHandlerImpl.mm */,
+				F5A9A1371A99FB6A0099012A /* GCTurnObject.h */,
+				F5A9A1381A99FB6A0099012A /* GCTurnObject.mm */,
+				F5A9A1391A99FB6A0099012A /* GCTurnObjectImpl.h */,
+				F5A9A13A1A99FB6A0099012A /* GCTurnObjectImpl.mm */,
+				F5A9A13B1A99FB6A0099012A /* GCTurnSignalHandler.h */,
+				F5A9A13C1A99FB6A0099012A /* GCTurnSignalHandler.mm */,
+				F5A9A13D1A99FB6A0099012A /* GCTurnSignalHandlerImpl.h */,
+				F5A9A13E1A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm */,
+				F5A9A1481A9A0FCF0099012A /* GCHostObject.h */,
+				F5A9A1451A9A0FCF0099012A /* GCHostObject.m */,
+				F5A9A1461A9A0FCF0099012A /* GCBaseHostObject.h */,
+				F5A9A1471A9A0FCF0099012A /* GCBaseHostObject.mm */,
+			);
+			name = AllJoynObjects;
+			sourceTree = "<group>";
+		};
 		684934FA1A90E03D00BD5770 /* EstimoteIndoorLocationSDK */ = {
 			isa = PBXGroup;
 			children = (
@@ -553,30 +577,9 @@
 			isa = PBXGroup;
 			children = (
 				AC8810781649DC7E006CD25A /* AllJoynFramework */,
-				682B003D1A8B572500BE5DF9 /* GCPositionObject.h */,
-				682B003E1A8B572500BE5DF9 /* GCPositionObject.mm */,
-				682B003F1A8B572500BE5DF9 /* GCPositionObjectImpl.h */,
-				682B00401A8B572500BE5DF9 /* GCPositionObjectImpl.mm */,
-				68C7558A1A95E15B0029F2B0 /* GCProxyPositionObject.h */,
-				68C7558B1A95E15B0029F2B0 /* GCProxyPositionObject.m */,
+				68472AB11A9A293700A4801D /* AllJoynObjects */,
 				682B00491A8B57CE00BE5DF9 /* GCPositionReceiver.h */,
-				682B00411A8B572500BE5DF9 /* GCPositionObjectSignalHandler.h */,
-				682B00421A8B572500BE5DF9 /* GCPositionObjectSignalHandler.mm */,
-				682B00431A8B572500BE5DF9 /* GCPositionObjectSignalHandlerImpl.h */,
-				682B00441A8B572500BE5DF9 /* GCPositionObjectSignalHandlerImpl.mm */,
-				F5A9A1371A99FB6A0099012A /* GCTurnObject.h */,
-				F5A9A1381A99FB6A0099012A /* GCTurnObject.mm */,
-				F5A9A1391A99FB6A0099012A /* GCTurnObjectImpl.h */,
-				F5A9A13A1A99FB6A0099012A /* GCTurnObjectImpl.mm */,
-				F5A9A13B1A99FB6A0099012A /* GCTurnSignalHandler.h */,
-				F5A9A13C1A99FB6A0099012A /* GCTurnSignalHandler.mm */,
-				F5A9A13D1A99FB6A0099012A /* GCTurnSignalHandlerImpl.h */,
-				F5A9A13E1A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm */,
 				F5A9A1431A99FBA00099012A /* GCTurnReceiver.h */,
-				F5A9A1481A9A0FCF0099012A /* GCHostObject.h */,
-				F5A9A1451A9A0FCF0099012A /* GCHostObject.m */,
-				F5A9A1461A9A0FCF0099012A /* GCBaseHostObject.h */,
-				F5A9A1471A9A0FCF0099012A /* GCBaseHostObject.mm */,
 				AC88105D1649DB10006CD25A /* AppDelegate.h */,
 				AC88105E1649DB10006CD25A /* AppDelegate.m */,
 				AC8811411649E04E006CD25A /* Constants.h */,
@@ -833,7 +836,6 @@
 				AC8810BE1649DC99006CD25A /* AJNInterfaceProperty.mm in Sources */,
 				F5A9A13F1A99FB6A0099012A /* GCTurnObject.mm in Sources */,
 				682B00461A8B572500BE5DF9 /* GCPositionObjectImpl.mm in Sources */,
-				68C7558C1A95E15B0029F2B0 /* GCProxyPositionObject.m in Sources */,
 				AC8810BF1649DC99006CD25A /* AJNKeyStoreListenerImpl.mm in Sources */,
 				682B00471A8B572500BE5DF9 /* GCPositionObjectSignalHandler.mm in Sources */,
 				AC8810C01649DC99006CD25A /* AJNMessage.mm in Sources */,
@@ -958,7 +960,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = TheGameOfChairs;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1030,7 +1032,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = TheGameOfChairs;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

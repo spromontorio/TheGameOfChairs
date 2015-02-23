@@ -20,7 +20,9 @@
 extern const AJNSessionPort kServicePort;
 extern NSString * const kServicePath;
 extern NSString * const kServiceName;
-extern NSString * const kInterfaceName;
+extern NSString * const kInterfacePosition;
+extern NSString * const kInterfaceTurn;
+extern NSString * const kInterfaceHost;
 extern NSString * const kAppName;
 extern AJNMessageFlag gMessageFlags;
 
