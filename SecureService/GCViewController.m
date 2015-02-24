@@ -407,11 +407,19 @@
         ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
         occupiedStation.player = [self.turn playerIdentifiedByName:data[@"player"]];
         
-        [occupiedStation turnStationOff];
+        occupiedStation.isActive = NO;
         
-        UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
-        red.alpha = 0.5;
-        [self.locationView drawObject:red withPosition:stationPosition];
+        if (![self.player.idPlayer isEqualToString:data[@"player"]]) {
+            UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+            red.alpha = 0.5;
+            [self.locationView drawObject:red withPosition:stationPosition];
+        }
+        else {
+            
+            UIImageView *green = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"green.png"]];
+            green.alpha = 0.5;
+            [self.locationView drawObject:green withPosition:stationPosition];
+        }
     }
 
 
@@ -430,10 +438,11 @@
     
     ESTOrientedPoint *playerPosition = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
     ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
-    
-    if ([playerPosition distanceToPoint:stationPosition] <= 10.00)
+    NSLog(@"Take Station distance: %f", [playerPosition distanceToPoint:stationPosition]);
+    if ([playerPosition distanceToPoint:stationPosition] <= 0.20)
         
         [self.positionObject sendPosition:message onSession:self.sessionId];
+        [self didReceiveNewPositionMessage:message forSession:self.sessionId];
 
 }
 
@@ -446,7 +455,8 @@
     
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
-        if ([[self.turn stationIdentifiedByMacAddress:beacon.macAddress] isActive]) {
+        Station *s = [self.turn stationIdentifiedByMacAddress:beacon.macAddress];
+        if (s.isActive) {
             
             data[@"station"] = beacon.macAddress;
             data[@"point"] = [beacon.position toDictionary];

@@ -8,28 +8,14 @@
 
 #import "Station.h"
 
-@interface Station ()
-
-@property (nonatomic) BOOL active;
-
-@end
-
 @implementation Station
 
--(BOOL)isActive {
-    
-    return self.active = YES;
+-(id)init {
+
+    self = [super init];
+    if (self)
+        self.isActive = YES;
+    return self;
 }
-
--(BOOL)turnStationOff {
-
-    if (self.active)
-        self.active = NO;
-    else
-        self.active = YES;
-    
-    return self.active;
-}
-
 
 @end

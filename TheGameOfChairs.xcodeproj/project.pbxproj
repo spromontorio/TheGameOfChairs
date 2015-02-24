@@ -57,6 +57,8 @@
 		684935671A90E05700BD5770 /* libEstimoteSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 684935661A90E05700BD5770 /* libEstimoteSDK.a */; };
 		68B5DC6C1A90E23B003DBECC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */; };
 		68B5DC701A90F6DA003DBECC /* cat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68B5DC6F1A90F6DA003DBECC /* cat@2x.png */; };
+		68C9E26F1A9C85AE009319FA /* green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68C9E26D1A9C85AE009319FA /* green@2x.png */; };
+		68C9E2701A9C85AE009319FA /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = 68C9E26E1A9C85AE009319FA /* green.png */; };
 		68EBB1701A8B67660070AD15 /* GCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68EBB16F1A8B67660070AD15 /* GCViewController.m */; };
 		68EBB1731A90B7200070AD15 /* location.json in Resources */ = {isa = PBXBuildFile; fileRef = 68EBB1721A90B7200070AD15 /* location.json */; };
 		68F776911A95F607003ED5C5 /* Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F776901A95F607003ED5C5 /* Game.m */; };
@@ -210,6 +212,8 @@
 		684935661A90E05700BD5770 /* libEstimoteSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libEstimoteSDK.a; sourceTree = "<group>"; };
 		68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		68B5DC6F1A90F6DA003DBECC /* cat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat@2x.png"; sourceTree = "<group>"; };
+		68C9E26D1A9C85AE009319FA /* green@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green@2x.png"; sourceTree = "<group>"; };
+		68C9E26E1A9C85AE009319FA /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green.png; sourceTree = "<group>"; };
 		68EBB16E1A8B67660070AD15 /* GCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCViewController.h; sourceTree = "<group>"; };
 		68EBB16F1A8B67660070AD15 /* GCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCViewController.m; sourceTree = "<group>"; };
 		68EBB1721A90B7200070AD15 /* location.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = location.json; sourceTree = "<group>"; };
@@ -515,6 +519,8 @@
 				68B5DC6F1A90F6DA003DBECC /* cat@2x.png */,
 				68F7769C1A9779DA003ED5C5 /* red.png */,
 				68F7769E1A977A4B003ED5C5 /* red@2x.png */,
+				68C9E26D1A9C85AE009319FA /* green@2x.png */,
+				68C9E26E1A9C85AE009319FA /* green.png */,
 				68EBB1721A90B7200070AD15 /* location.json */,
 			);
 			name = Resources;
@@ -759,7 +765,9 @@
 				AC8810591649DB10006CD25A /* InfoPlist.strings in Resources */,
 				68EBB1731A90B7200070AD15 /* location.json in Resources */,
 				684935431A90E03D00BD5770 /* navigation_guy@2x.png in Resources */,
+				68C9E2701A9C85AE009319FA /* green.png in Resources */,
 				684935361A90E03D00BD5770 /* beaconblueberry@2x.png in Resources */,
+				68C9E26F1A9C85AE009319FA /* green@2x.png in Resources */,
 				684934AD1A90C90100BD5770 /* cat.png in Resources */,
 				684935421A90E03D00BD5770 /* instructions@2x.png in Resources */,
 				684935391A90E03D00BD5770 /* beacongrey@2x.png in Resources */,

@@ -13,8 +13,8 @@
 
 @property (nonatomic ,strong) Player *player;
 @property (nonatomic, strong) NSString *macAddress;
+@property (nonatomic) BOOL isActive;
 
--(BOOL)isActive;
--(BOOL)turnStationOff;
+
 
 @end
