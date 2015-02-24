@@ -18,6 +18,7 @@
 
 -(id)initWithPlayer:(Player *)player;
 -(Station *)stationIdentifiedByMacAddress:(NSString *)macAddress;
+-(Player *)playerIdentifiedByName:(NSString *)name;
 
 
 @end

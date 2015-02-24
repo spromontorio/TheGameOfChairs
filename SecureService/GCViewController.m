@@ -52,7 +52,7 @@
 @property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *label;
-
+@property(nonatomic) BOOL isHost;
 @property(nonatomic) BOOL started;
 @property (nonatomic, strong) Player *player;
 @property (nonatomic, strong) Turn *turn;
@@ -107,15 +107,14 @@
             Station *station = [[Station alloc] init];
             station.macAddress = beacon.macAddress;
             [self.turn.stations addObject:station];
-            ESTOrientedPoint *stationPoint = beacon.position;
-            UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
-            red.alpha = 0.5;
-            [self.locationView drawObject:red withPosition:stationPoint];
+
         }
         
+        self.isHost=[self.sessionSwitch isOn] && self.sessionTypeSegmentedControl.selectedSegmentIndex == 1;
         
         
-       // [self.manager startIndoorLocation:self.location];
+        
+        [self.manager startIndoorLocation:self.location];
     }
     else{
         [self disconnectAndDestroyBus];
@@ -143,7 +142,7 @@
 }
 
 
-// SIX: setup method for alljoyn stuff
+//setup method for alljoyn stuff
 -(void)createAndConnectBus{
     
     QStatus status = ER_OK;
@@ -199,7 +198,7 @@
     self.turnObject = [[GCTurnObject alloc] initWithBusAttachment:self.busAttachment onServicePath:kServicePath];
     [self.busAttachment registerBusObject:self.turnObject];
     
-    if (gMessageFlags != kAJNMessageFlagSessionless && self.sessionTypeSegmentedControl.selectedSegmentIndex != 0) {
+    if (self.isHost) {
 
         self.hostObject = [[GCHostObject alloc] initWithBusAttachment:self.busAttachment onPath:kServicePath];
         self.hostObject.delegate = self;
@@ -262,11 +261,8 @@
 
 }
 
--(void)takeStation:(NSString *)message onSession:(AJNSessionId)sessionId{
-    NSLog(@"Take Station: %@", message);
-}
 
-// SIX: setup method for cleaning alljoyn stuff
+//setup method for cleaning alljoyn stuff
 -(void)disconnectAndDestroyBus{
     // leave the  session
     //
@@ -316,7 +312,7 @@
 }
 
 - (IBAction)didTouchSendButton:(id)sender {
-    NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @"ciao"];
+    NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @" ciao"];
     
     [self.proxyHostObject introspectRemoteObject];
     
@@ -386,37 +382,58 @@
     if(jsonError)
         return;
     
-    NSString *player = data[@"player"];
-    if (![player isEqualToString:self.player.idPlayer]) {
-        UIImageView *view = self.playersImageView[player];
-        if (!view) {
-            view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cat.png"]];
-            [self.locationView addSubview:view];
-            self.playersImageView[player] = view;
+    if (data[@"station"] == nil) {
+        
+        NSString *player = data[@"player"];
+        if (![player isEqualToString:self.player.idPlayer]) {
+            UIImageView *view = self.playersImageView[player];
+            if (!view) {
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cat.png"]];
+                [self.locationView addSubview:view];
+                self.playersImageView[player] = view;
+            }
+        
+            ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
+            [self.locationView drawObject:view withPosition:point];
+        
+            self.label.text = player;
+        
         }
-        
-        ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
-        [self.locationView drawObject:view withPosition:point];
-        
-        self.label.text = player;
-        
     }
-    NSString *macAddress = data[@"position"];
-    if (!macAddress ) {
-        Station *occupiedStation = [self.turn stationIdentifiedByMacAddress:macAddress];
-        if ([occupiedStation isActive]) {
-            [occupiedStation turnStationOff];
-            occupiedStation.player = self.player;
-            
-            ESTOrientedPoint *stationPoint = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
-            UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
-            red.alpha = 0.5;
-            [self.locationView drawObject:red withPosition:stationPoint];
-            
-        }
+    
+    else {
+    
+        Station *occupiedStation = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
+        ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
+        occupiedStation.player = [self.turn playerIdentifiedByName:data[@"player"]];
         
+        [occupiedStation turnStationOff];
         
+        UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+        red.alpha = 0.5;
+        [self.locationView drawObject:red withPosition:stationPosition];
     }
+
+
+}
+
+-(void)takeStation:(NSString *)message onSession:(AJNSessionId)sessionId{
+    NSLog(@"Take Station: %@", message);
+    
+    NSError *jsonError;
+    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:&jsonError];
+    if(jsonError)
+        return;
+    
+    ESTOrientedPoint *playerPosition = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
+    ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
+    
+    if ([playerPosition distanceToPoint:stationPosition] <= 10.00)
+        
+        [self.positionObject sendPosition:message onSession:self.sessionId];
 
 }
 
@@ -429,11 +446,25 @@
     
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
-        if ([position distanceToPoint: beacon.position] <= 1.00) {
+        if ([[self.turn stationIdentifiedByMacAddress:beacon.macAddress] isActive]) {
+            
             data[@"station"] = beacon.macAddress;
             data[@"point"] = [beacon.position toDictionary];
+            NSError *error;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+            NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            if (self.isHost)
+            
+                [self takeStation:message onSession:self.sessionId];
+           
+            else {
+                
+                [self.proxyHostObject introspectRemoteObject];
+                [self.proxyHostObject takeStation:message onSession:self.sessionId];
+            }
+            
         }
-        
+
     }
     
     
@@ -457,6 +488,15 @@
 - (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didFailToUpdatePositionWithError:(NSError *)error {
     
     NSLog(@"errore posizione");
+
+}
+
+
+-(void)startTurnWithMessage: (NSString *)message forSession: (AJNSessionId)sessionId {
+
+}
+
+-(void)endTurnWithMessage: (NSString *)message forSession: (AJNSessionId)sessionId {
 
 }
 

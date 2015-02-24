@@ -33,5 +33,14 @@
     return nil;
 }
 
+-(Player *)playerIdentifiedByName:(NSString *)name {
+    
+    for (Player *player in self.players) {
+        if (player.idPlayer == name)
+            return player;
+    }
+    return nil;
+}
+
 
 @end
