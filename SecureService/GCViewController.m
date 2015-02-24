@@ -45,6 +45,7 @@
 @property (nonatomic, strong) ESTLocation *location;
 @property (nonatomic, strong) ESTIndoorLocationManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *playersImageView;
+@property (nonatomic, strong) NSMutableDictionary *stationsImageView;
 @property (nonatomic, readonly) NSString *sessionlessSignalMatchRule;
 
 @property (weak, nonatomic) IBOutlet ESTIndoorLocationView *locationView;
@@ -80,6 +81,8 @@
     // Do any additional setup after loading the view.
     self.started=NO;
     self.playersImageView = [NSMutableDictionary dictionary];
+    self.stationsImageView = [NSMutableDictionary dictionary];
+
     
     
 }
@@ -381,8 +384,9 @@
                                                            error:&jsonError];
     if(jsonError)
         return;
+    Station *occupiedStation = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
     
-    if (data[@"station"] == nil) {
+    if (occupiedStation == nil) {
         
         NSString *player = data[@"player"];
         if (![player isEqualToString:self.player.idPlayer]) {
@@ -403,23 +407,38 @@
     
     else {
     
-        Station *occupiedStation = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
+        
         ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
-        occupiedStation.player = [self.turn playerIdentifiedByName:data[@"player"]];
         
-        occupiedStation.isActive = NO;
+        NSString *player = data[@"player"];
         
-        if (![self.player.idPlayer isEqualToString:data[@"player"]]) {
-            UIImageView *red = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
-            red.alpha = 0.5;
-            [self.locationView drawObject:red withPosition:stationPosition];
+        if (![player isEqualToString:self.player.idPlayer]) {
+            UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
+            if (!view) {
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+                view.alpha = 0.5;
+                [self.locationView addSubview:view];
+                self.stationsImageView[occupiedStation.macAddress] = view;
+            }
+            [self.locationView drawObject:view withPosition:stationPosition];
+
+        
         }
         else {
+            UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
+            if (!view) {
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"green.png"]];
+                view.alpha = 0.5;
+                [self.locationView addSubview:view];
+                self.stationsImageView[occupiedStation.macAddress] = view;
+            }
+            [self.locationView drawObject:view withPosition:stationPosition];
             
-            UIImageView *green = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"green.png"]];
-            green.alpha = 0.5;
-            [self.locationView drawObject:green withPosition:stationPosition];
         }
+        
+        occupiedStation.player = [self.turn playerIdentifiedByName:player];
+        occupiedStation.isActive = NO;
+        
     }
 
 
@@ -438,11 +457,11 @@
     
     ESTOrientedPoint *playerPosition = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
     ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
-    NSLog(@"Take Station distance: %f", [playerPosition distanceToPoint:stationPosition]);
-    if ([playerPosition distanceToPoint:stationPosition] <= 0.20)
+    if ([playerPosition distanceToPoint:stationPosition] <= 0.30 ) {
         
         [self.positionObject sendPosition:message onSession:self.sessionId];
         [self didReceiveNewPositionMessage:message forSession:self.sessionId];
+    }
 
 }
 
@@ -456,7 +475,7 @@
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
         Station *s = [self.turn stationIdentifiedByMacAddress:beacon.macAddress];
-        if (s.isActive) {
+        if (s.isActive && (s.player == nil)) {
             
             data[@"station"] = beacon.macAddress;
             data[@"point"] = [beacon.position toDictionary];

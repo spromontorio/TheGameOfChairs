@@ -26,7 +26,7 @@
 -(Station *)stationIdentifiedByMacAddress:(NSString *)macAddress {
     
     for (Station *station in self.stations) {
-        if (station.macAddress == macAddress)
+        if ([station.macAddress isEqualToString:macAddress])
             return station;
     
     }
@@ -36,7 +36,7 @@
 -(Player *)playerIdentifiedByName:(NSString *)name {
     
     for (Player *player in self.players) {
-        if (player.idPlayer == name)
+        if ([player.idPlayer isEqualToString:name ])
             return player;
     }
     return nil;
