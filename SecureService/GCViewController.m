@@ -46,6 +46,7 @@
 @property (nonatomic, strong) ESTIndoorLocationManager *manager;
 @property (nonatomic, strong) NSMutableDictionary *playersImageView;
 @property (nonatomic, strong) NSMutableDictionary *stationsImageView;
+@property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic, readonly) NSString *sessionlessSignalMatchRule;
 
 @property (weak, nonatomic) IBOutlet ESTIndoorLocationView *locationView;
@@ -82,7 +83,7 @@
     self.started=NO;
     self.playersImageView = [NSMutableDictionary dictionary];
     self.stationsImageView = [NSMutableDictionary dictionary];
-
+    self.images = [[NSMutableArray alloc] initWithObjects:@"dog.png", @"cat.png", @"lion.png", nil];
     
     
 }
@@ -103,6 +104,8 @@
         
         NSString *name = [[UIDevice currentDevice] name];
         self.player = [[Player alloc] initWithIdPlayer:name];
+        self.player.image = [self.images objectAtIndex:0];
+        [self.images removeObjectAtIndex:0];
         self.turn = [[Turn alloc] initWithPlayer:self.player];
         self.game = [[Game alloc] initWithTurn:self.turn];
         for (ESTPositionedBeacon *beacon in self.location.beacons) {
@@ -133,6 +136,8 @@
     
     NSString *name = [[UIDevice currentDevice] name];
     self.player = [[Player alloc] initWithIdPlayer:name];
+    self.player.image = [self.images objectAtIndex:0];
+    [self.images removeObjectAtIndex:0];
     self.turn = [[Turn alloc] initWithPlayer:self.player];
     self.game = [[Game alloc] initWithTurn:self.turn];
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
@@ -353,7 +358,8 @@
     
     
     // You can change the avatar using positionImage property of ESTIndoorLocationView class.
-    self.locationView.positionImage = [UIImage imageNamed:@"cat.png"];
+    UIImage *image = [UIImage imageNamed:self.player.image];
+    self.locationView.positionImage = image;
 
     [self.locationView drawLocation:self.location];
     
@@ -388,19 +394,20 @@
     
     if (occupiedStation == nil) {
         
-        NSString *player = data[@"player"];
-        if (![player isEqualToString:self.player.idPlayer]) {
+        Player *player = [self.turn playerIdentifiedByName:data[@"player"]];
+        if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
             UIImageView *view = self.playersImageView[player];
             if (!view) {
-                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cat.png"]];
+                
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:player.image]];
                 [self.locationView addSubview:view];
-                self.playersImageView[player] = view;
+                self.playersImageView[player.idPlayer] = view;
             }
         
             ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
             [self.locationView drawObject:view withPosition:point];
         
-            self.label.text = player;
+            self.label.text = player.idPlayer;
         
         }
     }
@@ -410,9 +417,9 @@
         
         ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
         
-        NSString *player = data[@"player"];
+        Player *player = [self.turn playerIdentifiedByName:data[@"player"]];
         
-        if (![player isEqualToString:self.player.idPlayer]) {
+        if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
             UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
             if (!view) {
                 view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
@@ -436,7 +443,7 @@
             
         }
         
-        occupiedStation.player = [self.turn playerIdentifiedByName:player];
+        occupiedStation.player = [self.turn playerIdentifiedByName:player.idPlayer];
         occupiedStation.isActive = NO;
         
     }
@@ -522,6 +529,8 @@
 
 
 -(void)startTurnWithMessage: (NSString *)message forSession: (AJNSessionId)sessionId {
+    
+    
 
 }
 
@@ -582,6 +591,12 @@
     if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 1) {
         self.sessionId = sessionId;
         NSLog(@"%@", joiner);
+        NSString * name = [[UIDevice currentDevice] name];
+        Player *player = [[Player alloc] initWithIdPlayer:name];
+        [self.turn.players addObject:player];
+        player.image = [self.images objectAtIndex:0];
+        [self.images removeObjectAtIndex:0];
+        
     }
 }
 

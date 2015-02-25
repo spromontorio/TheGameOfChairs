@@ -11,7 +11,9 @@
 @interface Player : NSObject
 
 @property (nonatomic, strong) NSString *idPlayer;
+@property (nonatomic, strong) NSString *image;
 
 -(id)initWithIdPlayer:(NSString *)name;
+
 
 @end
