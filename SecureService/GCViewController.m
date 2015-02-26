@@ -28,7 +28,7 @@
 #import "Turn.h"
 #import "Station.h"
 #import "Game.h"
-
+#import <AVFoundation/AVFoundation.h>
 
 @interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener, AJNSessionListener, GCTurnReceiver, GCHostObjectDelegate>
 
@@ -59,6 +59,7 @@
 @property (nonatomic, strong) Player *player;
 @property (nonatomic, strong) Turn *turn;
 @property (nonatomic, strong) Game *game;
+@property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 
 
 
@@ -92,6 +93,8 @@
     
     if(!self.started)
     {
+        [self playSound:@"go" afterSeconds:3];
+        
         [self createAndConnectBus];
         self.started=YES;
         self.sessionTypeSegmentedControl.enabled=NO;
@@ -104,8 +107,11 @@
         
         NSString *name = [[UIDevice currentDevice] name];
         self.player = [[Player alloc] initWithIdPlayer:name];
+        
+        //SIXI: are you sure?
         self.player.image = [self.images objectAtIndex:0];
         [self.images removeObjectAtIndex:0];
+        
         self.turn = [[Turn alloc] initWithPlayer:self.player];
         self.game = [[Game alloc] initWithTurn:self.turn];
         for (ESTPositionedBeacon *beacon in self.location.beacons) {
@@ -132,10 +138,13 @@
         self.player = nil;
         self.turn = nil;
         self.game = nil;
+        self.images = [[NSMutableArray alloc] initWithObjects:@"dog.png", @"cat.png", @"lion.png", nil];
+
     }
     
     NSString *name = [[UIDevice currentDevice] name];
     self.player = [[Player alloc] initWithIdPlayer:name];
+    //SIXI: why here? you've alredy assingned the player image in the if
     self.player.image = [self.images objectAtIndex:0];
     [self.images removeObjectAtIndex:0];
     self.turn = [[Turn alloc] initWithPlayer:self.player];
@@ -246,7 +255,7 @@
         // get the type of session to create
         //
         
-        if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 0) {
+        if (!self.isHost) {
             // join an existing session by finding the name
             //
             [self.busAttachment findAdvertisedName:kServiceName];
@@ -282,7 +291,7 @@
     // cancel the advertised name search, or the advertisement, depending on if this is a
     // service or client
     //
-    if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 0) {
+    if (!self.isHost) {
         [self.busAttachment cancelFindAdvertisedName:serviceName];
     }
     else {
@@ -299,7 +308,17 @@
     
     [self.busAttachment unregisterSignalHandler:self.positionHandler];
     
+    [self.busAttachment unregisterSignalHandler:self.turnHandler];
+    
     [self.busAttachment unregisterBusObject:self.positionObject];
+    
+    [self.busAttachment unregisterBusObject:self.turnObject];
+    
+    if(self.isHost)
+        [self.busAttachment unregisterBusObject:self.hostObject];
+    
+    
+
     
     // stop the bus and wait for the stop operation to complete
     //
@@ -315,6 +334,13 @@
     self.positionObject.delegate = nil;
     self.positionObject = nil;
     
+    self.turnHandler.delegate = nil;
+    self.turnObject = nil;
+    
+    self.hostObject = nil;
+    
+    self.proxyHostObject = nil;
+
     self.busAttachment = nil;
 
 }
@@ -538,6 +564,24 @@
 
 }
 
+
+-(void)playSound: (NSString *)soundName afterSeconds: (int)seconds{
+    
+    NSString *path  = [[NSBundle mainBundle] pathForResource:soundName ofType:@"wav"];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        NSError *error;
+        NSURL *pathURL = [NSURL fileURLWithPath : path];
+        self.audioPlayer = [[AVAudioPlayer alloc]
+                            initWithContentsOfURL:pathURL
+                            error:&error];
+        [self.audioPlayer play];
+    });
+  
+    
+   
+}
+
 -(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
 
     NSLog(@"end turn %@", message);
@@ -588,7 +632,7 @@
 
 - (void)didJoin:(NSString *)joiner inSessionWithId:(AJNSessionId)sessionId onSessionPort:(AJNSessionPort)sessionPort
 {
-    if (self.sessionTypeSegmentedControl.selectedSegmentIndex == 1) {
+    if (self.isHost) {
         self.sessionId = sessionId;
         NSLog(@"%@", joiner);
         NSString * name = [[UIDevice currentDevice] name];
@@ -597,6 +641,7 @@
         player.image = [self.images objectAtIndex:0];
         [self.images removeObjectAtIndex:0];
         
+        // if numberOfPlayer expected is reached then start turn
     }
 }
 

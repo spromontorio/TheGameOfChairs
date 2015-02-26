@@ -126,6 +126,7 @@
 		F5A9A1421A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A13E1A99FB6A0099012A /* GCTurnSignalHandlerImpl.mm */; };
 		F5A9A1491A9A0FCF0099012A /* GCHostObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A1451A9A0FCF0099012A /* GCHostObject.m */; };
 		F5A9A14A1A9A0FCF0099012A /* GCBaseHostObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A1471A9A0FCF0099012A /* GCBaseHostObject.mm */; };
+		F5A9A14E1A9F3BC70099012A /* go.wav in Resources */ = {isa = PBXBuildFile; fileRef = F5A9A14D1A9F3BC70099012A /* go.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -351,6 +352,7 @@
 		F5A9A1461A9A0FCF0099012A /* GCBaseHostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCBaseHostObject.h; sourceTree = "<group>"; };
 		F5A9A1471A9A0FCF0099012A /* GCBaseHostObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GCBaseHostObject.mm; sourceTree = "<group>"; };
 		F5A9A1481A9A0FCF0099012A /* GCHostObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHostObject.h; sourceTree = "<group>"; };
+		F5A9A14D1A9F3BC70099012A /* go.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = go.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -533,6 +535,7 @@
 				68C9E26E1A9C85AE009319FA /* green.png */,
 				68F7769C1A9779DA003ED5C5 /* red.png */,
 				68F7769E1A977A4B003ED5C5 /* red@2x.png */,
+				F5A9A14D1A9F3BC70099012A /* go.wav */,
 				68EBB1721A90B7200070AD15 /* location.json */,
 			);
 			name = Resources;
@@ -816,6 +819,7 @@
 				684935461A90E03D00BD5770 /* screen8_beacon_gray_trans@2x.png in Resources */,
 				684935321A90E03D00BD5770 /* 8a_first_frame@2x.png in Resources */,
 				AC8810681649DB10006CD25A /* MainStoryboard_iPhone.storyboard in Resources */,
+				F5A9A14E1A9F3BC70099012A /* go.wav in Resources */,
 				68F7769F1A977A4B003ED5C5 /* red@2x.png in Resources */,
 				AC88106B1649DB10006CD25A /* MainStoryboard_iPad.storyboard in Resources */,
 				68F7769D1A9779DA003ED5C5 /* red.png in Resources */,
