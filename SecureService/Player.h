@@ -12,6 +12,9 @@
 
 @property (nonatomic, strong) NSString *idPlayer;
 @property (nonatomic, strong) NSString *image;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic) BOOL isActive;
+@property (nonatomic) BOOL hasStation;
 
 -(id)initWithIdPlayer:(NSString *)name;
 

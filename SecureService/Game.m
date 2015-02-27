@@ -10,13 +10,13 @@
 
 @implementation Game
 
--(id)initWithTurn:(Turn *)turn {
+-(id)init {
 
     self = [super init];
     if (self) {
         
         self.turns = [[NSMutableArray alloc] init];
-        [self.turns addObject:turn];
+        self.players = [NSMutableArray array];
     }
     return self;
 }

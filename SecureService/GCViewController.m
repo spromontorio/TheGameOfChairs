@@ -30,6 +30,10 @@
 #import "Game.h"
 #import <AVFoundation/AVFoundation.h>
 
+
+#define DEFAULT_PROXIMITY_DISTANCE 0.30
+
+
 @interface GCViewController () <GCPositionReceiver, AJNBusListener, ESTIndoorLocationManagerDelegate, AJNSessionPortListener, AJNSessionListener, GCTurnReceiver, GCHostObjectDelegate>
 
 
@@ -60,6 +64,7 @@
 @property (nonatomic, strong) Turn *turn;
 @property (nonatomic, strong) Game *game;
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
+@property (nonatomic) int numberOfPlayers;
 
 
 
@@ -85,7 +90,7 @@
     self.playersImageView = [NSMutableDictionary dictionary];
     self.stationsImageView = [NSMutableDictionary dictionary];
     self.images = [[NSMutableArray alloc] initWithObjects:@"dog.png", @"cat.png", @"lion.png", nil];
-    
+    self.numberOfPlayers = self.images.count;
     
 }
 
@@ -93,40 +98,36 @@
     
     if(!self.started)
     {
-        [self playSound:@"go" afterSeconds:3];
+        //[self playSound:@"go" afterSeconds:3];
         
         [self createAndConnectBus];
         self.started=YES;
         self.sessionTypeSegmentedControl.enabled=NO;
         self.sessionSwitch.enabled=NO;
         if(self.sessionSwitch.isOn)
-            gMessageFlags=0x0; // SIX: what a fail
+            gMessageFlags=0x0;
         else
             gMessageFlags=kAJNMessageFlagSessionless;
-        [sender setTitle:@"Stop" forState:UIControlStateNormal];
-        
-        NSString *name = [[UIDevice currentDevice] name];
-        self.player = [[Player alloc] initWithIdPlayer:name];
-        
-        //SIXI: are you sure?
-        self.player.image = [self.images objectAtIndex:0];
-        [self.images removeObjectAtIndex:0];
-        
-        self.turn = [[Turn alloc] initWithPlayer:self.player];
-        self.game = [[Game alloc] initWithTurn:self.turn];
-        for (ESTPositionedBeacon *beacon in self.location.beacons) {
-            
-            Station *station = [[Station alloc] init];
-            station.macAddress = beacon.macAddress;
-            [self.turn.stations addObject:station];
-
-        }
         
         self.isHost=[self.sessionSwitch isOn] && self.sessionTypeSegmentedControl.selectedSegmentIndex == 1;
         
+        [sender setTitle:@"Stop" forState:UIControlStateNormal];
         
+        
+        NSString *name = [[UIDevice currentDevice] name];
+        self.player = [[Player alloc] init];
+        
+        if(self.isHost){
+            self.player.image = [self.images objectAtIndex:0];
+            [self.images removeObjectAtIndex:0];
+        }
+        
+        self.player.name = name;
+        
+        self.game = [[Game alloc] init];
         
         [self.manager startIndoorLocation:self.location];
+        
     }
     else{
         [self disconnectAndDestroyBus];
@@ -139,22 +140,8 @@
         self.turn = nil;
         self.game = nil;
         self.images = [[NSMutableArray alloc] initWithObjects:@"dog.png", @"cat.png", @"lion.png", nil];
-
     }
     
-    NSString *name = [[UIDevice currentDevice] name];
-    self.player = [[Player alloc] initWithIdPlayer:name];
-    //SIXI: why here? you've alredy assingned the player image in the if
-    self.player.image = [self.images objectAtIndex:0];
-    [self.images removeObjectAtIndex:0];
-    self.turn = [[Turn alloc] initWithPlayer:self.player];
-    self.game = [[Game alloc] initWithTurn:self.turn];
-    for (ESTPositionedBeacon *beacon in self.location.beacons) {
-        
-        Station *station = [[Station alloc] init];
-        station.macAddress = beacon.macAddress;
-        [self.turn.stations addObject:station];
-    }
     
 }
 
@@ -175,9 +162,9 @@
     }
     
     [posInterface activate];
-
+    
     AJNInterfaceDescription* turnInterface = [self.busAttachment createInterfaceWithName:kInterfaceTurn];
-
+    
     status=[turnInterface addSignalWithName:@"StartTurn" inputSignature:@"s" argumentNames:[NSArray arrayWithObject:@"str"]];
     if (status != ER_OK) {
         NSLog(@"ERROR: Failed to add signal to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
@@ -187,15 +174,15 @@
     if (status != ER_OK) {
         NSLog(@"ERROR: Failed to add signal to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
     }
-
+    
     [turnInterface activate];
-
+    
     AJNInterfaceDescription* hostInterface = [self.busAttachment createInterfaceWithName:kInterfaceHost];
-
-        status = [hostInterface addMethodWithName:@"TakeStation" inputSignature:@"s" outputSignature:@"" argumentNames:[NSArray arrayWithObjects:@"message", nil]];
-        if (status != ER_OK) {
-            NSLog(@"ERROR: Failed to add method to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
-        }
+    
+    status = [hostInterface addMethodWithName:@"TakeStation" inputSignature:@"s" outputSignature:@"" argumentNames:[NSArray arrayWithObjects:@"message", nil]];
+    if (status != ER_OK) {
+        NSLog(@"ERROR: Failed to add method to the interface. %@", [AJNStatus descriptionForStatusCode:status]);
+    }
     
     [hostInterface activate];
     
@@ -216,7 +203,7 @@
     [self.busAttachment registerBusObject:self.turnObject];
     
     if (self.isHost) {
-
+        
         self.hostObject = [[GCHostObject alloc] initWithBusAttachment:self.busAttachment onPath:kServicePath];
         self.hostObject.delegate = self;
         status=[self.busAttachment registerBusObject:self.hostObject];
@@ -232,7 +219,7 @@
     
     [self.busAttachment registerBusListener:self];
     
-
+    
     
     status = [self.busAttachment connectWithArguments:@"null:"];
     
@@ -268,14 +255,14 @@
             // advertise a name and let others connect to our service
             
             [self.busAttachment advertiseName:kServiceName withTransportMask:kAJNTransportMaskAny];
-           
+            
             
             AJNSessionOptions *sessionOptions = [[AJNSessionOptions alloc] initWithTrafficType:kAJNTrafficMessages supportsMultipoint:YES proximity:kAJNProximityAny transportMask:kAJNTransportMaskAny];
             
             [self.busAttachment bindSessionOnPort:kServicePort withOptions:sessionOptions withDelegate:self];
         }
     }
-
+    
 }
 
 
@@ -318,7 +305,7 @@
         [self.busAttachment unregisterBusObject:self.hostObject];
     
     
-
+    
     
     // stop the bus and wait for the stop operation to complete
     //
@@ -340,9 +327,9 @@
     self.hostObject = nil;
     
     self.proxyHostObject = nil;
-
+    
     self.busAttachment = nil;
-
+    
 }
 
 - (IBAction)didTouchSendButton:(id)sender {
@@ -386,7 +373,7 @@
     // You can change the avatar using positionImage property of ESTIndoorLocationView class.
     UIImage *image = [UIImage imageNamed:self.player.image];
     self.locationView.positionImage = image;
-
+    
     [self.locationView drawLocation:self.location];
     
 }
@@ -420,7 +407,7 @@
     
     if (occupiedStation == nil) {
         
-        Player *player = [self.turn playerIdentifiedByName:data[@"player"]];
+        Player *player = [self.turn playerIdentifiedById:data[@"player"]];
         if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
             UIImageView *view = self.playersImageView[player];
             if (!view) {
@@ -429,21 +416,21 @@
                 [self.locationView addSubview:view];
                 self.playersImageView[player.idPlayer] = view;
             }
-        
+            
             ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
             [self.locationView drawObject:view withPosition:point];
-        
+            
             self.label.text = player.idPlayer;
-        
+            
         }
     }
     
     else {
-    
         
-        ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
         
-        Player *player = [self.turn playerIdentifiedByName:data[@"player"]];
+        ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"station_position"]];
+        
+        Player *player = [self.turn playerIdentifiedById:data[@"player"]];
         
         if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
             UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
@@ -454,8 +441,8 @@
                 self.stationsImageView[occupiedStation.macAddress] = view;
             }
             [self.locationView drawObject:view withPosition:stationPosition];
-
-        
+            
+            
         }
         else {
             UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
@@ -469,12 +456,14 @@
             
         }
         
-        occupiedStation.player = [self.turn playerIdentifiedByName:player.idPlayer];
+        occupiedStation.player = player;
+        player.hasStation = YES;
         occupiedStation.isActive = NO;
         
+        
     }
-
-
+    
+    
 }
 
 -(void)takeStation:(NSString *)message onSession:(AJNSessionId)sessionId{
@@ -489,16 +478,31 @@
         return;
     
     ESTOrientedPoint *playerPosition = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
-    ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"point"]];
-    if ([playerPosition distanceToPoint:stationPosition] <= 0.30 ) {
+    Station *station = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
+    ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"station_position"]];
+    if (station.isActive && [playerPosition distanceToPoint:stationPosition] <= DEFAULT_PROXIMITY_DISTANCE) {
         
         [self.positionObject sendPosition:message onSession:self.sessionId];
         [self didReceiveNewPositionMessage:message forSession:self.sessionId];
+        
+        BOOL endTurn = YES;
+        
+        for(Station *s in self.turn.stations){
+            if(s.isActive){
+                endTurn = NO;
+                break;
+            }
+        }
+        
+        if(endTurn){
+            [self endTurn];
+        }
     }
-
+    
 }
 
 - (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didUpdatePosition:(ESTOrientedPoint *)position inLocation:(ESTLocation *)location {
+    
     NSLog(@"posizione ricevuta");
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
@@ -508,17 +512,17 @@
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
         Station *s = [self.turn stationIdentifiedByMacAddress:beacon.macAddress];
-        if (s.isActive && (s.player == nil)) {
+        if (s.isActive && [position distanceToPoint: beacon.position] <= DEFAULT_PROXIMITY_DISTANCE) {
             
             data[@"station"] = beacon.macAddress;
-            data[@"point"] = [beacon.position toDictionary];
+            data[@"station_position"] = [beacon.position toDictionary];
+
             NSError *error;
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
             NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             if (self.isHost)
-            
                 [self takeStation:message onSession:self.sessionId];
-           
+            
             else {
                 
                 [self.proxyHostObject introspectRemoteObject];
@@ -526,7 +530,7 @@
             }
             
         }
-
+        
     }
     
     
@@ -535,7 +539,7 @@
     NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
     [self.positionObject sendPosition:message onSession:self.sessionId];
-
+    
     
     [self.locationView updatePosition:position];
     
@@ -550,25 +554,87 @@
 - (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didFailToUpdatePositionWithError:(NSError *)error {
     
     NSLog(@"errore posizione");
-
+    
 }
 
 
--(void)startTurnWithMessage: (NSString *)message forSession: (AJNSessionId)sessionId {
+-(void)startTurn {
     
+    self.turn = [[Turn alloc] init];
+    [self.game.turns addObject:self.turn];
     
+    for(Player *player in self.game.players){
+        if(player.isActive){
+            [self.turn.players addObject:player];
+            player.hasStation = NO;
+        }
+    }
+    
+    int i=0;
+    for (ESTPositionedBeacon *beacon in self.location.beacons) {
+        
+        if(i==[self.turn.players count]-1)
+            break;
+        
+        Station *station = [[Station alloc] init];
+        station.macAddress = beacon.macAddress;
+        [self.turn.stations addObject:station];
+        
+        i++;
+        
+    }
 
+    
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    
+    NSMutableArray *players = [NSMutableArray array];
+    
+    for(Player *player in self.turn.players){
+        [players addObject:[NSDictionary dictionaryWithObjectsAndKeys:player.idPlayer, @"id", player.image, @"image", nil]];
+    }
+    
+    data[@"players"]=players;
+    
+    NSMutableArray *stations = [NSMutableArray array];
+
+    for(Station *station in self.turn.stations){
+        [stations addObject:station.macAddress];
+    }
+    
+    data[@"stations"]=stations;
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+    
+    [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
+    //[self didStartTurnWithMessage:message forSession:self.sessionId];
+    [self playSound:@"go" afterSeconds:2];
 }
 
--(void)endTurnWithMessage: (NSString *)message forSession: (AJNSessionId)sessionId {
-
+-(void)endTurn {
+    
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    for(Player *p in self.turn.players){
+        if(!p.hasStation){
+            data[@"loser"]=p.idPlayer;
+        }
+    }
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
+    
 }
 
 
 -(void)playSound: (NSString *)soundName afterSeconds: (int)seconds{
     
     NSString *path  = [[NSBundle mainBundle] pathForResource:soundName ofType:@"wav"];
-
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         NSError *error;
         NSURL *pathURL = [NSURL fileURLWithPath : path];
@@ -577,22 +643,50 @@
                             error:&error];
         [self.audioPlayer play];
     });
-  
     
-   
-}
-
--(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
-
-    NSLog(@"end turn %@", message);
+    
     
 }
 
 -(void)didStartTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
     
-    NSLog(@"start turn %@", message);
+    NSError *jsonError;
+    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:&jsonError];
+    if(jsonError)
+        return;
+    
+    self.turn=[Turn new];
+    NSArray *stations = data[@"stations"];
+    
+    for(NSString *macAddress in stations){
+        Station *station = [Station new];
+        station.macAddress = macAddress;
+        [self.turn.stations addObject: station];
+    }
+    
+    NSArray *players = data[@"players"];
+    
+    for(NSDictionary *playerDic in players){
+        Player *player = [Player new];
+        player.idPlayer = playerDic[@"id"];
+        player.image = playerDic[@"image"];
+        [self.turn.players addObject:player];
+    }
+
+    
     
 }
+
+-(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
+    
+    NSLog(@"end turn %@", message);
+    
+}
+
+
 
 
 #pragma mark - AJNBusListener delegate methods
@@ -632,36 +726,45 @@
 
 - (void)didJoin:(NSString *)joiner inSessionWithId:(AJNSessionId)sessionId onSessionPort:(AJNSessionPort)sessionPort
 {
-    if (self.isHost) {
-        self.sessionId = sessionId;
-        NSLog(@"%@", joiner);
-        NSString * name = [[UIDevice currentDevice] name];
-        Player *player = [[Player alloc] initWithIdPlayer:name];
-        NSLog(@"%@", player.idPlayer);
-        [self.turn.players addObject:player];
-        player.image = [self.images objectAtIndex:0];
-        [self.images removeObjectAtIndex:0];
-        
-        // if numberOfPlayer expected is reached then start turn
+    if([self.game.players count] == self.numberOfPlayers)
+        return;
+    
+    if(!self.player.idPlayer)
+        self.player.idPlayer=self.busAttachment.uniqueName;
+    
+    
+    self.sessionId = sessionId;
+    NSLog(@"%@", joiner);
+    Player *player = [[Player alloc] initWithIdPlayer:joiner];
+    NSLog(@"%@", player.idPlayer);
+    [self.game.players addObject:player];
+    player.image = [self.images objectAtIndex:0];
+    [self.images removeObjectAtIndex:0];
+    
+    if(self.numberOfPlayers == [self.game.players count])
+    {
+        [self startTurn];
     }
+    // if numberOfPlayer expected is reached then start turn
+    
 }
 
 - (BOOL)shouldAcceptSessionJoinerNamed:(NSString *)joiner onSessionPort:(AJNSessionPort)sessionPort withSessionOptions:(AJNSessionOptions *)options {
-
+    
     return sessionPort == kServicePort;
-
+    
 }
 
 
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

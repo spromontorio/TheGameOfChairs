@@ -10,13 +10,12 @@
 
 @implementation Turn
 
--(id)initWithPlayer:(Player *)player {
+-(id)init {
 
     self = [super init];
     if (self) {
  
         self.players = [[NSMutableArray alloc] init];
-        [self.players addObject:player];
         self.stations = [[NSMutableArray alloc] init];
     }
     
@@ -33,10 +32,10 @@
     return nil;
 }
 
--(Player *)playerIdentifiedByName:(NSString *)name {
+-(Player *)playerIdentifiedById:(NSString *)ide {
     
     for (Player *player in self.players) {
-        if ([player.idPlayer isEqualToString:name ])
+        if ([player.idPlayer isEqualToString:ide ])
             return player;
     }
     return nil;

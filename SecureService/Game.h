@@ -12,8 +12,8 @@
 @interface Game : NSObject
 
 @property (nonatomic, strong) NSMutableArray *turns;
+@property (nonatomic, strong) NSMutableArray *players;
 
--(id)initWithTurn:(Turn *)turn;
 
 
 @end
