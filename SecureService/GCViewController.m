@@ -593,6 +593,7 @@
         NSLog(@"%@", joiner);
         NSString * name = [[UIDevice currentDevice] name];
         Player *player = [[Player alloc] initWithIdPlayer:name];
+        NSLog(@"%@", player.idPlayer);
         [self.turn.players addObject:player];
         player.image = [self.images objectAtIndex:0];
         [self.images removeObjectAtIndex:0];
