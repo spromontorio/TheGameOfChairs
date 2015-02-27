@@ -88,7 +88,7 @@ void GCTurnSignalHandlerImpl::UnregisterSignalHandler(ajn::BusAttachment &bus)
     QStatus status =  bus.UnregisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(&GCTurnSignalHandlerImpl::StartTurnSignalHandler), startTurnSignalMember, NULL);
 
     if (status != ER_OK) {
-        NSLog(@"ERROR:GCPositionObjectSignalHandlerImpl::UnregisterSignalHandler StartTurn failed. %@", [AJNStatus descriptionForStatusCode:status] );
+        NSLog(@"ERROR:GCTurnSignalHandlerImpl::UnregisterSignalHandler StartTurn failed. %@", [AJNStatus descriptionForStatusCode:status] );
     }
     
     if (endTurnSignalMember == NULL) {
@@ -103,7 +103,7 @@ void GCTurnSignalHandlerImpl::UnregisterSignalHandler(ajn::BusAttachment &bus)
     status =  bus.UnregisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(&GCTurnSignalHandlerImpl::EndTurnSignalHandler), endTurnSignalMember, NULL);
     
     if (status != ER_OK) {
-        NSLog(@"ERROR:GCPositionObjectSignalHandlerImpl::UnregisterSignalHandler EndTurn failed. %@", [AJNStatus descriptionForStatusCode:status] );
+        NSLog(@"ERROR:GCTurnSignalHandlerImpl::UnregisterSignalHandler EndTurn failed. %@", [AJNStatus descriptionForStatusCode:status] );
     }
 
 }
@@ -112,11 +112,8 @@ void GCTurnSignalHandlerImpl::StartTurnSignalHandler(const ajn::InterfaceDescrip
 {
     @autoreleasepool {
         NSString *message = [NSString stringWithCString:msg->GetArg(0)->v_string.str encoding:NSUTF8StringEncoding];
-        NSString *from = [NSString stringWithCString:msg->GetSender() encoding:NSUTF8StringEncoding];
-        NSString *objectPath = [NSString stringWithCString:msg->GetObjectPath() encoding:NSUTF8StringEncoding];
+       
         ajn:SessionId sessionId = msg->GetSessionId();
-        
-        NSLog(@"Received signal [%@] from %@ on path %@ for session id %u [%s > %s]", message, from, objectPath, msg->GetSessionId(), msg->GetRcvEndpointName(), msg->GetDestination() ? msg->GetDestination() : "broadcast");
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [(id<GCTurnReceiver>)m_delegate didStartTurnWithMessage: message forSession:sessionId];
@@ -129,11 +126,8 @@ void GCTurnSignalHandlerImpl::EndTurnSignalHandler(const ajn::InterfaceDescripti
 {
     @autoreleasepool {
         NSString *message = [NSString stringWithCString:msg->GetArg(0)->v_string.str encoding:NSUTF8StringEncoding];
-        NSString *from = [NSString stringWithCString:msg->GetSender() encoding:NSUTF8StringEncoding];
-        NSString *objectPath = [NSString stringWithCString:msg->GetObjectPath() encoding:NSUTF8StringEncoding];
-    ajn:SessionId sessionId = msg->GetSessionId();
-        
-        NSLog(@"Received signal [%@] from %@ on path %@ for session id %u [%s > %s]", message, from, objectPath, msg->GetSessionId(), msg->GetRcvEndpointName(), msg->GetDestination() ? msg->GetDestination() : "broadcast");
+       
+        ajn:SessionId sessionId = msg->GetSessionId();
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [(id<GCTurnReceiver>)m_delegate didEndTurnWithMessage: message forSession:sessionId];

@@ -79,11 +79,8 @@ void GCPositionObjectSignalHandlerImpl::PositionSignalHandler(const ajn::Interfa
 {
     @autoreleasepool {
         NSString *message = [NSString stringWithCString:msg->GetArg(0)->v_string.str encoding:NSUTF8StringEncoding];
-        NSString *from = [NSString stringWithCString:msg->GetSender() encoding:NSUTF8StringEncoding];
-        NSString *objectPath = [NSString stringWithCString:msg->GetObjectPath() encoding:NSUTF8StringEncoding];
+       
         ajn:SessionId sessionId = msg->GetSessionId();
-        
-        NSLog(@"Received signal [%@] from %@ on path %@ for session id %u [%s > %s]", message, from, objectPath, msg->GetSessionId(), msg->GetRcvEndpointName(), msg->GetDestination() ? msg->GetDestination() : "broadcast");
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [(id<GCPositionReceiver>)m_delegate didReceiveNewPositionMessage:message forSession:sessionId];

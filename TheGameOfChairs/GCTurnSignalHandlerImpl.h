@@ -22,7 +22,6 @@ class GCTurnSignalHandlerImpl : public AJNSignalHandlerImpl {
     const ajn::InterfaceDescription::Member* startTurnSignalMember;
     const ajn::InterfaceDescription::Member* endTurnSignalMember;
 
-    /** Receive a signal from another Position client */
     void StartTurnSignalHandler(const ajn::InterfaceDescription::Member* member, const char* srcPath, ajn::Message& msg);
      void EndTurnSignalHandler(const ajn::InterfaceDescription::Member* member, const char* srcPath, ajn::Message& msg);
 

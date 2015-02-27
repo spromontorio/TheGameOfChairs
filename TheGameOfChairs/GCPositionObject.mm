@@ -34,10 +34,8 @@
 {
     self = [super initWithBusAttachment:busAttachment onPath:path];
     if (self) {
-        // create the internal C++ bus object
-        //
+
         GCPositionObjectImpl *busObject = new GCPositionObjectImpl(*((ajn::BusAttachment*)busAttachment.handle), [path UTF8String], self);
-        NSLog(@"%s", [path UTF8String]);
         
         self.handle = busObject;
     }

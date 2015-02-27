@@ -33,7 +33,6 @@ GCPositionObjectImpl::GCPositionObjectImpl(ajn::BusAttachment &bus, const char *
 /* send a position signal */
 QStatus GCPositionObjectImpl::SendPositionSignal(const char* msg, ajn::SessionId sessionId)
 {
-    NSLog(@"SendPositionSignal( %s, %u)", msg, sessionId);
     
     ajn::MsgArg posArg("s", msg);
     

@@ -25,7 +25,6 @@ GCTurnObjectImpl::GCTurnObjectImpl(ajn::BusAttachment &bus, const char *path, id
     assert(intf);
     AddInterface(*intf);
     
-    /* Store the Position signal member away so it can be quickly looked up when signals are sent */
     startTurnSignalMember = intf->GetMember("StartTurn");
     endTurnSignalMember = intf->GetMember("EndTurn");
 
@@ -36,8 +35,6 @@ GCTurnObjectImpl::GCTurnObjectImpl(ajn::BusAttachment &bus, const char *path, id
 
 QStatus GCTurnObjectImpl::SendStartTurnSignal(const char* msg, ajn::SessionId sessionId)
 {
-    NSLog(@"SendStartTurnSignal( %s, %u)", msg, sessionId);
-    
     ajn::MsgArg args("s", msg);
     
      //if we are using sessionless signals, ignore the session (obviously)
@@ -50,7 +47,6 @@ QStatus GCTurnObjectImpl::SendStartTurnSignal(const char* msg, ajn::SessionId se
 
 QStatus GCTurnObjectImpl::SendEndTurnSignal(const char* msg, ajn::SessionId sessionId)
 {
-    NSLog(@"SendEndTurnSignal( %s, %u)", msg, sessionId);
     
     ajn::MsgArg args("s", msg);
     

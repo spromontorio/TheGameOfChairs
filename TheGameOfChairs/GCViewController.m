@@ -121,9 +121,6 @@
     
     if(!self.started)
     {
-        [self playSound:@"go" afterSeconds:3];
-        
-        [self createAndConnectBus];
         self.started=YES;
         self.sessionTypeSegmentedControl.enabled=NO;
         self.sessionSwitch.enabled=NO;
@@ -133,6 +130,9 @@
             gMessageFlags=kAJNMessageFlagSessionless;
         
         self.isHost=[self.sessionSwitch isOn] && self.sessionTypeSegmentedControl.selectedSegmentIndex == 1;
+        
+        [self createAndConnectBus];
+
         
         [sender setTitle:@"Stop" forState:UIControlStateNormal];
         
@@ -189,7 +189,7 @@
 
 - (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didUpdatePosition:(ESTOrientedPoint *)position inLocation:(ESTLocation *)location {
     
-    NSLog(@"posizione ricevuta");
+    NSLog(@"position received");
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"player"] = self.player.idPlayer;
@@ -232,7 +232,7 @@
 -(void)indoorLocationManager:(ESTIndoorLocationManager *)manager didFailToUpdatePositionWithError:(NSError *)error
 {
     
-    NSLog(@"errore posizione");
+   // NSLog(@"position error");
 }
 
 
@@ -292,9 +292,9 @@
 -(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
     
     if(gMessageFlags != kAJNMessageFlagSessionless && self.sessionId!=sessionId)
-        NSLog(@"POSIZIONE RICEVUTA MA SESSIONE ERRATA");
+        NSLog(@"Session Error");
     
-    NSLog(@"RICEVUTA POSIZIONE: %@", message);
+    NSLog(@"Position Signal received %@", message);
     NSError *jsonError;
     NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
@@ -478,6 +478,8 @@
 
 -(void)didStartTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
     
+    NSLog(@"Start turn signal received %@", message);
+    
     NSError *jsonError;
     NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
@@ -510,7 +512,7 @@
 
 -(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
     
-    NSLog(@"end turn %@", message);
+    NSLog(@"End turn signal received %@", message);
     
 }
 
@@ -762,6 +764,7 @@
 
 - (void)didJoin:(NSString *)joiner inSessionWithId:(AJNSessionId)sessionId onSessionPort:(AJNSessionPort)sessionPort
 {
+    NSLog(@"JOIN");
     if([self.game.players count] == self.numberOfPlayers)
         return;
     
@@ -770,9 +773,7 @@
     
     
     self.sessionId = sessionId;
-    NSLog(@"%@", joiner);
     Player *player = [[Player alloc] initWithIdPlayer:joiner];
-    NSLog(@"%@", player.idPlayer);
     [self.game.players addObject:player];
     player.image = [self.images objectAtIndex:0];
     [self.images removeObjectAtIndex:0];
