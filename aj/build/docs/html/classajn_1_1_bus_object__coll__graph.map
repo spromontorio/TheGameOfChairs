@@ -1,0 +1,4 @@
+<map id="ajn::BusObject" name="ajn::BusObject">
+<area shape="rect" id="node2" href="$classajn_1_1_message_receiver.html" title="MessageReceiver is a pure&#45;virtual base class that is implemented by any class that wishes to receive ..." alt="" coords="5,5,159,31"/>
+<area shape="rect" id="node3" href="$classajn_1_1_bus_attachment.html" title="BusAttachment is the top&#45;level object responsible for connecting to and optionally managing a message..." alt="" coords="84,80,221,105"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="ajn::BusObject" name="ajn::BusObject">
+<area shape="rect" id="node3" href="$classajn_1_1_about_icon_obj.html" title="AboutIconObj is an AllJoyn BusObject that implements the org.alljoyn.Icon standard interface..." alt="" coords="390,5,517,31"/>
+<area shape="rect" id="node4" href="$classajn_1_1_about_obj.html" title="An AllJoyn BusObject that implements the org.alljoyn.About interface. " alt="" coords="403,55,505,80"/>
+<area shape="rect" id="node5" href="$classajn_1_1services_1_1_about_icon_service.html" title="AboutIconService is an AllJoyn BusObject that implements the org.alljoyn.Icon standard interface..." alt="" coords="372,104,535,143"/>
+<area shape="rect" id="node6" href="$classajn_1_1services_1_1_about_service.html" title="AboutService is an AllJoyn BusObject that implements the org.alljoyn.About standard interface..." alt="" coords="363,167,545,192"/>
+<area shape="rect" id="node2" href="$classajn_1_1_message_receiver.html" title="MessageReceiver is a pure&#45;virtual base class that is implemented by any class that wishes to receive ..." alt="" coords="5,111,159,136"/>
+<area shape="rect" id="node7" href="$classajn_1_1services_1_1_about_service_api.html" title="AboutServiceApi is wrapper class that encapsulates the AboutService with a Singelton. " alt="" coords="593,167,794,192"/>
+</map>

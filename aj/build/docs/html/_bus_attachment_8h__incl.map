@@ -1,0 +1,25 @@
+<map id="BusAttachment.h" name="BusAttachment.h">
+<area shape="rect" id="node2" href="$platform_8h.html" title="This file just wraps including actual OS and toolchain specific header files depding on the OS group ..." alt="" coords="1678,445,1783,471"/>
+<area shape="rect" id="node3" href="$_string_8h.html" title="Non&#45;STL version of string. " alt="" coords="542,372,634,397"/>
+<area shape="rect" id="node6" href="$_key_store_listener_8h.html" title="The KeyStoreListener class handled requests to load or store the key store. " alt="" coords="702,299,877,324"/>
+<area shape="rect" id="node7" href="$_status_8h.html" title="This file contains an enumerated list values that QStatus can return. " alt="" coords="1112,372,1224,397"/>
+<area shape="rect" id="node8" href="$_auth_listener_8h.html" title="This file defines the AuthListener class that provides the interface between authentication mechanism..." alt="" coords="1318,152,1466,177"/>
+<area shape="rect" id="node13" href="$_session_8h.html" title="AllJoyn session related data types. " alt="" coords="1965,299,2086,324"/>
+<area shape="rect" id="node15" href="$_about_listener_8h.html" title="This contains the AboutListener class. " alt="" coords="1085,79,1240,104"/>
+<area shape="rect" id="node18" href="$_about_object_description_8h.html" title="This contains the AboutObjectDescription class responsible holding a list of all BusObject interfaces..." alt="" coords="554,225,768,251"/>
+<area shape="rect" id="node19" href="$_interface_description_8h.html" title="This file defines types for statically describing a message bus interface. " alt="" coords="789,152,982,177"/>
+<area shape="rect" id="node21" href="$_translator_8h.html" title="Translator is an abstract base class (interface) implemented by users of the AllJoyn API in order to ..." alt="" coords="43,225,176,251"/>
+<area shape="rect" id="node23" href="$_bus_listener_8h.html" title="BusListener is an abstract base class (interface) implemented by users of the AllJoyn API in order to..." alt="" coords="2256,299,2400,324"/>
+<area shape="rect" id="node24" href="$_bus_object_8h.html" title="This file defines the base class for message bus objects that are implemented and registered locally..." alt="" coords="842,79,977,104"/>
+<area shape="rect" id="node25" href="$_proxy_bus_object_8h.html" title="This file defines the class ProxyBusObject. " alt="" coords="1735,79,1905,104"/>
+<area shape="rect" id="node27" href="$_session_listener_8h.html" title="SessionListener is an abstract base class (interface) implemented by users of the AllJoyn API in orde..." alt="" coords="2213,152,2381,177"/>
+<area shape="rect" id="node28" href="$_session_port_listener_8h.html" title="SessionPortListener is an abstract base class (interface) implemented by users of the AllJoyn API in ..." alt="" coords="2240,79,2432,104"/>
+<area shape="rect" id="node9" href="$_message_8h.html" title="This file defines a class for parsing and generating message bus messages. " alt="" coords="1605,225,1733,251"/>
+<area shape="rect" id="node10" href="$_managed_obj_8h.html" title="This template class provides reference counting based heap allocation for objects. " alt="" coords="1603,299,1736,324"/>
+<area shape="rect" id="node12" href="$_msg_arg_8h.html" title="This file defines a class for message bus data types and values. " alt="" coords="1256,299,1376,324"/>
+<area shape="rect" id="node14" href="$_transport_mask_8h.html" title="Transport type definitions. " alt="" coords="2163,372,2325,397"/>
+<area shape="rect" id="node16" href="$_about_data_8h.html" title="This contains the AboutData class responsible for holding the org.alljoyn.About interface data fields..." alt="" coords="1056,152,1192,177"/>
+<area shape="rect" id="node22" href="$_message_receiver_8h.html" title="MessageReceiver is a base class implemented by any class which wishes to receive AllJoyn messages..." alt="" coords="1642,152,1822,177"/>
+<area shape="rect" id="node17" href="$_about_data_listener_8h_source.html" title="alljoyn/AboutDataListener.h" alt="" coords="1144,225,1328,251"/>
+<area shape="rect" id="node20" href="$_d_bus_std_8h.html" title="This file provides definitions for standard DBus interfaces. " alt="" coords="842,225,969,251"/>
+</map>

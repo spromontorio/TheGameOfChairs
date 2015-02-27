@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>787F0C8E-4B5B-46E3-9DA9-806D9CDF92AF</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TheGameOfChairs</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F00E1917870B6618DD090F416BF31733CDCF6188</key>
+		<string>https://bitbucket.org/spromontorio/thegameofchairs.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TheGameOfChairs.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F00E1917870B6618DD090F416BF31733CDCF6188</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://bitbucket.org/spromontorio/thegameofchairs.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F00E1917870B6618DD090F416BF31733CDCF6188</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F00E1917870B6618DD090F416BF31733CDCF6188</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TheGameOfChairs%20copia</string>
+		</dict>
+	</array>
+</dict>
+</plist>

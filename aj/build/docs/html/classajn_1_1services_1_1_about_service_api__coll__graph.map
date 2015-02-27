@@ -1,0 +1,6 @@
+<map id="ajn::services::AboutServiceApi" name="ajn::services::AboutServiceApi">
+<area shape="rect" id="node2" href="$classajn_1_1services_1_1_about_service.html" title="AboutService is an AllJoyn BusObject that implements the org.alljoyn.About standard interface..." alt="" coords="15,241,197,267"/>
+<area shape="rect" id="node3" href="$classajn_1_1_bus_object.html" title="Message Bus Object base class. " alt="" coords="52,167,160,192"/>
+<area shape="rect" id="node4" href="$classajn_1_1_message_receiver.html" title="MessageReceiver is a pure&#45;virtual base class that is implemented by any class that wishes to receive ..." alt="" coords="43,5,196,31"/>
+<area shape="rect" id="node5" href="$classajn_1_1_bus_attachment.html" title="BusAttachment is the top&#45;level object responsible for connecting to and optionally managing a message..." alt="" coords="122,80,259,105"/>
+</map>

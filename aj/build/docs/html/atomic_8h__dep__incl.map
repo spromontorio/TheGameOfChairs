@@ -1,0 +1,10 @@
+<map id="atomic.h" name="atomic.h">
+<area shape="rect" id="node2" href="$_managed_obj_8h.html" title="This template class provides reference counting based heap allocation for objects. " alt="" coords="268,79,377,104"/>
+<area shape="rect" id="node3" href="$_message_8h.html" title="This file defines a class for parsing and generating message bus messages. " alt="" coords="279,152,366,177"/>
+<area shape="rect" id="node4" href="$_about_listener_8h.html" title="This contains the AboutListener class. " alt="" coords="43,299,157,324"/>
+<area shape="rect" id="node5" href="$_auth_listener_8h.html" title="This file defines the AuthListener class that provides the interface between authentication mechanism..." alt="" coords="413,225,520,251"/>
+<area shape="rect" id="node6" href="$_interface_description_8h.html" title="This file defines types for statically describing a message bus interface. " alt="" coords="24,225,175,251"/>
+<area shape="rect" id="node7" href="$_proxy_bus_object_8h.html" title="This file defines the class ProxyBusObject. " alt="" coords="205,299,333,324"/>
+<area shape="rect" id="node8" href="$_message_receiver_8h.html" title="MessageReceiver is a base class implemented by any class which wishes to receive AllJoyn messages..." alt="" coords="200,225,338,251"/>
+<area shape="rect" id="node9" href="$_message_sink_8h.html" title="Abstract interface implemented by objects that wish to consume Message Bus messages. " alt="" coords="544,225,656,251"/>
+</map>

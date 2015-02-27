@@ -1,0 +1,11 @@
+<map id="ajn::AllJoynDictEntry" name="ajn::AllJoynDictEntry">
+<area shape="rect" id="node2" href="$classajn_1_1_msg_arg.html" title="Class definition for a message arg. " alt="" coords="298,171,390,197"/>
+<area shape="rect" id="node6" href="$structajn_1_1_all_joyn_variant.html" title="Type for a variant. " alt="" coords="497,137,628,162"/>
+<area shape="rect" id="node8" href="$structajn_1_1_all_joyn_struct.html" title="Type for a struct. " alt="" coords="501,205,625,230"/>
+<area shape="rect" id="node3" href="$structajn_1_1_all_joyn_handle.html" title="Type for a handle. " alt="" coords="19,94,151,119"/>
+<area shape="rect" id="node4" href="$structajn_1_1_all_joyn_invalid.html" title="Type for initializing an invalid MsgArg. " alt="" coords="21,143,149,169"/>
+<area shape="rect" id="node5" href="$structajn_1_1_all_joyn_string.html" title="Type for the various string types. " alt="" coords="23,194,147,219"/>
+<area shape="rect" id="node7" href="$classajn_1_1_all_joyn_array.html" title="Type for an array. " alt="" coords="24,243,146,269"/>
+<area shape="rect" id="node9" href="$structajn_1_1_all_joyn_signature.html" title="Type for a signature The same as AllJoynString except the length is a single byte (thus signatures ha..." alt="" coords="12,293,158,318"/>
+<area shape="rect" id="node10" href="$structajn_1_1_all_joyn_scalar_array.html" title="Type for arrays of scalars. " alt="" coords="5,342,164,367"/>
+</map>

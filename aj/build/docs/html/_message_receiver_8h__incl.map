@@ -1,0 +1,11 @@
+<map id="MessageReceiver.h" name="MessageReceiver.h">
+<area shape="rect" id="node2" href="$platform_8h.html" title="This file just wraps including actual OS and toolchain specific header files depding on the OS group ..." alt="" coords="197,299,302,324"/>
+<area shape="rect" id="node3" href="$_message_8h.html" title="This file defines a class for parsing and generating message bus messages. " alt="" coords="403,79,531,104"/>
+<area shape="rect" id="node4" href="$_string_8h.html" title="Non&#45;STL version of string. " alt="" coords="626,225,718,251"/>
+<area shape="rect" id="node7" href="$_managed_obj_8h.html" title="This template class provides reference counting based heap allocation for objects. " alt="" coords="400,152,533,177"/>
+<area shape="rect" id="node11" href="$_msg_arg_8h.html" title="This file defines a class for message bus data types and values. " alt="" coords="719,152,839,177"/>
+<area shape="rect" id="node13" href="$_status_8h.html" title="This file contains an enumerated list values that QStatus can return. " alt="" coords="910,225,1021,251"/>
+<area shape="rect" id="node14" href="$_session_8h.html" title="AllJoyn session related data types. " alt="" coords="166,152,287,177"/>
+<area shape="rect" id="node10" href="$atomic_8h.html" title="Toolchain specific wrapper for atomic.h. " alt="" coords="312,225,408,251"/>
+<area shape="rect" id="node15" href="$_transport_mask_8h.html" title="Transport type definitions. " alt="" coords="56,225,219,251"/>
+</map>

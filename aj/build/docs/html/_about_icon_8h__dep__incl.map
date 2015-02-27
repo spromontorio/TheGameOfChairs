@@ -1,0 +1,4 @@
+<map id="AboutIcon.h" name="AboutIcon.h">
+<area shape="rect" id="node2" href="$_about_icon_obj_8h.html" title="An Alljoyn BusObject that implements the org.alljoyn.Icon interface. " alt="" coords="5,79,119,104"/>
+<area shape="rect" id="node3" href="$_about_icon_proxy_8h.html" title="Implementation of a ProxyBusObject used to interact with a org.alljoyn.Icon interface. " alt="" coords="143,79,269,104"/>
+</map>

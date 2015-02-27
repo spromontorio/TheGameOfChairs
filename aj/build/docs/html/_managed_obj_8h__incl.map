@@ -1,0 +1,4 @@
+<map id="ManagedObj.h" name="ManagedObj.h">
+<area shape="rect" id="node2" href="$platform_8h.html" title="This file just wraps including actual OS and toolchain specific header files depding on the OS group ..." alt="" coords="101,152,206,177"/>
+<area shape="rect" id="node6" href="$atomic_8h.html" title="Toolchain specific wrapper for atomic.h. " alt="" coords="274,79,370,104"/>
+</map>

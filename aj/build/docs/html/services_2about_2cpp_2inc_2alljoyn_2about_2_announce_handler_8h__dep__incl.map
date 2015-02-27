@@ -1,0 +1,4 @@
+<map id="AnnounceHandler.h" name="AnnounceHandler.h">
+<area shape="rect" id="node2" href="$build_2darwin_2x86_2debug_2dist_2cpp_2inc_2alljoyn_2about_2_announcement_registrar_8h.html" title="Used to register an AnnounceHandler for the org.alljoyn.About Announce signal. " alt="" coords="5,79,181,104"/>
+<area shape="rect" id="node3" href="$services_2about_2cpp_2inc_2alljoyn_2about_2_announcement_registrar_8h.html" title="Used to register an AnnounceHandler for the org.alljoyn.About Announce signal. " alt="" coords="205,79,381,104"/>
+</map>

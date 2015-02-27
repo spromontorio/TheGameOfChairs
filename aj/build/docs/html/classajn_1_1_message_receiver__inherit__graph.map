@@ -1,0 +1,14 @@
+<map id="ajn::MessageReceiver" name="ajn::MessageReceiver">
+<area shape="rect" id="node2" href="$classajn_1_1_bus_attachment.html" title="BusAttachment is the top&#45;level object responsible for connecting to and optionally managing a message..." alt="" coords="243,89,380,115"/>
+<area shape="rect" id="node3" href="$classajn_1_1_bus_object.html" title="Message Bus Object base class. " alt="" coords="257,139,365,164"/>
+<area shape="rect" id="node9" href="$classajn_1_1_proxy_bus_object.html" title="Each ProxyBusObject instance represents a single DBus/AllJoyn object registered somewhere on the bus..." alt="" coords="240,201,382,227"/>
+<area shape="rect" id="node12" href="$classajn_1_1services_1_1_about_client.html" title="AboutClient is a helper class used by an AllJoyn IoE client application to discover services being of..." alt="" coords="225,251,397,276"/>
+<area shape="rect" id="node13" href="$classajn_1_1services_1_1_announce_handler.html" title="AnnounceHandler is a helper class used by an AllJoyn IoE client application to receive AboutService s..." alt="" coords="207,300,416,325"/>
+<area shape="rect" id="node4" href="$classajn_1_1_about_icon_obj.html" title="AboutIconObj is an AllJoyn BusObject that implements the org.alljoyn.Icon standard interface..." alt="" coords="492,5,619,31"/>
+<area shape="rect" id="node5" href="$classajn_1_1_about_obj.html" title="An AllJoyn BusObject that implements the org.alljoyn.About interface. " alt="" coords="504,55,606,80"/>
+<area shape="rect" id="node6" href="$classajn_1_1services_1_1_about_icon_service.html" title="AboutIconService is an AllJoyn BusObject that implements the org.alljoyn.Icon standard interface..." alt="" coords="474,104,637,143"/>
+<area shape="rect" id="node7" href="$classajn_1_1services_1_1_about_service.html" title="AboutService is an AllJoyn BusObject that implements the org.alljoyn.About standard interface..." alt="" coords="464,167,646,192"/>
+<area shape="rect" id="node8" href="$classajn_1_1services_1_1_about_service_api.html" title="AboutServiceApi is wrapper class that encapsulates the AboutService with a Singelton. " alt="" coords="694,167,896,192"/>
+<area shape="rect" id="node10" href="$classajn_1_1_about_icon_proxy.html" title="AboutIconProxy enables the user of the class to interact with the remote AboutIcon BusObject..." alt="" coords="485,216,626,241"/>
+<area shape="rect" id="node11" href="$classajn_1_1_about_proxy.html" title="AboutProxy give proxy access to the org.alljoyn.About interface AboutProxy class enables the user to ..." alt="" coords="498,265,613,291"/>
+</map>
