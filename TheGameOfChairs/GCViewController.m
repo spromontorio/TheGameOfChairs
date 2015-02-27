@@ -72,6 +72,7 @@
 
 @implementation GCViewController
 
+#pragma mark View lifecycle and buttons
 
 - (void)viewDidLoad {
     
@@ -80,12 +81,7 @@
     self.manager = [ESTIndoorLocationManager new];
     self.manager.delegate = self;
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"location" ofType:@"json"];
-    NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     
-    self.location = [ESTLocationBuilder parseFromJSON:content];
-    
-    // Do any additional setup after loading the view.
     self.started=NO;
     self.playersImageView = [NSMutableDictionary dictionary];
     self.stationsImageView = [NSMutableDictionary dictionary];
@@ -94,11 +90,38 @@
     
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    NSDictionary *location = [[NSUserDefaults standardUserDefaults] objectForKey:@"location"];
+    if(!location){
+        
+        // temporary
+        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"location" ofType:@"json"];
+        NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+        
+        ESTLocation *location = [ESTLocationBuilder parseFromJSON:content];
+        NSDictionary *rawLocation = [location toDictionary];
+        [[NSUserDefaults standardUserDefaults] setObject:rawLocation forKey:@"location"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self setupLocationWithDictionary:rawLocation];
+        
+        //[self presentLocationSetupController];
+    }
+    else{
+        
+        [self setupLocationWithDictionary:location];
+    }
+
+}
+
+
 -(IBAction)didTouchStartButton:(UIButton *)sender {
     
     if(!self.started)
     {
-        //[self playSound:@"go" afterSeconds:3];
+        [self playSound:@"go" afterSeconds:3];
         
         [self createAndConnectBus];
         self.started=YES;
@@ -145,8 +168,375 @@
     
 }
 
+- (IBAction)didTouchSendButton:(id)sender {
+    NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @" ciao"];
+    
+    [self.proxyHostObject introspectRemoteObject];
+    
+    [self.proxyHostObject takeStation:message onSession:self.sessionId];
+    
+    
+    [self.positionObject sendPosition:message onSession:self.sessionId];
+    [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
+    [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
+    
+    if (gMessageFlags != kAJNMessageFlagSessionless) {
+        [self didReceiveNewPositionMessage:message forSession:self.sessionId];
+    }
+}
 
-//setup method for alljoyn stuff
+#pragma mark Estimote SDK (host and client)
+
+- (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didUpdatePosition:(ESTOrientedPoint *)position inLocation:(ESTLocation *)location {
+    
+    NSLog(@"posizione ricevuta");
+    
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    data[@"player"] = self.player.idPlayer;
+    data[@"position"] = [position toDictionary];
+    
+    for (ESTPositionedBeacon *beacon in self.location.beacons) {
+        
+        Station *s = [self.turn stationIdentifiedByMacAddress:beacon.macAddress];
+        if (s.isActive && [position distanceToPoint: beacon.position] <= DEFAULT_PROXIMITY_DISTANCE) {
+            
+            data[@"station"] = beacon.macAddress;
+            data[@"station_position"] = [beacon.position toDictionary];
+            
+            NSError *error;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+            NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            if (self.isHost)
+                [self takeStation:message onSession:self.sessionId];
+            
+            else {
+                
+                [self.proxyHostObject introspectRemoteObject];
+                [self.proxyHostObject takeStation:message onSession:self.sessionId];
+            }
+            
+        }
+        
+    }
+    
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    [self.positionObject sendPosition:message onSession:self.sessionId];
+    
+    [self.locationView updatePosition:position];
+}
+
+-(void)indoorLocationManager:(ESTIndoorLocationManager *)manager didFailToUpdatePositionWithError:(NSError *)error
+{
+    
+    NSLog(@"errore posizione");
+}
+
+
+-(void)presentLocationSetupController{
+    
+    __weak GCViewController *weakSelf = self;
+    UIViewController *nextVC = [ESTIndoorLocationManager locationSetupControllerWithCompletion:^(ESTLocation *location, NSError *error) {
+        
+        [weakSelf dismissViewControllerAnimated:YES completion:^{
+            if (location)
+            {
+                NSDictionary *rawLocation = [location toDictionary];
+                [[NSUserDefaults standardUserDefaults] setObject:rawLocation forKey:@"location"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [self setupLocationWithDictionary:rawLocation];
+                
+            }
+        }];
+    }];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nextVC];
+    [self presentViewController:navController animated:YES completion:nil];
+
+}
+
+-(void)setupLocationWithDictionary: (NSDictionary *)location{
+    
+    
+    self.location = [ESTLocation locationFromDictionary:location];
+    
+    self.locationView.backgroundColor = [UIColor clearColor];
+    
+    self.locationView.showTrace               = NO;
+    self.locationView.rotateOnPositionUpdate  = YES;
+    
+    self.locationView.showWallLengthLabels    = YES;
+    
+    self.locationView.locationBorderColor     = [UIColor blackColor];
+    self.locationView.locationBorderThickness = 4;
+    self.locationView.doorColor               = [UIColor brownColor];
+    self.locationView.doorThickness           = 6;
+    self.locationView.traceColor              = [UIColor blueColor];
+    self.locationView.traceThickness          = 2;
+    self.locationView.wallLengthLabelsColor   = [UIColor blackColor];
+    
+    
+    UIImage *image = [UIImage imageNamed:self.player.image];
+    self.locationView.positionImage = image;
+    
+    [self.locationView drawLocation:self.location];
+    
+}
+
+
+#pragma mark Position signal handler (host and client)
+
+-(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
+    
+    if(gMessageFlags != kAJNMessageFlagSessionless && self.sessionId!=sessionId)
+        NSLog(@"POSIZIONE RICEVUTA MA SESSIONE ERRATA");
+    
+    NSLog(@"RICEVUTA POSIZIONE: %@", message);
+    NSError *jsonError;
+    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:&jsonError];
+    if(jsonError)
+        return;
+    Station *occupiedStation = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
+    
+    if (occupiedStation == nil) {
+        
+        Player *player = [self.turn playerIdentifiedById:data[@"player"]];
+        if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
+            UIImageView *view = self.playersImageView[player];
+            if (!view) {
+                
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:player.image]];
+                [self.locationView addSubview:view];
+                self.playersImageView[player.idPlayer] = view;
+            }
+            
+            ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
+            [self.locationView drawObject:view withPosition:point];
+            
+            self.label.text = player.idPlayer;
+            
+        }
+    }
+    
+    else {
+        
+        ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"station_position"]];
+        
+        Player *player = [self.turn playerIdentifiedById:data[@"player"]];
+        
+        if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
+            UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
+            if (!view) {
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+                view.alpha = 0.5;
+                [self.locationView addSubview:view];
+                self.stationsImageView[occupiedStation.macAddress] = view;
+            }
+            [self.locationView drawObject:view withPosition:stationPosition];
+            
+            
+        }
+        else {
+            UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
+            if (!view) {
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"green.png"]];
+                view.alpha = 0.5;
+                [self.locationView addSubview:view];
+                self.stationsImageView[occupiedStation.macAddress] = view;
+            }
+            [self.locationView drawObject:view withPosition:stationPosition];
+            
+        }
+        
+        occupiedStation.player = player;
+        player.hasStation = YES;
+        occupiedStation.isActive = NO;
+        
+    }
+    
+    
+}
+
+#pragma mark TakeStation bus method (host)
+
+-(void)takeStation:(NSString *)message onSession:(AJNSessionId)sessionId{
+    NSLog(@"Take Station: %@", message);
+    
+    NSError *jsonError;
+    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:&jsonError];
+    if(jsonError)
+        return;
+    
+    ESTOrientedPoint *playerPosition = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
+    Station *station = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
+    ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"station_position"]];
+    if (station.isActive && [playerPosition distanceToPoint:stationPosition] <= DEFAULT_PROXIMITY_DISTANCE) {
+        
+        [self.positionObject sendPosition:message onSession:self.sessionId];
+        [self didReceiveNewPositionMessage:message forSession:self.sessionId];
+        
+        BOOL endTurn = YES;
+        
+        for(Station *s in self.turn.stations){
+            if(s.isActive){
+                endTurn = NO;
+                break;
+            }
+        }
+        
+        if(endTurn){
+            [self endTurn];
+        }
+    }
+    
+}
+
+#pragma mark Turn logic (host)
+
+-(void)startTurn {
+    
+    self.turn = [[Turn alloc] init];
+    [self.game.turns addObject:self.turn];
+    
+    for(Player *player in self.game.players){
+        if(player.isActive){
+            [self.turn.players addObject:player];
+            player.hasStation = NO;
+        }
+    }
+    
+    int i=0;
+    for (ESTPositionedBeacon *beacon in self.location.beacons) {
+        
+        if(i==[self.turn.players count]-1)
+            break;
+        
+        Station *station = [[Station alloc] init];
+        station.macAddress = beacon.macAddress;
+        [self.turn.stations addObject:station];
+        
+        i++;
+        
+    }
+
+    
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    
+    NSMutableArray *players = [NSMutableArray array];
+    
+    for(Player *player in self.turn.players){
+        [players addObject:[NSDictionary dictionaryWithObjectsAndKeys:player.idPlayer, @"id", player.image, @"image", nil]];
+    }
+    
+    data[@"players"]=players;
+    
+    NSMutableArray *stations = [NSMutableArray array];
+
+    for(Station *station in self.turn.stations){
+        [stations addObject:station.macAddress];
+    }
+    
+    data[@"stations"]=stations;
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+    
+    [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
+    //[self didStartTurnWithMessage:message forSession:self.sessionId];
+    [self playSound:@"go" afterSeconds:2];
+}
+
+-(void)endTurn {
+    
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    for(Player *p in self.turn.players){
+        if(!p.hasStation){
+            data[@"loser"]=p.idPlayer;
+        }
+    }
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
+    
+}
+
+#pragma mark Turn signal handler (client)
+
+-(void)didStartTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
+    
+    NSError *jsonError;
+    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:&jsonError];
+    if(jsonError)
+        return;
+    
+    self.turn=[Turn new];
+    NSArray *stations = data[@"stations"];
+    
+    for(NSString *macAddress in stations){
+        Station *station = [Station new];
+        station.macAddress = macAddress;
+        [self.turn.stations addObject: station];
+    }
+    
+    NSArray *players = data[@"players"];
+    
+    for(NSDictionary *playerDic in players){
+        Player *player = [Player new];
+        player.idPlayer = playerDic[@"id"];
+        player.image = playerDic[@"image"];
+        [self.turn.players addObject:player];
+    }
+
+    
+    
+}
+
+-(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
+    
+    NSLog(@"end turn %@", message);
+    
+}
+
+
+#pragma mark Utility
+
+-(void)playSound: (NSString *)soundName afterSeconds: (int)seconds{
+    
+    NSString *path  = [[NSBundle mainBundle] pathForResource:soundName ofType:@"wav"];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        NSError *error;
+        NSURL *pathURL = [NSURL fileURLWithPath : path];
+        self.audioPlayer = [[AVAudioPlayer alloc]
+                            initWithContentsOfURL:pathURL
+                            error:&error];
+        [self.audioPlayer play];
+    });
+    
+    
+    
+}
+
+
+#pragma mark AllJoyn bus stuff
+
 -(void)createAndConnectBus{
     
     QStatus status = ER_OK;
@@ -332,50 +722,8 @@
     
 }
 
-- (IBAction)didTouchSendButton:(id)sender {
-    NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @" ciao"];
-    
-    [self.proxyHostObject introspectRemoteObject];
-    
-    [self.proxyHostObject takeStation:message onSession:self.sessionId];
-    
-    
-    
-    [self.positionObject sendPosition:message onSession:self.sessionId];
-    [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
-    [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
-    //IF THE COMMUNICATION USES SESSION DATA YOU WONT RECEIVE THE MESSAGE YOU SEND. IF YOU WANT TO RECEIVE IT YOU MANAULLY CALL YOUR DELEGATE METHOD
-    if (gMessageFlags != kAJNMessageFlagSessionless) {
-        [self didReceiveNewPositionMessage:message forSession:self.sessionId];
-    }
-}
-
--(void)viewWillAppear:(BOOL)animated {
-    
-    [super viewWillAppear:animated];
-    
-    self.locationView.backgroundColor = [UIColor clearColor];
-    
-    self.locationView.showTrace               = NO;
-    self.locationView.rotateOnPositionUpdate  = YES;
-    
-    self.locationView.showWallLengthLabels    = YES;
-    
-    self.locationView.locationBorderColor     = [UIColor blackColor];
-    self.locationView.locationBorderThickness = 4;
-    self.locationView.doorColor               = [UIColor brownColor];
-    self.locationView.doorThickness           = 6;
-    self.locationView.traceColor              = [UIColor blueColor];
-    self.locationView.traceThickness          = 2;
-    self.locationView.wallLengthLabelsColor   = [UIColor blackColor];
-    
-    
-    // You can change the avatar using positionImage property of ESTIndoorLocationView class.
-    UIImage *image = [UIImage imageNamed:self.player.image];
-    self.locationView.positionImage = image;
-    
-    [self.locationView drawLocation:self.location];
-    
+- (void)listenerDidRegisterWithBus:(AJNBusAttachment *)busAttachment{
+    self.player.idPlayer = busAttachment.uniqueName;
 }
 
 - (NSString *)sessionlessSignalMatchRule
@@ -383,313 +731,7 @@
     return @"sessionless='t'";
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
--(void)didReceiveNewPositionMessage:(NSString *)message forSession:(AJNSessionId)sessionId{
-    
-    //IF YOU ARE USING SESSION YOU FILTER HERE THE MESSAGES THAT DON'T BELONG TO THE CURRENT SESSION
-    if(gMessageFlags != kAJNMessageFlagSessionless && self.sessionId!=sessionId)
-        NSLog(@"POSIZIONE RICEVUTA MA SESSIONE ERRATA");
-    
-    NSLog(@"RICEVUTA POSIZIONE: %@", message);
-    NSError *jsonError;
-    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
-                                                         options:NSJSONReadingMutableContainers
-                                                           error:&jsonError];
-    if(jsonError)
-        return;
-    Station *occupiedStation = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
-    
-    if (occupiedStation == nil) {
-        
-        Player *player = [self.turn playerIdentifiedById:data[@"player"]];
-        if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
-            UIImageView *view = self.playersImageView[player];
-            if (!view) {
-                
-                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:player.image]];
-                [self.locationView addSubview:view];
-                self.playersImageView[player.idPlayer] = view;
-            }
-            
-            ESTOrientedPoint *point = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
-            [self.locationView drawObject:view withPosition:point];
-            
-            self.label.text = player.idPlayer;
-            
-        }
-    }
-    
-    else {
-        
-        
-        ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"station_position"]];
-        
-        Player *player = [self.turn playerIdentifiedById:data[@"player"]];
-        
-        if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
-            UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
-            if (!view) {
-                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
-                view.alpha = 0.5;
-                [self.locationView addSubview:view];
-                self.stationsImageView[occupiedStation.macAddress] = view;
-            }
-            [self.locationView drawObject:view withPosition:stationPosition];
-            
-            
-        }
-        else {
-            UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
-            if (!view) {
-                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"green.png"]];
-                view.alpha = 0.5;
-                [self.locationView addSubview:view];
-                self.stationsImageView[occupiedStation.macAddress] = view;
-            }
-            [self.locationView drawObject:view withPosition:stationPosition];
-            
-        }
-        
-        occupiedStation.player = player;
-        player.hasStation = YES;
-        occupiedStation.isActive = NO;
-        
-        
-    }
-    
-    
-}
-
--(void)takeStation:(NSString *)message onSession:(AJNSessionId)sessionId{
-    NSLog(@"Take Station: %@", message);
-    
-    NSError *jsonError;
-    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
-                                                         options:NSJSONReadingMutableContainers
-                                                           error:&jsonError];
-    if(jsonError)
-        return;
-    
-    ESTOrientedPoint *playerPosition = [ESTOrientedPoint pointFromDictionary:data[@"position"]];
-    Station *station = [self.turn stationIdentifiedByMacAddress:data[@"station"]];
-    ESTOrientedPoint *stationPosition = [ESTOrientedPoint pointFromDictionary:data[@"station_position"]];
-    if (station.isActive && [playerPosition distanceToPoint:stationPosition] <= DEFAULT_PROXIMITY_DISTANCE) {
-        
-        [self.positionObject sendPosition:message onSession:self.sessionId];
-        [self didReceiveNewPositionMessage:message forSession:self.sessionId];
-        
-        BOOL endTurn = YES;
-        
-        for(Station *s in self.turn.stations){
-            if(s.isActive){
-                endTurn = NO;
-                break;
-            }
-        }
-        
-        if(endTurn){
-            [self endTurn];
-        }
-    }
-    
-}
-
-- (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didUpdatePosition:(ESTOrientedPoint *)position inLocation:(ESTLocation *)location {
-    
-    NSLog(@"posizione ricevuta");
-    
-    NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    data[@"player"] = self.player.idPlayer;
-    data[@"position"] = [position toDictionary];
-    
-    for (ESTPositionedBeacon *beacon in self.location.beacons) {
-        
-        Station *s = [self.turn stationIdentifiedByMacAddress:beacon.macAddress];
-        if (s.isActive && [position distanceToPoint: beacon.position] <= DEFAULT_PROXIMITY_DISTANCE) {
-            
-            data[@"station"] = beacon.macAddress;
-            data[@"station_position"] = [beacon.position toDictionary];
-
-            NSError *error;
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
-            NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            if (self.isHost)
-                [self takeStation:message onSession:self.sessionId];
-            
-            else {
-                
-                [self.proxyHostObject introspectRemoteObject];
-                [self.proxyHostObject takeStation:message onSession:self.sessionId];
-            }
-            
-        }
-        
-    }
-    
-    
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
-    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    [self.positionObject sendPosition:message onSession:self.sessionId];
-    
-    
-    [self.locationView updatePosition:position];
-    
-    
-}
-/**
- * Tells the delegate that position update could not be determined.
- *
- * @param manager The manager object that generated the event.
- * @param error Error why position could not be determined.
- */
-- (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didFailToUpdatePositionWithError:(NSError *)error {
-    
-    NSLog(@"errore posizione");
-    
-}
-
-
--(void)startTurn {
-    
-    self.turn = [[Turn alloc] init];
-    [self.game.turns addObject:self.turn];
-    
-    for(Player *player in self.game.players){
-        if(player.isActive){
-            [self.turn.players addObject:player];
-            player.hasStation = NO;
-        }
-    }
-    
-    int i=0;
-    for (ESTPositionedBeacon *beacon in self.location.beacons) {
-        
-        if(i==[self.turn.players count]-1)
-            break;
-        
-        Station *station = [[Station alloc] init];
-        station.macAddress = beacon.macAddress;
-        [self.turn.stations addObject:station];
-        
-        i++;
-        
-    }
-
-    
-    NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    
-    NSMutableArray *players = [NSMutableArray array];
-    
-    for(Player *player in self.turn.players){
-        [players addObject:[NSDictionary dictionaryWithObjectsAndKeys:player.idPlayer, @"id", player.image, @"image", nil]];
-    }
-    
-    data[@"players"]=players;
-    
-    NSMutableArray *stations = [NSMutableArray array];
-
-    for(Station *station in self.turn.stations){
-        [stations addObject:station.macAddress];
-    }
-    
-    data[@"stations"]=stations;
-    
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
-    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
-    
-    [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
-    //[self didStartTurnWithMessage:message forSession:self.sessionId];
-    [self playSound:@"go" afterSeconds:2];
-}
-
--(void)endTurn {
-    
-    NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    for(Player *p in self.turn.players){
-        if(!p.hasStation){
-            data[@"loser"]=p.idPlayer;
-        }
-    }
-    
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
-    NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
-    
-}
-
-
--(void)playSound: (NSString *)soundName afterSeconds: (int)seconds{
-    
-    NSString *path  = [[NSBundle mainBundle] pathForResource:soundName ofType:@"wav"];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        NSError *error;
-        NSURL *pathURL = [NSURL fileURLWithPath : path];
-        self.audioPlayer = [[AVAudioPlayer alloc]
-                            initWithContentsOfURL:pathURL
-                            error:&error];
-        [self.audioPlayer play];
-    });
-    
-    
-    
-}
-
--(void)didStartTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
-    
-    NSError *jsonError;
-    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
-                                                         options:NSJSONReadingMutableContainers
-                                                           error:&jsonError];
-    if(jsonError)
-        return;
-    
-    self.turn=[Turn new];
-    NSArray *stations = data[@"stations"];
-    
-    for(NSString *macAddress in stations){
-        Station *station = [Station new];
-        station.macAddress = macAddress;
-        [self.turn.stations addObject: station];
-    }
-    
-    NSArray *players = data[@"players"];
-    
-    for(NSDictionary *playerDic in players){
-        Player *player = [Player new];
-        player.idPlayer = playerDic[@"id"];
-        player.image = playerDic[@"image"];
-        [self.turn.players addObject:player];
-    }
-
-    
-    
-}
-
--(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
-    
-    NSLog(@"end turn %@", message);
-    
-}
-
-
-
-
-#pragma mark - AJNBusListener delegate methods
+# pragma mark AllJoyn session stuff (client)
 
 - (void)didFindAdvertisedName:(NSString *)name withTransportMask:(AJNTransportMask)transport namePrefix:(NSString *)namePrefix
 {
@@ -716,13 +758,7 @@
 }
 
 
-- (void)listenerDidRegisterWithBus:(AJNBusAttachment *)busAttachment{
-    self.player.idPlayer = busAttachment.uniqueName;
-}
-
-
-#pragma mark - AJNSessionPortListener delegate methods
-
+# pragma mark AllJoyn session stuff (host)
 
 - (void)didJoin:(NSString *)joiner inSessionWithId:(AJNSessionId)sessionId onSessionPort:(AJNSessionPort)sessionPort
 {
@@ -745,7 +781,6 @@
     {
         [self startTurn];
     }
-    // if numberOfPlayer expected is reached then start turn
     
 }
 
@@ -754,7 +789,6 @@
     return sessionPort == kServicePort;
     
 }
-
 
 
 /*

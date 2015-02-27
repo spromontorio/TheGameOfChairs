@@ -387,6 +387,10 @@
 		68472AB11A9A293700A4801D /* AllJoynObjects */ = {
 			isa = PBXGroup;
 			children = (
+				AC8811411649E04E006CD25A /* Constants.h */,
+				AC8811421649E04E006CD25A /* Constants.m */,
+				682B00491A8B57CE00BE5DF9 /* GCPositionReceiver.h */,
+				F5A9A1431A99FBA00099012A /* GCTurnReceiver.h */,
 				682B003D1A8B572500BE5DF9 /* GCPositionObject.h */,
 				682B003E1A8B572500BE5DF9 /* GCPositionObject.mm */,
 				682B003F1A8B572500BE5DF9 /* GCPositionObjectImpl.h */,
@@ -602,12 +606,8 @@
 			children = (
 				F55BBC071AA0F47C00C99502 /* AllJoynFramework */,
 				68472AB11A9A293700A4801D /* AllJoynObjects */,
-				682B00491A8B57CE00BE5DF9 /* GCPositionReceiver.h */,
-				F5A9A1431A99FBA00099012A /* GCTurnReceiver.h */,
 				AC88105D1649DB10006CD25A /* AppDelegate.h */,
 				AC88105E1649DB10006CD25A /* AppDelegate.m */,
-				AC8811411649E04E006CD25A /* Constants.h */,
-				AC8811421649E04E006CD25A /* Constants.m */,
 				68EBB16E1A8B67660070AD15 /* GCViewController.h */,
 				68EBB16F1A8B67660070AD15 /* GCViewController.m */,
 				68F7769B1A95F768003ED5C5 /* Logic */,
