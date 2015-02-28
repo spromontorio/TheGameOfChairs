@@ -14,6 +14,6 @@
 @property (nonatomic, strong) NSMutableArray *turns;
 @property (nonatomic, strong) NSMutableArray *players;
 
-
+-(Player *)playerIdentifiedById:(NSString *)ide;
 
 @end

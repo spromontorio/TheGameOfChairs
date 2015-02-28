@@ -53,11 +53,13 @@
 @property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic, readonly) NSString *sessionlessSignalMatchRule;
 
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *resultEffectView;
 @property (weak, nonatomic) IBOutlet ESTIndoorLocationView *locationView;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) IBOutlet UIImageView *resultImageView;
 @property(nonatomic) BOOL isHost;
 @property(nonatomic) BOOL started;
 @property (nonatomic, strong) Player *player;
@@ -86,7 +88,8 @@
     self.playersImageView = [NSMutableDictionary dictionary];
     self.stationsImageView = [NSMutableDictionary dictionary];
     self.images = [[NSMutableArray alloc] initWithObjects:@"dog.png", @"cat.png", @"lion.png", nil];
-    self.numberOfPlayers = self.images.count;
+    self.numberOfPlayers = 3
+    ;
     
 }
 
@@ -113,7 +116,7 @@
         
         [self setupLocationWithDictionary:location];
     }
-
+    
 }
 
 
@@ -132,7 +135,7 @@
         self.isHost=[self.sessionSwitch isOn] && self.sessionTypeSegmentedControl.selectedSegmentIndex == 1;
         
         [self createAndConnectBus];
-
+        
         
         [sender setTitle:@"Stop" forState:UIControlStateNormal];
         
@@ -148,6 +151,9 @@
         self.player.name = name;
         
         self.game = [[Game alloc] init];
+        
+        if(self.isHost)
+            [self.game.players addObject:self.player];
         
         [self.manager startIndoorLocation:self.location];
         
@@ -189,7 +195,6 @@
 
 - (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didUpdatePosition:(ESTOrientedPoint *)position inLocation:(ESTLocation *)location {
     
-    NSLog(@"position received");
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"player"] = self.player.idPlayer;
@@ -222,17 +227,23 @@
     
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
+    
     NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
     [self.positionObject sendPosition:message onSession:self.sessionId];
     
-    [self.locationView updatePosition:position];
+    if(self.player.image){
+        self.locationView.positionImage = [UIImage imageNamed:self.player.image];
+        [self.locationView updatePosition:position];
+        
+    }
+    
 }
 
 -(void)indoorLocationManager:(ESTIndoorLocationManager *)manager didFailToUpdatePositionWithError:(NSError *)error
 {
     
-   // NSLog(@"position error");
+    // NSLog(@"position error");
 }
 
 
@@ -255,7 +266,7 @@
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nextVC];
     [self presentViewController:navController animated:YES completion:nil];
-
+    
 }
 
 -(void)setupLocationWithDictionary: (NSDictionary *)location{
@@ -278,10 +289,6 @@
     self.locationView.traceThickness          = 2;
     self.locationView.wallLengthLabelsColor   = [UIColor blackColor];
     
-    
-    UIImage *image = [UIImage imageNamed:self.player.image];
-    self.locationView.positionImage = image;
-    
     [self.locationView drawLocation:self.location];
     
 }
@@ -294,7 +301,6 @@
     if(gMessageFlags != kAJNMessageFlagSessionless && self.sessionId!=sessionId)
         NSLog(@"Session Error");
     
-    NSLog(@"Position Signal received %@", message);
     NSError *jsonError;
     NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
@@ -307,10 +313,9 @@
     if (occupiedStation == nil) {
         
         Player *player = [self.turn playerIdentifiedById:data[@"player"]];
-        if (![player.idPlayer isEqualToString:self.player.idPlayer]) {
-            UIImageView *view = self.playersImageView[player];
+        if (player && ![player.idPlayer isEqualToString:self.player.idPlayer]) {
+            UIImageView *view = self.playersImageView[player.idPlayer];
             if (!view) {
-                
                 view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:player.image]];
                 [self.locationView addSubview:view];
                 self.playersImageView[player.idPlayer] = view;
@@ -334,10 +339,12 @@
             UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
             if (!view) {
                 view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
-                view.alpha = 0.5;
                 [self.locationView addSubview:view];
                 self.stationsImageView[occupiedStation.macAddress] = view;
             }
+            
+            view.image = [UIImage imageNamed:@"red.png"];
+            view.alpha = 0.5;
             [self.locationView drawObject:view withPosition:stationPosition];
             
             
@@ -346,10 +353,12 @@
             UIImageView *view = self.stationsImageView[occupiedStation.macAddress];
             if (!view) {
                 view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"green.png"]];
-                view.alpha = 0.5;
                 [self.locationView addSubview:view];
                 self.stationsImageView[occupiedStation.macAddress] = view;
             }
+            
+            view.image = [UIImage imageNamed:@"green.png"];
+            view.alpha = 0.5;
             [self.locationView drawObject:view withPosition:stationPosition];
             
         }
@@ -357,7 +366,6 @@
         occupiedStation.player = player;
         player.hasStation = YES;
         occupiedStation.isActive = NO;
-        
     }
     
     
@@ -403,57 +411,47 @@
 #pragma mark Turn logic (host)
 
 -(void)startTurn {
-    
-    self.turn = [[Turn alloc] init];
-    [self.game.turns addObject:self.turn];
-    
-    for(Player *player in self.game.players){
-        if(player.isActive){
-            [self.turn.players addObject:player];
-            player.hasStation = NO;
-        }
-    }
-    
-    int i=0;
-    for (ESTPositionedBeacon *beacon in self.location.beacons) {
-        
-        if(i==[self.turn.players count]-1)
-            break;
-        
-        Station *station = [[Station alloc] init];
-        station.macAddress = beacon.macAddress;
-        [self.turn.stations addObject:station];
-        
-        i++;
-        
-    }
-
-    
+    NSLog(@"start turn");
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     
     NSMutableArray *players = [NSMutableArray array];
     
-    for(Player *player in self.turn.players){
-        [players addObject:[NSDictionary dictionaryWithObjectsAndKeys:player.idPlayer, @"id", player.image, @"image", nil]];
+    NSMutableArray *stations = [NSMutableArray array];
+    
+    
+    for(Player *player in self.game.players){
+        if(player.isActive){
+            [players addObject:[NSDictionary dictionaryWithObjectsAndKeys:player.idPlayer, @"id", player.image, @"image", nil]];
+        }
+    }
+    
+    int i=0;
+    NSArray *beacons = [self shuffledArray:self.location.beacons];
+    for (ESTPositionedBeacon *beacon in beacons) {
+        
+        if(i >= [players count]-1)
+            break;
+        
+        [stations addObject:beacon.macAddress];
+        
+        i++;
+        
     }
     
     data[@"players"]=players;
     
-    NSMutableArray *stations = [NSMutableArray array];
-
-    for(Station *station in self.turn.stations){
-        [stations addObject:station.macAddress];
-    }
-    
     data[@"stations"]=stations;
+    
+    
     
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options: NSJSONWritingPrettyPrinted error:&error];
     NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
+    
     
     [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
-    //[self didStartTurnWithMessage:message forSession:self.sessionId];
+    [self didStartTurnWithMessage:message forSession:self.sessionId];
+    
     [self playSound:@"go" afterSeconds:2];
 }
 
@@ -471,14 +469,20 @@
     NSString *message = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
     [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
+    [self didEndTurnWithMessage:message forSession:self.sessionId];
     
 }
 
-#pragma mark Turn signal handler (client)
+#pragma mark Turn signal handler (client and host)
 
 -(void)didStartTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
     
+    
     NSLog(@"Start turn signal received %@", message);
+    
+    
+    if(self.player.isActive)
+        self.resultEffectView.hidden = YES;
     
     NSError *jsonError;
     NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
@@ -489,23 +493,54 @@
         return;
     
     self.turn=[Turn new];
+    [self.game.turns addObject:self.turn];
+    
     NSArray *stations = data[@"stations"];
     
-    for(NSString *macAddress in stations){
-        Station *station = [Station new];
-        station.macAddress = macAddress;
-        [self.turn.stations addObject: station];
+    for (ESTPositionedBeacon *beacon in self.location.beacons) {
+        UIImageView *view = self.stationsImageView[beacon.macAddress];
+        
+        if([stations containsObject:beacon.macAddress]) {
+            Station *station = [Station new];
+            station.macAddress = beacon.macAddress;
+            [self.turn.stations addObject: station];
+            view.image = nil;
+        }
+        else {
+            if (!view) {
+                view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"x.png"]];
+                [self.locationView addSubview:view];
+                self.stationsImageView[beacon.macAddress] = view;
+            }
+            
+            view.image = [UIImage imageNamed:@"x.png"];
+            view.alpha = 0.7;
+            [self.locationView drawObject:view withPosition:beacon.position];
+            
+        }
+        
+        
     }
+    
     
     NSArray *players = data[@"players"];
     
     for(NSDictionary *playerDic in players){
-        Player *player = [Player new];
-        player.idPlayer = playerDic[@"id"];
-        player.image = playerDic[@"image"];
+        Player *player = [self.game playerIdentifiedById: playerDic[@"id"]];
+        if(!player){
+            player = [Player new];
+            player.idPlayer = playerDic[@"id"];
+            player.image = playerDic[@"image"];
+            [self.game.players addObject:player];
+        }
+        
+        player.hasStation = NO;
+        
+        if([self.player.idPlayer isEqualToString:player.idPlayer])
+            self.player = player;
+        
         [self.turn.players addObject:player];
     }
-
     
     
 }
@@ -513,6 +548,46 @@
 -(void)didEndTurnWithMessage:(NSString *)message forSession:(AJNSessionId)sessionId {
     
     NSLog(@"End turn signal received %@", message);
+    
+    NSError *jsonError;
+    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:&jsonError];
+    if(jsonError)
+        return;
+    
+    
+    if (self.player.isActive){
+        if ([self.player.idPlayer isEqualToString:data[@"loser"]]) {
+            
+            self.resultImageView.image = [UIImage imageNamed:@"lose.png"];
+            self.resultEffectView.hidden = NO;
+            
+        }
+        else if ([self.turn.players count] == 2) {
+            self.resultImageView.image = [UIImage imageNamed:@"medal.png"];
+            self.resultEffectView.hidden = NO;
+        }
+        else {
+            
+            self.resultImageView.image = [UIImage imageNamed:@"win.png"];
+            self.resultEffectView.hidden = NO;
+        }
+    }
+    
+    for(Player * player in self.turn.players){
+        if([player.idPlayer isEqualToString:data[@"loser"]])
+            player.isActive=NO;
+    }
+   
+    if (self.isHost && [self.turn.players count] > 2) {
+        
+        NSLog(@"Restart");
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self startTurn];
+        });
+    }
     
 }
 
@@ -533,6 +608,21 @@
     });
     
     
+    
+}
+
+-(NSArray *)shuffledArray: (NSArray *)array{
+    
+    NSMutableArray *res = [NSMutableArray arrayWithArray:array];
+    NSUInteger count = [res count];
+    for (NSUInteger i = 0; i < count; ++i) {
+        // Select a random element between i and end of array to swap with.
+        int nElements = count - i;
+        int n = (arc4random() % nElements) + i;
+        [res exchangeObjectAtIndex:i withObjectAtIndex:n];
+    }
+    
+    return res;
     
 }
 
@@ -773,14 +863,15 @@
     
     
     self.sessionId = sessionId;
-    Player *player = [[Player alloc] initWithIdPlayer:joiner];
+    Player *player = [[Player alloc] init];
+    player.idPlayer = joiner;
     [self.game.players addObject:player];
     player.image = [self.images objectAtIndex:0];
     [self.images removeObjectAtIndex:0];
     
     if(self.numberOfPlayers == [self.game.players count])
     {
-        [self startTurn];
+        [self performSelector:@selector(startTurn) withObject:nil afterDelay:3];
     }
     
 }

@@ -21,5 +21,13 @@
     return self;
 }
 
+-(Player *)playerIdentifiedById:(NSString *)ide {
+    
+    for (Player *player in self.players) {
+        if ([player.idPlayer isEqualToString:ide ])
+            return player;
+    }
+    return nil;
+}
 
 @end

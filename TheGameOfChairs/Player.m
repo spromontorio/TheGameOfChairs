@@ -10,11 +10,10 @@
 
 @implementation Player
 
--(id)initWithIdPlayer:(NSString *)name {
+-(id)init {
     
     self = [super init];
     if (self) {
-        self.idPlayer = name;
         self.isActive = YES;
     }
     return self;

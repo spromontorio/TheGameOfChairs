@@ -16,7 +16,6 @@
 @property (nonatomic) BOOL isActive;
 @property (nonatomic) BOOL hasStation;
 
--(id)initWithIdPlayer:(NSString *)name;
 
 
 @end

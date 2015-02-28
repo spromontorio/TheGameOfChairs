@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qdR-Ns-0Z1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="pi3-Kx-PW8">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="mYX-m9-doQ">
+            <objects>
+                <viewController id="pi3-Kx-PW8" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JK8-Xv-gAq"/>
+                        <viewControllerLayoutGuide type="bottom" id="BSb-hw-hgJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HnM-V6-GL1">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xoI-R4-xaT">
+                                <rect key="frame" x="117" y="20" width="87" height="29"/>
+                                <segments>
+                                    <segment title="Join"/>
+                                    <segment title="Host"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qqj-D1-QlV">
+                                <rect key="frame" x="137" y="367" width="33" height="30"/>
+                                <state key="normal" title="Start">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The Game of Chairs" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xFa-03-m21">
+                                <rect key="frame" x="64" y="132" width="230" height="26"/>
+                                <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="22"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xoI-R4-xaT" firstAttribute="top" secondItem="JK8-Xv-gAq" secondAttribute="bottom" id="PF9-Rg-auW"/>
+                            <constraint firstAttribute="centerX" secondItem="xoI-R4-xaT" secondAttribute="centerX" constant="-0.5" id="jRv-gA-E2P"/>
+                            <constraint firstItem="xoI-R4-xaT" firstAttribute="leading" secondItem="HnM-V6-GL1" secondAttribute="leadingMargin" constant="101" id="vts-dz-4fM"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l0O-sL-WyP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="217" y="-190"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="ys4-09-JDj">
             <objects>
@@ -18,6 +62,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.49999999999999961" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg-3.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="ezU-tw-PDV">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0J8-fR-iNI" customClass="ESTIndoorLocationView">
                                 <rect key="frame" x="20" y="144" width="280" height="280"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -64,12 +111,37 @@
                                     <action selector="didTouchSendButton:" destination="qdR-Ns-0Z1" eventType="touchUpInside" id="Fbw-57-yga"/>
                                 </connections>
                             </button>
+                            <visualEffectView hidden="YES" opaque="NO" alpha="0.89999999999999991" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wKu-C6-ulH">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="pxe-Xc-oiF">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="medal.png" translatesAutoresizingMaskIntoConstraints="NO" id="l4O-sE-Nv4">
+                                            <rect key="frame" x="32" y="134" width="256" height="300"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="300" id="xyu-RC-32O"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerX" secondItem="l4O-sE-Nv4" secondAttribute="centerX" id="Yk3-yX-nfD"/>
+                                        <constraint firstAttribute="centerY" secondItem="l4O-sE-Nv4" secondAttribute="centerY" id="jsM-Hm-YCT"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="dark"/>
+                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="gLf-sW-Mzh" firstAttribute="top" secondItem="ezU-tw-PDV" secondAttribute="bottom" id="818-Wy-ShK"/>
                             <constraint firstItem="gLf-sW-Mzh" firstAttribute="top" secondItem="seZ-4B-kEb" secondAttribute="bottom" constant="71" id="FN7-2T-XUW"/>
                             <constraint firstItem="GnR-dW-ddF" firstAttribute="top" secondItem="OFu-cg-yRt" secondAttribute="bottom" constant="8" id="GJ8-v6-d0N"/>
+                            <constraint firstAttribute="trailing" secondItem="wKu-C6-ulH" secondAttribute="trailing" id="KN7-u3-QNo"/>
+                            <constraint firstItem="ezU-tw-PDV" firstAttribute="top" secondItem="T7A-sP-rSX" secondAttribute="top" id="NSr-hA-jLj"/>
+                            <constraint firstAttribute="bottom" secondItem="wKu-C6-ulH" secondAttribute="bottom" id="OYq-KX-y7X"/>
                             <constraint firstAttribute="centerY" secondItem="0J8-fR-iNI" secondAttribute="centerY" id="Pv9-zB-YhZ"/>
+                            <constraint firstItem="ezU-tw-PDV" firstAttribute="leading" secondItem="T7A-sP-rSX" secondAttribute="leading" id="SU3-Fa-oex"/>
                             <constraint firstAttribute="centerX" secondItem="0J8-fR-iNI" secondAttribute="centerX" id="Xuy-En-QvB"/>
                             <constraint firstItem="gLf-sW-Mzh" firstAttribute="top" secondItem="9Fd-fJ-nd2" secondAttribute="bottom" constant="109" id="aNg-T8-cgP"/>
                             <constraint firstAttribute="centerX" secondItem="wDC-HR-2pq" secondAttribute="centerX" id="d2G-wi-g6j"/>
@@ -78,12 +150,17 @@
                             <constraint firstItem="wDC-HR-2pq" firstAttribute="top" secondItem="seZ-4B-kEb" secondAttribute="bottom" constant="8" id="lyF-KO-WaU"/>
                             <constraint firstAttribute="centerX" secondItem="9Fd-fJ-nd2" secondAttribute="centerX" constant="-0.5" id="o7W-ib-wkp"/>
                             <constraint firstItem="gpW-nN-gfb" firstAttribute="leading" secondItem="T7A-sP-rSX" secondAttribute="leadingMargin" constant="4" id="qGr-iv-KRl"/>
+                            <constraint firstItem="wKu-C6-ulH" firstAttribute="top" secondItem="T7A-sP-rSX" secondAttribute="top" id="qxU-e1-Ckb"/>
+                            <constraint firstAttribute="trailing" secondItem="ezU-tw-PDV" secondAttribute="trailing" id="s0M-RL-ZQ1"/>
                             <constraint firstItem="gpW-nN-gfb" firstAttribute="top" secondItem="OFu-cg-yRt" secondAttribute="bottom" constant="13" id="sMh-Dc-3z0"/>
+                            <constraint firstItem="wKu-C6-ulH" firstAttribute="leading" secondItem="T7A-sP-rSX" secondAttribute="leading" id="yWC-XD-E0D"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="label" destination="gpW-nN-gfb" id="Lkb-6n-Q0W"/>
                         <outlet property="locationView" destination="0J8-fR-iNI" id="32c-LM-qjZ"/>
+                        <outlet property="resultEffectView" destination="wKu-C6-ulH" id="CCR-N8-Lze"/>
+                        <outlet property="resultImageView" destination="l4O-sE-Nv4" id="stx-I9-OOg"/>
                         <outlet property="sessionSwitch" destination="GnR-dW-ddF" id="Y57-pF-645"/>
                         <outlet property="sessionTypeSegmentedControl" destination="9Fd-fJ-nd2" id="gbb-1m-1B5"/>
                         <outlet property="startButton" destination="seZ-4B-kEb" id="IAg-ra-5Eu"/>
@@ -91,9 +168,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uRu-Gh-VSl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="348" y="-198"/>
+            <point key="canvasLocation" x="595" y="-190"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="bg-3.jpg" width="5000" height="3500"/>
+        <image name="medal.png" width="256" height="256"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
