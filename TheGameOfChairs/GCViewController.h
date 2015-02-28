@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
+@class Game;
+
 @interface GCViewController : UIViewController
 
-- (IBAction)didTouchStartButton:(id)sender;
-
+@property(nonatomic, strong) Game *game;
 
 @end

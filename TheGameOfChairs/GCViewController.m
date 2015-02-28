@@ -53,18 +53,16 @@
 @property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic, readonly) NSString *sessionlessSignalMatchRule;
 
+@property (weak, nonatomic) IBOutlet UIImageView *playerImageView;
 @property (weak, nonatomic) IBOutlet UIVisualEffectView *resultEffectView;
+@property (weak, nonatomic) IBOutlet UILabel *resultLabel;
 @property (weak, nonatomic) IBOutlet ESTIndoorLocationView *locationView;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
-@property (weak, nonatomic) IBOutlet UISwitch *sessionSwitch;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *sessionTypeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UIImageView *resultImageView;
 @property(nonatomic) BOOL isHost;
-@property(nonatomic) BOOL started;
 @property (nonatomic, strong) Player *player;
 @property (nonatomic, strong) Turn *turn;
-@property (nonatomic, strong) Game *game;
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 @property (nonatomic) int numberOfPlayers;
 
@@ -80,116 +78,81 @@
     
     [super viewDidLoad];
     
-    self.manager = [ESTIndoorLocationManager new];
-    self.manager.delegate = self;
-    
-    
-    self.started=NO;
-    self.playersImageView = [NSMutableDictionary dictionary];
-    self.stationsImageView = [NSMutableDictionary dictionary];
-    self.images = [[NSMutableArray alloc] initWithObjects:@"dog.png", @"cat.png", @"lion.png", nil];
-    self.numberOfPlayers = 3
-    ;
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
     
     [super viewDidAppear:animated];
+    self.playersImageView = [NSMutableDictionary dictionary];
+    self.stationsImageView = [NSMutableDictionary dictionary];
+    self.images = [self shuffledArray:@[@"dog.png", @"cat.png", @"lion.png", @"donkey.png", @"bird.png"]];
     NSDictionary *location = [[NSUserDefaults standardUserDefaults] objectForKey:@"location"];
-    if(!location){
-        
-        // temporary
-        
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"location" ofType:@"json"];
-        NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-        
-        ESTLocation *location = [ESTLocationBuilder parseFromJSON:content];
-        NSDictionary *rawLocation = [location toDictionary];
-        [[NSUserDefaults standardUserDefaults] setObject:rawLocation forKey:@"location"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [self setupLocationWithDictionary:rawLocation];
-        
-        //[self presentLocationSetupController];
-    }
-    else{
-        
-        [self setupLocationWithDictionary:location];
-    }
+    self.manager = [ESTIndoorLocationManager new];
+    self.manager.delegate = self;
+    [self setupLocationWithDictionary:location];
+    [self start];
     
 }
 
-
--(IBAction)didTouchStartButton:(UIButton *)sender {
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [self stop];
     
-    if(!self.started)
-    {
-        self.started=YES;
-        self.sessionTypeSegmentedControl.enabled=NO;
-        self.sessionSwitch.enabled=NO;
-        if(self.sessionSwitch.isOn)
-            gMessageFlags=0x0;
-        else
-            gMessageFlags=kAJNMessageFlagSessionless;
-        
-        self.isHost=[self.sessionSwitch isOn] && self.sessionTypeSegmentedControl.selectedSegmentIndex == 1;
-        
-        [self createAndConnectBus];
-        
-        
-        [sender setTitle:@"Stop" forState:UIControlStateNormal];
-        
-        
-        NSString *name = [[UIDevice currentDevice] name];
-        self.player = [[Player alloc] init];
-        
-        if(self.isHost){
-            self.player.image = [self.images objectAtIndex:0];
-            [self.images removeObjectAtIndex:0];
-        }
-        
-        self.player.name = name;
-        
-        self.game = [[Game alloc] init];
-        
-        if(self.isHost)
-            [self.game.players addObject:self.player];
-        
-        [self.manager startIndoorLocation:self.location];
-        
+
+}
+
+
+-(void)start {
+    
+    self.isHost=self.game.isHost;
+    self.numberOfPlayers = self.game.numberOfPlayers;
+    
+    [self.manager startIndoorLocation:self.location];
+
+    [self createAndConnectBus];
+    
+    NSString *name = [[UIDevice currentDevice] name];
+    self.player = [[Player alloc] init];
+    
+    if(self.isHost){
+        self.player.image = [self.images objectAtIndex:0];
+        [self.images removeObjectAtIndex:0];
+        self.playerImageView.image = [UIImage imageNamed:self.player.image];
     }
-    else{
-        [self disconnectAndDestroyBus];
-        self.started=NO;
-        self.sessionSwitch.enabled=YES;
-        self.sessionTypeSegmentedControl.enabled=YES;
-        [sender setTitle:@"Start" forState:UIControlStateNormal];
-        [self.manager stopIndoorLocation];
-        self.player = nil;
-        self.turn = nil;
-        self.game = nil;
-        self.images = [[NSMutableArray alloc] initWithObjects:@"dog.png", @"cat.png", @"lion.png", nil];
-    }
+    
+    self.player.name = name;
+    
+    if(self.isHost)
+        [self.game.players addObject:self.player];
     
     
 }
 
-- (IBAction)didTouchSendButton:(id)sender {
-    NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @" ciao"];
-    
-    [self.proxyHostObject introspectRemoteObject];
-    
-    [self.proxyHostObject takeStation:message onSession:self.sessionId];
-    
-    
-    [self.positionObject sendPosition:message onSession:self.sessionId];
-    [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
-    [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
-    
-    if (gMessageFlags != kAJNMessageFlagSessionless) {
-        [self didReceiveNewPositionMessage:message forSession:self.sessionId];
-    }
+-(void)stop{
+    [self disconnectAndDestroyBus];
+    [self.manager stopIndoorLocation];
+    self.player = nil;
+    self.turn = nil;
+    self.game = nil;
 }
+
+/*
+ - (void)test {
+ NSString *message = [[[UIDevice currentDevice] name] stringByAppendingString: @" ciao"];
+ 
+ [self.proxyHostObject introspectRemoteObject];
+ 
+ [self.proxyHostObject takeStation:message onSession:self.sessionId];
+ 
+ 
+ [self.positionObject sendPosition:message onSession:self.sessionId];
+ [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
+ [self.turnObject endTurnWithMessage:message forSession:self.sessionId];
+ 
+ if (gMessageFlags != kAJNMessageFlagSessionless) {
+ [self didReceiveNewPositionMessage:message forSession:self.sessionId];
+ }
+ }*/
 
 #pragma mark Estimote SDK (host and client)
 
@@ -203,7 +166,7 @@
     for (ESTPositionedBeacon *beacon in self.location.beacons) {
         
         Station *s = [self.turn stationIdentifiedByMacAddress:beacon.macAddress];
-        if (s.isActive && [position distanceToPoint: beacon.position] <= DEFAULT_PROXIMITY_DISTANCE) {
+        if (self.turn && [[NSDate date] timeIntervalSinceDate: self.turn.beginDate]>2 && s.isActive && [position distanceToPoint: beacon.position] <= DEFAULT_PROXIMITY_DISTANCE) {
             
             data[@"station"] = beacon.macAddress;
             data[@"station_position"] = [beacon.position toDictionary];
@@ -246,28 +209,6 @@
     // NSLog(@"position error");
 }
 
-
--(void)presentLocationSetupController{
-    
-    __weak GCViewController *weakSelf = self;
-    UIViewController *nextVC = [ESTIndoorLocationManager locationSetupControllerWithCompletion:^(ESTLocation *location, NSError *error) {
-        
-        [weakSelf dismissViewControllerAnimated:YES completion:^{
-            if (location)
-            {
-                NSDictionary *rawLocation = [location toDictionary];
-                [[NSUserDefaults standardUserDefaults] setObject:rawLocation forKey:@"location"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [self setupLocationWithDictionary:rawLocation];
-                
-            }
-        }];
-    }];
-    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:nextVC];
-    [self presentViewController:navController animated:YES completion:nil];
-    
-}
 
 -(void)setupLocationWithDictionary: (NSDictionary *)location{
     
@@ -452,7 +393,7 @@
     [self.turnObject startTurnWithMessage:message forSession:self.sessionId];
     [self didStartTurnWithMessage:message forSession:self.sessionId];
     
-    [self playSound:@"go" afterSeconds:2];
+    [self playSound:@"go" afterSeconds:3];
 }
 
 -(void)endTurn {
@@ -481,8 +422,12 @@
     NSLog(@"Start turn signal received %@", message);
     
     
-    if(self.player.isActive)
+    
+    if(self.player.isActive){
         self.resultEffectView.hidden = YES;
+        self.locationView.rotateOnPositionUpdate = YES;
+
+    }
     
     NSError *jsonError;
     NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
@@ -493,6 +438,7 @@
         return;
     
     self.turn=[Turn new];
+    self.turn.beginDate =[NSDate date];
     [self.game.turns addObject:self.turn];
     
     NSArray *stations = data[@"stations"];
@@ -536,8 +482,11 @@
         
         player.hasStation = NO;
         
-        if([self.player.idPlayer isEqualToString:player.idPlayer])
+        if([self.player.idPlayer isEqualToString:player.idPlayer]) {
             self.player = player;
+            self.playerImageView.image = [UIImage imageNamed:self.player.image];
+        }
+        
         
         [self.turn.players addObject:player];
     }
@@ -563,31 +512,49 @@
             
             self.resultImageView.image = [UIImage imageNamed:@"lose.png"];
             self.resultEffectView.hidden = NO;
+            self.resultLabel.text = @"You LOSE!\nWaiting for the game end...";
+
+            
             
         }
         else if ([self.turn.players count] == 2) {
             self.resultImageView.image = [UIImage imageNamed:@"medal.png"];
+            self.resultLabel.text = @"You WIN!\nClosing the game...";
             self.resultEffectView.hidden = NO;
         }
         else {
             
             self.resultImageView.image = [UIImage imageNamed:@"win.png"];
             self.resultEffectView.hidden = NO;
+            self.resultLabel.text = @"You SURVIVED!\nA new turn will start in seconds...";
         }
     }
     
+    self.locationView.rotateOnPositionUpdate = NO;
+    
     for(Player * player in self.turn.players){
-        if([player.idPlayer isEqualToString:data[@"loser"]])
+        if([player.idPlayer isEqualToString:data[@"loser"]]) {
             player.isActive=NO;
+            UIImageView *view = self.playersImageView[data[@"loser"]];
+            view.image = nil;
+            [view removeFromSuperview];
+        }
     }
-   
+    
     if (self.isHost && [self.turn.players count] > 2) {
         
-        NSLog(@"Restart");
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self startTurn];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self startTurn];
         });
+        
     }
+    else if([self.turn.players count] == 2){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self dismissViewControllerAnimated:YES completion:NULL];
+        });
+        
+    }
+        
     
 }
 
@@ -611,7 +578,7 @@
     
 }
 
--(NSArray *)shuffledArray: (NSArray *)array{
+-(NSMutableArray *)shuffledArray: (NSArray *)array{
     
     NSMutableArray *res = [NSMutableArray arrayWithArray:array];
     NSUInteger count = [res count];
@@ -710,40 +677,31 @@
     }
     
     
-    if (gMessageFlags == kAJNMessageFlagSessionless) {
-        NSLog(@"Adding match rule : [%@]", self.sessionlessSignalMatchRule);
-        status = [self.busAttachment addMatchRule:self.sessionlessSignalMatchRule];
-        
-        if (status != ER_OK) {
-            
-            NSLog(@"ERROR: Unable to %@ match rule. %@", self.sessionSwitch.isOn ? @"remove" : @"add", [AJNStatus descriptionForStatusCode:status]);
-        }
+    
+    
+    // get the type of session to create
+    //
+    
+    if (!self.isHost) {
+        // join an existing session by finding the name
+        //
+        [self.busAttachment findAdvertisedName:kServiceName];
     }
     else {
-        
-        // get the type of session to create
+        // request the service name for the position object
         //
+        [self.busAttachment requestWellKnownName:kServiceName withFlags:kAJNBusNameFlagReplaceExisting|kAJNBusNameFlagDoNotQueue];
         
-        if (!self.isHost) {
-            // join an existing session by finding the name
-            //
-            [self.busAttachment findAdvertisedName:kServiceName];
-        }
-        else {
-            // request the service name for the position object
-            //
-            [self.busAttachment requestWellKnownName:kServiceName withFlags:kAJNBusNameFlagReplaceExisting|kAJNBusNameFlagDoNotQueue];
-            
-            // advertise a name and let others connect to our service
-            
-            [self.busAttachment advertiseName:kServiceName withTransportMask:kAJNTransportMaskAny];
-            
-            
-            AJNSessionOptions *sessionOptions = [[AJNSessionOptions alloc] initWithTrafficType:kAJNTrafficMessages supportsMultipoint:YES proximity:kAJNProximityAny transportMask:kAJNTransportMaskAny];
-            
-            [self.busAttachment bindSessionOnPort:kServicePort withOptions:sessionOptions withDelegate:self];
-        }
+        // advertise a name and let others connect to our service
+        
+        [self.busAttachment advertiseName:kServiceName withTransportMask:kAJNTransportMaskAny];
+        
+        
+        AJNSessionOptions *sessionOptions = [[AJNSessionOptions alloc] initWithTrafficType:kAJNTrafficMessages supportsMultipoint:YES proximity:kAJNProximityAny transportMask:kAJNTransportMaskAny];
+        
+        [self.busAttachment bindSessionOnPort:kServicePort withOptions:sessionOptions withDelegate:self];
     }
+    
     
 }
 
@@ -854,7 +812,6 @@
 
 - (void)didJoin:(NSString *)joiner inSessionWithId:(AJNSessionId)sessionId onSessionPort:(AJNSessionPort)sessionPort
 {
-    NSLog(@"JOIN");
     if([self.game.players count] == self.numberOfPlayers)
         return;
     

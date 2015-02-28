@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) NSMutableArray *players;
 @property (nonatomic, strong) NSMutableArray *stations;
+@property (nonatomic, strong) NSDate *beginDate;
 
 -(Station *)stationIdentifiedByMacAddress:(NSString *)macAddress;
 -(Player *)playerIdentifiedById:(NSString *)name;

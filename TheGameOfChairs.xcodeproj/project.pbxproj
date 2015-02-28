@@ -71,6 +71,16 @@
 		6867CE4A1AA2114C00049159 /* x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE481AA2114C00049159 /* x@2x.png */; };
 		6867CE4C1AA216E400049159 /* background-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE4B1AA216E400049159 /* background-2.jpg */; };
 		6867CE4E1AA2182100049159 /* bg-3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE4D1AA2182100049159 /* bg-3.jpg */; };
+		6867CE551AA21EF700049159 /* gameofchairs.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE531AA21EF700049159 /* gameofchairs.png */; };
+		6867CE561AA21EF700049159 /* gameofchairs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE541AA21EF700049159 /* gameofchairs@2x.png */; };
+		6867CE591AA224E700049159 /* GCMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6867CE581AA224E700049159 /* GCMenuViewController.m */; };
+		6867CE5C1AA22CA000049159 /* ghost.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE5A1AA22CA000049159 /* ghost.png */; };
+		6867CE5D1AA22CA000049159 /* ghost@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE5B1AA22CA000049159 /* ghost@2x.png */; };
+		6867CE601AA22D8E00049159 /* bird.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE5E1AA22D8E00049159 /* bird.png */; };
+		6867CE611AA22D8E00049159 /* bird@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE5F1AA22D8E00049159 /* bird@2x.png */; };
+		6867CE641AA22E4E00049159 /* donkey.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE621AA22E4E00049159 /* donkey.png */; };
+		6867CE651AA22E4E00049159 /* donkey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE631AA22E4E00049159 /* donkey@2x.png */; };
+		6867CE671AA244F600049159 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6867CE661AA244F600049159 /* Images.xcassets */; };
 		68B5DC6C1A90E23B003DBECC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */; };
 		68B5DC701A90F6DA003DBECC /* cat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68B5DC6F1A90F6DA003DBECC /* cat@2x.png */; };
 		68C9E2731A9DCC9B009319FA /* dog.png in Resources */ = {isa = PBXBuildFile; fileRef = 68C9E2711A9DCC9B009319FA /* dog.png */; };
@@ -244,6 +254,17 @@
 		6867CE481AA2114C00049159 /* x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "x@2x.png"; sourceTree = "<group>"; };
 		6867CE4B1AA216E400049159 /* background-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "background-2.jpg"; sourceTree = "<group>"; };
 		6867CE4D1AA2182100049159 /* bg-3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "bg-3.jpg"; sourceTree = "<group>"; };
+		6867CE531AA21EF700049159 /* gameofchairs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gameofchairs.png; sourceTree = "<group>"; };
+		6867CE541AA21EF700049159 /* gameofchairs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gameofchairs@2x.png"; sourceTree = "<group>"; };
+		6867CE571AA224E700049159 /* GCMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCMenuViewController.h; sourceTree = "<group>"; };
+		6867CE581AA224E700049159 /* GCMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCMenuViewController.m; sourceTree = "<group>"; };
+		6867CE5A1AA22CA000049159 /* ghost.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ghost.png; sourceTree = "<group>"; };
+		6867CE5B1AA22CA000049159 /* ghost@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ghost@2x.png"; sourceTree = "<group>"; };
+		6867CE5E1AA22D8E00049159 /* bird.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bird.png; sourceTree = "<group>"; };
+		6867CE5F1AA22D8E00049159 /* bird@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bird@2x.png"; sourceTree = "<group>"; };
+		6867CE621AA22E4E00049159 /* donkey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = donkey.png; sourceTree = "<group>"; };
+		6867CE631AA22E4E00049159 /* donkey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "donkey@2x.png"; sourceTree = "<group>"; };
+		6867CE661AA244F600049159 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		68B5DC6B1A90E23B003DBECC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		68B5DC6F1A90F6DA003DBECC /* cat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat@2x.png"; sourceTree = "<group>"; };
 		68C9E2711A9DCC9B009319FA /* dog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dog.png; sourceTree = "<group>"; };
@@ -556,8 +577,12 @@
 		68EBB1711A90B7020070AD15 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6867CE5A1AA22CA000049159 /* ghost.png */,
+				6867CE5B1AA22CA000049159 /* ghost@2x.png */,
 				684934AC1A90C90100BD5770 /* cat.png */,
 				68B5DC6F1A90F6DA003DBECC /* cat@2x.png */,
+				6867CE621AA22E4E00049159 /* donkey.png */,
+				6867CE631AA22E4E00049159 /* donkey@2x.png */,
 				68C9E2711A9DCC9B009319FA /* dog.png */,
 				68C9E2721A9DCC9B009319FA /* dog@2x.png */,
 				68C9E2751A9DCE51009319FA /* lion.png */,
@@ -567,10 +592,16 @@
 				6867CE411AA2113300049159 /* red.png */,
 				6867CE421AA2113300049159 /* red@2x.png */,
 				6867CE471AA2114C00049159 /* x.png */,
+				6867CE531AA21EF700049159 /* gameofchairs.png */,
+				6867CE541AA21EF700049159 /* gameofchairs@2x.png */,
 				6867CE481AA2114C00049159 /* x@2x.png */,
 				6848BEA11AA1CA030076C4B6 /* win.png */,
 				6848BEA21AA1CA030076C4B6 /* lose@2x.png */,
 				6848BEA31AA1CA030076C4B6 /* lose.png */,
+				6867CE5E1AA22D8E00049159 /* bird.png */,
+				6867CE5F1AA22D8E00049159 /* bird@2x.png */,
+				6867CE4B1AA216E400049159 /* background-2.jpg */,
+				6867CE4D1AA2182100049159 /* bg-3.jpg */,
 				6867CE371AA2003300049159 /* background.jpg */,
 				6867CE381AA2003300049159 /* background@2x.jpg */,
 				6867CE3B1AA200DD00049159 /* medal@2x.png */,
@@ -644,11 +675,12 @@
 				AC88105E1649DB10006CD25A /* AppDelegate.m */,
 				68EBB16E1A8B67660070AD15 /* GCViewController.h */,
 				68EBB16F1A8B67660070AD15 /* GCViewController.m */,
-				6867CE4B1AA216E400049159 /* background-2.jpg */,
-				6867CE4D1AA2182100049159 /* bg-3.jpg */,
+				6867CE571AA224E700049159 /* GCMenuViewController.h */,
+				6867CE581AA224E700049159 /* GCMenuViewController.m */,
 				68F7769B1A95F768003ED5C5 /* Logic */,
 				68EBB1711A90B7020070AD15 /* Resources */,
 				AC8810661649DB10006CD25A /* MainStoryboard_iPhone.storyboard */,
+				6867CE661AA244F600049159 /* Images.xcassets */,
 				AC8810551649DB10006CD25A /* Supporting Files */,
 			);
 			path = TheGameOfChairs;
@@ -816,11 +848,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				6848BEA51AA1CA030076C4B6 /* win.png in Resources */,
+				6867CE5C1AA22CA000049159 /* ghost.png in Resources */,
 				68B5DC701A90F6DA003DBECC /* cat@2x.png in Resources */,
 				68C9E2771A9DCE51009319FA /* lion.png in Resources */,
 				6849352F1A90E03D00BD5770 /* 8c.mov in Resources */,
 				684935471A90E03D00BD5770 /* screen8_beacon_green@2x.png in Resources */,
 				6849354C1A90E03D00BD5770 /* wall_bump.wav in Resources */,
+				6867CE671AA244F600049159 /* Images.xcassets in Resources */,
 				6867CE431AA2113300049159 /* green@2x.png in Resources */,
 				AC8810591649DB10006CD25A /* InfoPlist.strings in Resources */,
 				68EBB1731A90B7200070AD15 /* location.json in Resources */,
@@ -836,11 +870,15 @@
 				684935401A90E03D00BD5770 /* beaconMintSmall@2x.png in Resources */,
 				6867CE491AA2114C00049159 /* x.png in Resources */,
 				F55BBC801AA0F47C00C99502 /* SConscript in Resources */,
+				6867CE651AA22E4E00049159 /* donkey@2x.png in Resources */,
+				6867CE561AA21EF700049159 /* gameofchairs@2x.png in Resources */,
 				6867CE3E1AA200DD00049159 /* medal.png in Resources */,
 				684935311A90E03D00BD5770 /* 5b_first_frame@2x.png in Resources */,
 				AC8810611649DB10006CD25A /* Default.png in Resources */,
+				6867CE601AA22D8E00049159 /* bird.png in Resources */,
 				684935301A90E03D00BD5770 /* 5a_first_frame@2x.png in Resources */,
 				684935491A90E03D00BD5770 /* tick@2x.png in Resources */,
+				6867CE551AA21EF700049159 /* gameofchairs.png in Resources */,
 				6848BEA71AA1CA030076C4B6 /* lose.png in Resources */,
 				AC8810631649DB10006CD25A /* Default@2x.png in Resources */,
 				68C9E2781A9DCE51009319FA /* lion@2x.png in Resources */,
@@ -858,7 +896,9 @@
 				684935381A90E03D00BD5770 /* beaconBlueberrySmall@2x.png in Resources */,
 				6848BEA61AA1CA030076C4B6 /* lose@2x.png in Resources */,
 				684935331A90E03D00BD5770 /* 8b_first_frame@2x.png in Resources */,
+				6867CE641AA22E4E00049159 /* donkey.png in Resources */,
 				6849352C1A90E03D00BD5770 /* 5b.mov in Resources */,
+				6867CE611AA22D8E00049159 /* bird@2x.png in Resources */,
 				684935371A90E03D00BD5770 /* beaconBlueberrySmall.png in Resources */,
 				AC8810651649DB10006CD25A /* Default-568h@2x.png in Resources */,
 				684935481A90E03D00BD5770 /* screen8_beacon_purple@2x.png in Resources */,
@@ -871,6 +911,7 @@
 				684935461A90E03D00BD5770 /* screen8_beacon_gray_trans@2x.png in Resources */,
 				684935321A90E03D00BD5770 /* 8a_first_frame@2x.png in Resources */,
 				6867CE3A1AA2003300049159 /* background@2x.jpg in Resources */,
+				6867CE5D1AA22CA000049159 /* ghost@2x.png in Resources */,
 				AC8810681649DB10006CD25A /* MainStoryboard_iPhone.storyboard in Resources */,
 				6867CE4A1AA2114C00049159 /* x@2x.png in Resources */,
 				F5A9A14E1A9F3BC70099012A /* go.wav in Resources */,
@@ -901,6 +942,7 @@
 				F55BBC741AA0F47C00C99502 /* AJNPasswordManager.mm in Sources */,
 				F55BBC7D1AA0F47C00C99502 /* AJNTranslatorImpl.mm in Sources */,
 				F55BBC711AA0F47C00C99502 /* AJNMessageArgument.mm in Sources */,
+				6867CE591AA224E700049159 /* GCMenuViewController.m in Sources */,
 				F55BBC691AA0F47C00C99502 /* AJNBusObject.mm in Sources */,
 				F55BBC6C1AA0F47C00C99502 /* AJNInterfaceDescription.mm in Sources */,
 				F55BBC731AA0F47C00C99502 /* AJNObject.m in Sources */,
@@ -1008,6 +1050,8 @@
 					"$(ARCHS_STANDARD_32_BIT)",
 					armv7,
 				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1078,6 +1122,8 @@
 					"$(ARCHS_STANDARD_32_BIT)",
 					armv7,
 				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
