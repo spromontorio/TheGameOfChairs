@@ -1,0 +1,5 @@
+<map id="ajn::BusObject::MethodEntry" name="ajn::BusObject::MethodEntry">
+<area shape="rect" id="node2" href="$structajn_1_1_interface_description_1_1_member.html" title="A map to store string annotations. " alt="" coords="117,160,282,199"/>
+<area shape="rect" id="node3" href="$classqcc_1_1_string.html" title="String is a heap&#45;allocated array of bytes whose life&#45;cycle is managed through reference counting..." alt="" coords="5,7,90,32"/>
+<area shape="rect" id="node4" href="$classajn_1_1_interface_description.html" title="Class for describing message bus interfaces. " alt="" coords="180,7,345,32"/>
+</map>

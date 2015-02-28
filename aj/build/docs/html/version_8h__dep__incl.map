@@ -1,0 +1,8 @@
+<map id="version.h" name="version.h">
+<area shape="rect" id="node2" href="$build_2darwin_2x86_2debug_2dist_2cpp_2inc_2alljoyn_2about_2_about_service_api_8h.html" title="Wrapper to encapsulate the AboutService with a singelton. " alt="" coords="5,79,136,104"/>
+<area shape="rect" id="node3" href="$build_2darwin_2x86_2debug_2dist_2cpp_2inc_2alljoyn_2about_2_announcement_registrar_8h.html" title="Used to register an AnnounceHandler for the org.alljoyn.About Announce signal. " alt="" coords="160,79,336,104"/>
+<area shape="rect" id="node4" href="$services_2about_2cpp_2inc_2alljoyn_2about_2_about_service_api_8h.html" title="Wrapper to encapsulate the AboutService with a singelton. " alt="" coords="360,79,491,104"/>
+<area shape="rect" id="node7" href="$services_2about_2cpp_2inc_2alljoyn_2about_2_announcement_registrar_8h.html" title="Used to register an AnnounceHandler for the org.alljoyn.About Announce signal. " alt="" coords="515,79,691,104"/>
+<area shape="rect" id="node5" href="$build_2darwin_2x86_2debug_2dist_2cpp_2inc_2alljoyn_2about_2_about_property_store_impl_8h.html" title="Default implementation of the Property store. " alt="" coords="238,152,413,177"/>
+<area shape="rect" id="node6" href="$services_2about_2cpp_2inc_2alljoyn_2about_2_about_property_store_impl_8h.html" title="Default implementation of the Property store. " alt="" coords="437,152,612,177"/>
+</map>

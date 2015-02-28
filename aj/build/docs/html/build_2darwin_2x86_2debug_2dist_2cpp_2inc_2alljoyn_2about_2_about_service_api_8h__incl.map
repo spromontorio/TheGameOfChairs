@@ -1,0 +1,5 @@
+<map id="AboutServiceApi.h" name="AboutServiceApi.h">
+<area shape="rect" id="node2" href="$_log_8h.html" title="Log control. " alt="" coords="5,79,84,104"/>
+<area shape="rect" id="node4" href="$version_8h.html" title="This file provides access to AllJoyn library version and build information. " alt="" coords="109,79,226,104"/>
+<area shape="rect" id="node3" href="$platform_8h.html" title="This file just wraps including actual OS and toolchain specific header files depding on the OS group ..." alt="" coords="54,152,159,177"/>
+</map>

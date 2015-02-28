@@ -1,0 +1,5 @@
+<map id="ajn::ProxyBusObject" name="ajn::ProxyBusObject">
+<area shape="rect" id="node3" href="$classajn_1_1_about_icon_proxy.html" title="AboutIconProxy enables the user of the class to interact with the remote AboutIcon BusObject..." alt="" coords="5,152,146,177"/>
+<area shape="rect" id="node4" href="$classajn_1_1_about_proxy.html" title="AboutProxy give proxy access to the org.alljoyn.About interface AboutProxy class enables the user to ..." alt="" coords="170,152,285,177"/>
+<area shape="rect" id="node2" href="$classajn_1_1_message_receiver.html" title="MessageReceiver is a pure&#45;virtual base class that is implemented by any class that wishes to receive ..." alt="" coords="75,5,228,31"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="AllJoynStd.h" name="AllJoynStd.h">
+<area shape="rect" id="node2" href="$platform_8h.html" title="This file just wraps including actual OS and toolchain specific header files depding on the OS group ..." alt="" coords="469,372,574,397"/>
+<area shape="rect" id="node3" href="$_interface_description_8h.html" title="This file defines types for statically describing a message bus interface. " alt="" coords="523,79,716,104"/>
+<area shape="rect" id="node4" href="$_string_8h.html" title="Non&#45;STL version of string. " alt="" coords="161,299,252,324"/>
+<area shape="rect" id="node7" href="$_d_bus_std_8h.html" title="This file provides definitions for standard DBus interfaces. " alt="" coords="556,152,683,177"/>
+<area shape="rect" id="node8" href="$_message_8h.html" title="This file defines a class for parsing and generating message bus messages. " alt="" coords="405,152,533,177"/>
+<area shape="rect" id="node11" href="$_status_8h.html" title="This file contains an enumerated list values that QStatus can return. " alt="" coords="559,299,670,324"/>
+<area shape="rect" id="node13" href="$_translator_8h.html" title="Translator is an abstract base class (interface) implemented by users of the AllJoyn API in order to ..." alt="" coords="5,225,138,251"/>
+<area shape="rect" id="node9" href="$_managed_obj_8h.html" title="This template class provides reference counting based heap allocation for objects. " alt="" coords="300,299,433,324"/>
+<area shape="rect" id="node10" href="$_msg_arg_8h.html" title="This file defines a class for message bus data types and values. " alt="" coords="461,225,581,251"/>
+<area shape="rect" id="node12" href="$_session_8h.html" title="AllJoyn session related data types. " alt="" coords="264,225,386,251"/>
+</map>

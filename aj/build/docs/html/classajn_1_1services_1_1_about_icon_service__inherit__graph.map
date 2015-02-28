@@ -1,0 +1,4 @@
+<map id="ajn::services::AboutIconService" name="ajn::services::AboutIconService">
+<area shape="rect" id="node2" href="$classajn_1_1_bus_object.html" title="Message Bus Object base class. " alt="" coords="33,79,141,104"/>
+<area shape="rect" id="node3" href="$classajn_1_1_message_receiver.html" title="MessageReceiver is a pure&#45;virtual base class that is implemented by any class that wishes to receive ..." alt="" coords="10,5,163,31"/>
+</map>

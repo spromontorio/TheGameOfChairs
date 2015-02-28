@@ -1,0 +1,25 @@
+<map id="AnnouncementRegistrar.h" name="AnnouncementRegistrar.h">
+<area shape="rect" id="node3" href="$_log_8h.html" title="Log control. " alt="" coords="2155,372,2234,397"/>
+<area shape="rect" id="node5" href="$version_8h.html" title="This file provides access to AllJoyn library version and build information. " alt="" coords="2211,445,2328,471"/>
+<area shape="rect" id="node6" href="$_bus_attachment_8h.html" title="is the top&#45;level object responsible for connecting to a message bus. " alt="" coords="1491,79,1656,104"/>
+<area shape="rect" id="node4" href="$platform_8h.html" title="This file just wraps including actual OS and toolchain specific header files depding on the OS group ..." alt="" coords="1534,519,1639,544"/>
+<area shape="rect" id="node7" href="$_string_8h.html" title="Non&#45;STL version of string. " alt="" coords="614,445,706,471"/>
+<area shape="rect" id="node10" href="$_key_store_listener_8h.html" title="The KeyStoreListener class handled requests to load or store the key store. " alt="" coords="1298,372,1473,397"/>
+<area shape="rect" id="node11" href="$_status_8h.html" title="This file contains an enumerated list values that QStatus can return. " alt="" coords="1077,445,1189,471"/>
+<area shape="rect" id="node12" href="$_auth_listener_8h.html" title="This file defines the AuthListener class that provides the interface between authentication mechanism..." alt="" coords="1337,225,1485,251"/>
+<area shape="rect" id="node15" href="$_session_8h.html" title="AllJoyn session related data types. " alt="" coords="1713,372,1834,397"/>
+<area shape="rect" id="node17" href="$_about_listener_8h.html" title="This contains the AboutListener class. " alt="" coords="804,152,959,177"/>
+<area shape="rect" id="node19" href="$_about_object_description_8h.html" title="This contains the AboutObjectDescription class responsible holding a list of all BusObject interfaces..." alt="" coords="453,299,667,324"/>
+<area shape="rect" id="node20" href="$_interface_description_8h.html" title="This file defines types for statically describing a message bus interface. " alt="" coords="449,225,642,251"/>
+<area shape="rect" id="node21" href="$_translator_8h.html" title="Translator is an abstract base class (interface) implemented by users of the AllJoyn API in order to ..." alt="" coords="144,299,277,324"/>
+<area shape="rect" id="node23" href="$_bus_listener_8h.html" title="BusListener is an abstract base class (interface) implemented by users of the AllJoyn API in order to..." alt="" coords="1990,299,2133,324"/>
+<area shape="rect" id="node24" href="$_bus_object_8h.html" title="This file defines the base class for message bus objects that are implemented and registered locally..." alt="" coords="319,152,454,177"/>
+<area shape="rect" id="node26" href="$_proxy_bus_object_8h.html" title="This file defines the class ProxyBusObject. " alt="" coords="1126,152,1295,177"/>
+<area shape="rect" id="node28" href="$_session_listener_8h.html" title="SessionListener is an abstract base class (interface) implemented by users of the AllJoyn API in orde..." alt="" coords="1813,225,1981,251"/>
+<area shape="rect" id="node29" href="$_session_port_listener_8h.html" title="SessionPortListener is an abstract base class (interface) implemented by users of the AllJoyn API in ..." alt="" coords="1813,152,2006,177"/>
+<area shape="rect" id="node13" href="$_message_8h.html" title="This file defines a class for parsing and generating message bus messages. " alt="" coords="1053,299,1181,324"/>
+<area shape="rect" id="node14" href="$_msg_arg_8h.html" title="This file defines a class for message bus data types and values. " alt="" coords="697,372,817,397"/>
+<area shape="rect" id="node16" href="$_transport_mask_8h.html" title="Transport type definitions. " alt="" coords="1700,445,1863,471"/>
+<area shape="rect" id="node18" href="$_about_data_8h.html" title="This contains the AboutData class responsible for holding the org.alljoyn.About interface data fields..." alt="" coords="741,299,878,324"/>
+<area shape="rect" id="node22" href="$_message_receiver_8h.html" title="MessageReceiver is a base class implemented by any class which wishes to receive AllJoyn messages..." alt="" coords="969,225,1149,251"/>
+</map>

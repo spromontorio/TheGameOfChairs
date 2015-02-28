@@ -1,0 +1,24 @@
+<map id="AboutProxy.h" name="AboutProxy.h">
+<area shape="rect" id="node2" href="$_about_object_description_8h.html" title="This contains the AboutObjectDescription class responsible holding a list of all BusObject interfaces..." alt="" coords="615,299,829,324"/>
+<area shape="rect" id="node8" href="$_about_data_8h.html" title="This contains the AboutData class responsible for holding the org.alljoyn.About interface data fields..." alt="" coords="446,225,583,251"/>
+<area shape="rect" id="node10" href="$_bus_attachment_8h.html" title="is the top&#45;level object responsible for connecting to a message bus. " alt="" coords="1212,79,1377,104"/>
+<area shape="rect" id="node3" href="$_msg_arg_8h.html" title="This file defines a class for message bus data types and values. " alt="" coords="813,372,933,397"/>
+<area shape="rect" id="node5" href="$_string_8h.html" title="Non&#45;STL version of string. " alt="" coords="1279,445,1371,471"/>
+<area shape="rect" id="node7" href="$_status_8h.html" title="This file contains an enumerated list values that QStatus can return. " alt="" coords="667,445,778,471"/>
+<area shape="rect" id="node4" href="$platform_8h.html" title="This file just wraps including actual OS and toolchain specific header files depding on the OS group ..." alt="" coords="1693,519,1798,544"/>
+<area shape="rect" id="node9" href="$_about_data_listener_8h_source.html" title="alljoyn/AboutDataListener.h" alt="" coords="357,299,541,324"/>
+<area shape="rect" id="node11" href="$_key_store_listener_8h.html" title="The KeyStoreListener class handled requests to load or store the key store. " alt="" coords="5,372,181,397"/>
+<area shape="rect" id="node12" href="$_auth_listener_8h.html" title="This file defines the AuthListener class that provides the interface between authentication mechanism..." alt="" coords="1459,225,1607,251"/>
+<area shape="rect" id="node14" href="$_session_8h.html" title="AllJoyn session related data types. " alt="" coords="2042,372,2163,397"/>
+<area shape="rect" id="node16" href="$_about_listener_8h.html" title="This contains the AboutListener class. " alt="" coords="1274,152,1430,177"/>
+<area shape="rect" id="node17" href="$_interface_description_8h.html" title="This file defines types for statically describing a message bus interface. " alt="" coords="1141,225,1333,251"/>
+<area shape="rect" id="node18" href="$_translator_8h.html" title="Translator is an abstract base class (interface) implemented by users of the AllJoyn API in order to ..." alt="" coords="1005,299,1138,324"/>
+<area shape="rect" id="node20" href="$_bus_listener_8h.html" title="BusListener is an abstract base class (interface) implemented by users of the AllJoyn API in order to..." alt="" coords="2187,372,2330,397"/>
+<area shape="rect" id="node21" href="$_bus_object_8h.html" title="This file defines the base class for message bus objects that are implemented and registered locally..." alt="" coords="1024,152,1159,177"/>
+<area shape="rect" id="node23" href="$_proxy_bus_object_8h.html" title="This file defines the class ProxyBusObject. " alt="" coords="1851,152,2021,177"/>
+<area shape="rect" id="node25" href="$_session_listener_8h.html" title="SessionListener is an abstract base class (interface) implemented by users of the AllJoyn API in orde..." alt="" coords="2405,225,2573,251"/>
+<area shape="rect" id="node26" href="$_session_port_listener_8h.html" title="SessionPortListener is an abstract base class (interface) implemented by users of the AllJoyn API in ..." alt="" coords="2281,152,2473,177"/>
+<area shape="rect" id="node13" href="$_message_8h.html" title="This file defines a class for parsing and generating message bus messages. " alt="" coords="1618,299,1746,324"/>
+<area shape="rect" id="node15" href="$_transport_mask_8h.html" title="Transport type definitions. " alt="" coords="2021,445,2184,471"/>
+<area shape="rect" id="node19" href="$_message_receiver_8h.html" title="MessageReceiver is a base class implemented by any class which wishes to receive AllJoyn messages..." alt="" coords="1783,225,1963,251"/>
+</map>
