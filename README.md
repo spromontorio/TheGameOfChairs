@@ -1,6 +1,10 @@
 ## **The Game of Chairs** 
-######Social Proximity and Indoor Location mixed together. Powered by Estimote and Alljoyn.
 
+#### In short
+
+- A digital remake of the famous Musical Chairs game
+- Social Proximity and Indoor Location mixed together thanks to the Estimote Indoor SDK and the Alljoyn framework.
+- Submitted to the *Estimote Reality Hack #2*.
 
 ####Description
 
@@ -24,7 +28,7 @@ Enjoy!
 
 <img src="https://lh6.googleusercontent.com/-rOodEybj2QE/VPMDGqToI4I/AAAAAAAAAG8/H-zTdbylIqY/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B12.55.43.png" width="375px" height="667px"/> 
 
-*When a turn starts all the players are in centre of the room waiting for the start sound*
+*When a turn starts all the players are in the centre of the room waiting for the start sound*
 
 <img src="https://lh6.googleusercontent.com/-t0goZodQII8/VPMDCWkLUgI/AAAAAAAAAGk/rI8QIYTqecw/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B12.55.08.png" width="375px" height="667px"/> 
 
@@ -35,6 +39,13 @@ Enjoy!
 *The last player left wins the game*
 
 <img src="https://lh3.googleusercontent.com/-rJEmWDtIuMY/VPMDG6NAsVI/AAAAAAAAAG4/fVFi-R1HTSo/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B13.02.07.png" width="375px" height="667px"/> 
+
+
+####Links
+- [Estimote indoor SDK](http://estimote.com/indoor/)
+- [AllJoyn framework](https://allseenalliance.org/developers)
+- [Reality Hack #2](https://community.estimote.com/hc/en-us/articles/203901966-RealityHack-2-is-here-)
+- [A youtube presentation of the game](https://www.youtube.com/watch?v=rP_FB5IdPNM&feature=youtu.be)
 
 
 ######Created by *Silvia Promontorio*
