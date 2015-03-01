@@ -2,7 +2,7 @@
 ######Social Proximity and Indoor Location mixed together. Powered by Estimote and Alljoyn.
 
 
-#####Description
+####Description
 
 The Game of Chairs is the evolution of the famous Musical Chairs, but instead of chairs you have Estimote Beacons.
 
@@ -14,7 +14,7 @@ The last player left on the map is the winner, then the game is over.
 
 Enjoy!
 
-#####Screenshots
+####Screenshots
 
 *The start screen*
 
