@@ -16,23 +16,23 @@ Enjoy!
 
 ####Screenshots
 
-*The start screen*
+######The start screen
 
 <img src="https://lh4.googleusercontent.com/-HYeFi_53jvk/VPMDCtZwGqI/AAAAAAAAAGo/yeXME6OoEk8/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B12.55.31.png" width="375px" height="667px"/> 
 
-*In which you can create a the indoor location map of your room*
+######Here you can create a the indoor location map of your room
 
 <img src="https://lh6.googleusercontent.com/-rOodEybj2QE/VPMDGqToI4I/AAAAAAAAAG8/H-zTdbylIqY/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B12.55.43.png" width="375px" height="667px"/> 
 
-*When a turn start all the players are in centre of the room*
+######When a turn starts all the players are in centre of the room waiting for the start sound
 
 <img src="https://lh6.googleusercontent.com/-t0goZodQII8/VPMDCWkLUgI/AAAAAAAAAGk/rI8QIYTqecw/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B12.55.08.png" width="375px" height="667px"/> 
 
-*Each player has to run faster as possible near an avaliable station*
+######Each player has to run faster as possible near an avaliable station
 
 <img src="https://lh3.googleusercontent.com/-_eWVrdMHnlk/VPMDCw12WcI/AAAAAAAAAGs/jq_a8BpOiE0/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B12.48.58.png" width="375px" height="667px"/> 
 
-*The last player left wins the game*
+######The last player left wins the game
 
 <img src="https://lh3.googleusercontent.com/-rJEmWDtIuMY/VPMDG6NAsVI/AAAAAAAAAG4/fVFi-R1HTSo/w654-h1164-no/iOS%2BSimulator%2BScreen%2BShot%2B01.mar.2015%2B13.02.07.png" width="375px" height="667px"/> 
 
