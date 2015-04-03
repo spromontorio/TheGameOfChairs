@@ -114,16 +114,16 @@
     NSString *name = [[UIDevice currentDevice] name];
     self.player = [[Player alloc] init];
     
-    if(self.isHost){
-        self.player.image = [self.images objectAtIndex:0];
-        [self.images removeObjectAtIndex:0];
-        self.playerImageView.image = [UIImage imageNamed:self.player.image];
-    }
+ //   if(self.isHost){
+   //     self.player.image = [self.images objectAtIndex:0];
+  //      [self.images removeObjectAtIndex:0];
+  //      self.playerImageView.image = [UIImage imageNamed:self.player.image];
+ //   }
     
     self.player.name = name;
-    
-    if(self.isHost)
-        [self.game.players addObject:self.player];
+    self.player.isActive=NO;
+//    if(self.isHost)
+      //  [self.game.players addObject:self.player];
     
     
 }
@@ -158,6 +158,8 @@
 
 - (void)indoorLocationManager:(ESTIndoorLocationManager *)manager didUpdatePosition:(ESTOrientedPoint *)position inLocation:(ESTLocation *)location {
     
+    if(self.isHost)
+        return;
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"player"] = self.player.idPlayer;
@@ -423,7 +425,7 @@
     
     
     
-    if(self.player.isActive){
+    if(self.player.isActive || self.isHost){
         self.resultEffectView.hidden = YES;
         self.locationView.rotateOnPositionUpdate = YES;
 
